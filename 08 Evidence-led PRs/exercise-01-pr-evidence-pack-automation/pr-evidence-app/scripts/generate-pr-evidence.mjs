@@ -162,4 +162,4 @@ for (const check of checks) {
 
 fs.writeFileSync(path.join(outputRoot, "summary.md"), `${summaryLines.join("\n")}\n`);
 
-process.exit(pack.overallExitCode);
+process.exitCode = pack.overallExitCode;

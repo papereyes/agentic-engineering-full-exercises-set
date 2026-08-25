@@ -1,0 +1,13 @@
+$ npm run evidence:verify
+
+> pr-evidence-app@0.1.0 evidence:verify
+> node ./scripts/verify-evidence-submission.mjs
+
+Source SHA: 2f719be07e54362969a43abf20f8ab22b9c3b111
+PASS submitted failing pack preserves all fixture results and artifact bytes
+PASS generator preserves the first failing exit code for single and multiple failures, and exit 0 for all-passing results
+PASS generator rejects missing artifacts, path traversal, and inconsistent result fixtures without writing a pack
+PASS .github/workflows/evidence-led-pr-01.yml uses pull_request, read-only permissions, pinned actions, stable paths, always-run verification and upload, and no failure masking
+PASS Git history contains the generator and workflow at source SHA; later changes are evidence only
+PASS verified evidence contract for 08 Evidence-led PRs/exercise-01-pr-evidence-pack-automation
+exit code: 0

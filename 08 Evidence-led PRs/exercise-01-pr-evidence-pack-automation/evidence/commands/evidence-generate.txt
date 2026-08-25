@@ -1,0 +1,2 @@
+$ npm run evidence:generate -- --sha 2f719be07e54362969a43abf20f8ab22b9c3b111
+exit code: 1

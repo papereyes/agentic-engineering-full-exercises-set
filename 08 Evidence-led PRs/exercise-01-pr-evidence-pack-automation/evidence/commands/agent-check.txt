@@ -1,0 +1,44 @@
+$ npm run agent:check
+
+> pr-evidence-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+
+
+> pr-evidence-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+
+Verified 27 protected challenge inputs.
+
+> pr-evidence-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+
+lint-check passed
+
+> pr-evidence-app@0.1.0 test
+> node ./scripts/test-evidence-verifier.mjs && node ./scripts/agent-check.mjs
+
+PR evidence verifier self-test passed
+agent-check passed for Failure-Preserving PR Evidence Pack
+
+> pr-evidence-app@0.1.0 format
+> node ./scripts/format-check.mjs
+
+format-check passed
+
+> pr-evidence-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+
+
+> pr-evidence-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 31 modules transformed.
+rendering chunks...
+computing gzip size...
+../../../../../../../../tmp/exercise-vite-build-EVX7iF/dist/index.html                   0.42 kB │ gzip:  0.28 kB
+../../../../../../../../tmp/exercise-vite-build-EVX7iF/dist/assets/index-BAmIHqwj.css    3.99 kB │ gzip:  1.44 kB
+../../../../../../../../tmp/exercise-vite-build-EVX7iF/dist/assets/index-BVqO1sBR.js   196.44 kB │ gzip: 61.77 kB
+✓ built in 867ms
+exit code: 0

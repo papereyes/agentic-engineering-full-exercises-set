@@ -1,0 +1,146 @@
+diff --git a/08 Evidence-led PRs/exercise-02-feature-flag-rollback-proof/feature-flag-app/scripts/rollback-invoice-preview.mjs b/08 Evidence-led PRs/exercise-02-feature-flag-rollback-proof/feature-flag-app/scripts/rollback-invoice-preview.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..c4d8b6085f154485669a79a4285817ba7ebb84cc
+--- /dev/null
++++ b/08 Evidence-led PRs/exercise-02-feature-flag-rollback-proof/feature-flag-app/scripts/rollback-invoice-preview.mjs	
+@@ -0,0 +1,98 @@
++import fs from "node:fs";
++import path from "node:path";
++
++const FLAG_KEY = "invoice-preview-v2";
++const ISO_8601 = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,3})?(Z|[+-]\d{2}:\d{2})$/;
++
++function argument(name) {
++  const index = process.argv.indexOf(name);
++  return index === -1 ? undefined : process.argv[index + 1];
++}
++
++function fail(message) {
++  console.error(message);
++  process.exitCode = 1;
++}
++
++function sleepSync(ms) {
++  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
++}
++
++function acquireLock(lockPath, { retries = 400, delayMs = 25 } = {}) {
++  for (let attempt = 0; attempt <= retries; attempt += 1) {
++    try {
++      return fs.openSync(lockPath, "wx");
++    } catch (error) {
++      if (error.code !== "EEXIST") throw error;
++      sleepSync(delayMs);
++    }
++  }
++  throw new Error("timed out waiting for the rollback lock");
++}
++
++function releaseLock(fd, lockPath) {
++  if (fd !== undefined) {
++    try { fs.closeSync(fd); } catch { /* already closed */ }
++  }
++  try { fs.unlinkSync(lockPath); } catch { /* already removed */ }
++}
++
++function run({ configPath, actor, reason, timestamp, expectedRevision }) {
++  const target = path.resolve(configPath);
++  const lockPath = `${target}.lock`;
++  let lockFd;
++  try {
++    lockFd = acquireLock(lockPath);
++  } catch (error) {
++    fail(`could not acquire rollback lock: ${error.message}`);
++    return;
++  }
++
++  let tempPath;
++  try {
++    const config = JSON.parse(fs.readFileSync(target, "utf8"));
++    if (config.schemaVersion !== 1) throw new Error("config schemaVersion must be 1");
++    if (config.flagKey !== FLAG_KEY) throw new Error(`config flagKey must be ${FLAG_KEY}`);
++    if (config.revision !== expectedRevision) throw new Error(`expected revision ${expectedRevision} but found ${config.revision}`);
++
++    const updated = {
++      ...config,
++      enabled: false,
++      allowlist: [],
++      revision: `rollback-${timestamp.replace(/[^0-9A-Za-z]/g, "-")}`,
++      lastRollback: { actor, reason, timestamp, previousRevision: config.revision },
++    };
++
++    tempPath = path.join(path.dirname(target), `${path.basename(target)}.${process.pid}-${Date.now()}.tmp`);
++    fs.writeFileSync(tempPath, `${JSON.stringify(updated, null, 2)}\n`);
++
++    if (process.env.NODE_ENV === "test" && process.env.ROLLBACK_TEST_FAIL_BEFORE_RENAME === "1") {
++      throw new Error("fault injection: stopping before rename");
++    }
++
++    fs.renameSync(tempPath, target);
++    tempPath = undefined;
++    console.log(`Rolled back ${config.flagKey} to revision ${updated.revision}`);
++  } catch (error) {
++    fail(error.message);
++  } finally {
++    if (tempPath && fs.existsSync(tempPath)) {
++      try { fs.unlinkSync(tempPath); } catch { /* best effort */ }
++    }
++    releaseLock(lockFd, lockPath);
++  }
++}
++
++const configPath = argument("--config");
++const actor = argument("--actor");
++const reason = argument("--reason");
++const timestamp = argument("--timestamp");
++const expectedRevision = argument("--expected-revision");
++
++if (!configPath || !actor || !reason || !timestamp || !expectedRevision) {
++  fail("Usage: node scripts/rollback-invoice-preview.mjs --config <path> --actor <value> --reason <value> --timestamp <ISO-8601> --expected-revision <value>");
++} else if (!ISO_8601.test(timestamp) || Number.isNaN(Date.parse(timestamp))) {
++  fail(`--timestamp must be a valid ISO-8601 timestamp, got ${timestamp}`);
++} else {
++  run({ configPath, actor, reason, timestamp, expectedRevision });
++}
+diff --git a/08 Evidence-led PRs/exercise-02-feature-flag-rollback-proof/feature-flag-app/src/rollout/invoicePreview.mjs b/08 Evidence-led PRs/exercise-02-feature-flag-rollback-proof/feature-flag-app/src/rollout/invoicePreview.mjs
+index 04dee6ee30c4f14ad20548bf5239db8629c92e67..5f3b7c5858c3d0bd088777ed381aeea5ac48b3ef 100644
+--- a/08 Evidence-led PRs/exercise-02-feature-flag-rollback-proof/feature-flag-app/src/rollout/invoicePreview.mjs	
++++ b/08 Evidence-led PRs/exercise-02-feature-flag-rollback-proof/feature-flag-app/src/rollout/invoicePreview.mjs	
+@@ -1,19 +1,26 @@
+-/** Seeded rollout: disabled and provider-error states still touch the new service. */
++/** Repaired rollout: disabled, invalid-context, and provider-error paths never touch the preview API or emit telemetry. */
+ export async function loadInvoiceExperience({ flagClient, context, api, telemetry }) {
+-  let enabled = true;
++  const { targetingKey, accountId } = context;
++  if (!targetingKey || !accountId || targetingKey !== accountId) {
++    return { experience: "legacy", reason: "invalid-context" };
++  }
++
++  let enabled;
+   try {
+-    enabled = await flagClient.getBooleanValue("invoice-preview-v2", true, context);
++    enabled = await flagClient.getBooleanValue("invoice-preview-v2", false, context);
+   } catch {
+-    enabled = false;
++    return { experience: "legacy", reason: "flag-evaluation-error" };
+   }
+ 
+-  if (enabled) {
+-    const preview = await api.loadPreview(context.accountId);
+-    telemetry.emit("invoice_preview_viewed", { targetingKey: context.targetingKey });
+-    return { experience: "preview", preview };
++  if (!enabled) {
++    return { experience: "legacy", reason: "flag-disabled" };
+   }
+ 
+-  const preview = await api.loadPreview(context.accountId);
+-  telemetry.emit("invoice_preview_disabled", { targetingKey: context.targetingKey });
+-  return { experience: "legacy", reason: "flag-disabled", preview };
++  try {
++    const preview = await api.loadPreview(accountId);
++    telemetry.emit("invoice_preview_viewed", { targetingKey, accountId, flagKey: "invoice-preview-v2" });
++    return { experience: "preview", preview };
++  } catch {
++    return { experience: "legacy", reason: "preview-unavailable" };
++  }
+ }

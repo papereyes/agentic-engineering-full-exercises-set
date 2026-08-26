@@ -1,0 +1,7 @@
+> node ./scripts/verify-rollout-submission.mjs
+Source SHA: 3a0b04586999a946b691600de1f74aff816c05d6
+PASS enabled evidence proves one evaluation, one API call, and one accurate telemetry event
+PASS disabled and provider-error evidence prove legacy behavior with zero preview side effects
+PASS rollback drill atomically disables the flag, clears targeting, records audit data, and meets the 1000 ms objective
+PASS protected scenarios and rollback drill reproduce from the submitted implementation
+PASS Git source binding and evidence-only follow-up history verified

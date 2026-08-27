@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "sourceSha": "00728a08f6114315fd2ac94d939a9ad64fe05306",
+  "captureSession": "c88b9d52-ab11-45d0-87dd-5b352cf3ca43",
+  "capturedAt": "2026-08-27T07:12:58.576Z",
+  "configSha256": "25520e29821405a5d6c5520177b7687e7477fd2596a7090c05237734dc8f77c4",
+  "productionBuildSha256": "368fc1639b3029942e10aca68227419e9c74a1ec5486a09a671d06fbbe1b4fa3",
+  "route": "/",
+  "numberOfRuns": 3,
+  "browser": {
+    "channel": "chromium",
+    "version": "151.0.7922.34"
+  },
+  "captureEnvironment": {
+    "formFactor": "mobile",
+    "throttlingMethod": "simulate",
+    "screenEmulation": {
+      "mobile": true,
+      "width": 412,
+      "height": 823,
+      "deviceScaleFactor": 1.75,
+      "disabled": false
+    }
+  },
+  "lighthouseReports": [
+    {
+      "path": "raw/lighthouse/run-1.json",
+      "sha256": "fa7c4ac46fc3034680c39aded06fc908d18e186a2ef531d288196589d3ac7214"
+    },
+    {
+      "path": "raw/lighthouse/run-2.json",
+      "sha256": "dfec2773ff03a8065322b699de64e8eb3cc900536910092b9561fb9de7c53537"
+    },
+    {
+      "path": "raw/lighthouse/run-3.json",
+      "sha256": "475bbf971b71b660446f8214da13bdd9a9922cd556f56eead2e857388e6f0687"
+    }
+  ],
+  "axeReport": {
+    "path": "raw/axe.json",
+    "sha256": "19702be58306292b5d7ff60546ef9dca4ec442e46c49b506a11f8716f06b92d5"
+  }
+}

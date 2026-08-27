@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "sourceSha": "00728a08f6114315fd2ac94d939a9ad64fe05306",
+  "testedUrl": "http://127.0.0.1:33113/",
+  "route": "/",
+  "generatedAt": "2026-08-27T07:12:58.404Z",
+  "browser": {
+    "name": "chromium",
+    "version": "151.0.7922.34"
+  },
+  "captureEnvironment": {
+    "formFactor": "mobile",
+    "throttlingMethod": "simulate",
+    "screenEmulation": {
+      "mobile": true,
+      "width": 412,
+      "height": 823,
+      "deviceScaleFactor": 1.75,
+      "disabled": false
+    }
+  },
+  "violations": []
+}

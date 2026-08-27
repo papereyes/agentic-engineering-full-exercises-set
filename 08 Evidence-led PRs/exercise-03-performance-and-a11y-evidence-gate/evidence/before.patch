@@ -1,0 +1,142 @@
+diff --git a/08 Evidence-led PRs/exercise-03-performance-and-a11y-evidence-gate/quality-gate-app/lighthouserc.json b/08 Evidence-led PRs/exercise-03-performance-and-a11y-evidence-gate/quality-gate-app/lighthouserc.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..e39c57821631174b551bf1537692bb1849ab43b1
+--- /dev/null
++++ b/08 Evidence-led PRs/exercise-03-performance-and-a11y-evidence-gate/quality-gate-app/lighthouserc.json	
+@@ -0,0 +1,28 @@
++{
++  "ci": {
++    "collect": {
++      "staticDistDir": "./dist",
++      "url": ["http://localhost/"],
++      "numberOfRuns": 3,
++      "settings": {
++        "onlyCategories": ["performance", "accessibility"],
++        "formFactor": "mobile",
++        "throttlingMethod": "simulate",
++        "screenEmulation": {
++          "mobile": true,
++          "width": 412,
++          "height": 823,
++          "deviceScaleFactor": 1.75,
++          "disabled": false
++        }
++      }
++    },
++    "assert": {
++      "assertions": {
++        "categories:performance": ["error", { "minScore": 0.9, "aggregationMethod": "pessimistic" }],
++        "categories:accessibility": ["error", { "minScore": 1, "aggregationMethod": "pessimistic" }],
++        "largest-contentful-paint": ["error", { "maxNumericValue": 2500, "aggregationMethod": "pessimistic" }]
++      }
++    }
++  }
++}
+diff --git a/08 Evidence-led PRs/exercise-03-performance-and-a11y-evidence-gate/quality-gate-app/scripts/quality-gate.mjs b/08 Evidence-led PRs/exercise-03-performance-and-a11y-evidence-gate/quality-gate-app/scripts/quality-gate.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..a9d304cfef250ac1b3142c5808a9a8732521dc45
+--- /dev/null
++++ b/08 Evidence-led PRs/exercise-03-performance-and-a11y-evidence-gate/quality-gate-app/scripts/quality-gate.mjs	
+@@ -0,0 +1,72 @@
++import fs from "node:fs";
++import path from "node:path";
++import { expectedSummary, readAxeEvidence, readLighthouseReports } from "./quality-verification.mjs";
++
++// Pessimistic release gate: reads exactly three raw Lighthouse reports and one
++// raw axe report, validates them against the protected contract, and writes a
++// decision using the worst run across performance, accessibility, and LCP.
++// One bad run, or any axe violation, fails the whole release.
++
++function argument(name) {
++  const index = process.argv.indexOf(name);
++  if (index === -1 || !process.argv[index + 1]) throw new Error(`Missing ${name}`);
++  return process.argv[index + 1];
++}
++
++const lighthouseDir = argument("--lighthouse-dir");
++const axePath = argument("--axe");
++const contractPath = argument("--contract");
++const sourceSha = argument("--sha");
++const outputPath = argument("--output");
++
++const contract = JSON.parse(fs.readFileSync(contractPath, "utf8"));
++
++const validationFailures = [];
++if (!/^[a-f0-9]{40}$/.test(sourceSha)) validationFailures.push("--sha must be a full 40-character Git SHA");
++
++const lighthouse = readLighthouseReports(lighthouseDir, contract);
++validationFailures.push(...lighthouse.failures);
++
++const lighthouseBrowserMajor = lighthouse.runs[0]?.environment?.browserMajor ?? null;
++const axe = readAxeEvidence(axePath, sourceSha, contract, lighthouseBrowserMajor);
++validationFailures.push(...axe.failures);
++
++const hasCompleteEvidence =
++  lighthouse.runs.length === contract.lighthouseRuns &&
++  Boolean(axe.axe) &&
++  /^[a-f0-9]{40}$/.test(sourceSha);
++
++let summary;
++if (hasCompleteEvidence) {
++  summary = expectedSummary({ sourceSha, contract, runs: lighthouse.runs, axe: axe.axe });
++  if (validationFailures.length) {
++    summary = {
++      ...summary,
++      failures: [...new Set([...validationFailures, ...summary.failures])],
++      releaseDecision: "failed",
++    };
++  }
++} else {
++  summary = {
++    schemaVersion: 1,
++    sourceSha,
++    route: contract.route,
++    aggregation: contract.aggregation,
++    thresholds: contract.thresholds,
++    lighthouseRuns: lighthouse.runs,
++    axe: axe.axe,
++    worstCase: null,
++    failures: [...new Set(validationFailures.length ? validationFailures : ["insufficient evidence to compute a release decision"])],
++    releaseDecision: "failed",
++  };
++}
++
++fs.mkdirSync(path.dirname(outputPath), { recursive: true });
++fs.writeFileSync(outputPath, `${JSON.stringify(summary, null, 2)}\n`);
++
++console.log(`Source SHA: ${sourceSha}`);
++console.log(`Worst case: ${JSON.stringify(summary.worstCase)}`);
++console.log(`Release decision: ${summary.releaseDecision}`);
++if (summary.failures.length) console.log(`Failures: ${summary.failures.join(", ")}`);
++
++process.exitCode = summary.releaseDecision === "passed" ? 0 : 1;
+diff --git a/08 Evidence-led PRs/exercise-03-performance-and-a11y-evidence-gate/quality-gate-app/src/App.tsx b/08 Evidence-led PRs/exercise-03-performance-and-a11y-evidence-gate/quality-gate-app/src/App.tsx
+index 8d235e0bbb8f83b106b0df207fc1375391e155e4..c1b97787c21e094f3a5db79b01899ad909ff657b 100644
+--- a/08 Evidence-led PRs/exercise-03-performance-and-a11y-evidence-gate/quality-gate-app/src/App.tsx	
++++ b/08 Evidence-led PRs/exercise-03-performance-and-a11y-evidence-gate/quality-gate-app/src/App.tsx	
+@@ -14,7 +14,7 @@ export default function App() {
+           <h1>{labContract.title}</h1>
+           <p>{labContract.domain}</p>
+         </div>
+-        <button className="icon-only-action" type="button">
++        <button className="icon-only-action" type="button" aria-label="Download report">
+           <svg aria-hidden="true" viewBox="0 0 24 24">
+             <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14" />
+           </svg>
+diff --git a/08 Evidence-led PRs/exercise-03-performance-and-a11y-evidence-gate/quality-gate-app/src/main.tsx b/08 Evidence-led PRs/exercise-03-performance-and-a11y-evidence-gate/quality-gate-app/src/main.tsx
+index f3cda678824103c205dbd84d7e1acef0dc84f823..15a96a080d6f69758c0667a22b5eff5feefd5d4b 100644
+--- a/08 Evidence-led PRs/exercise-03-performance-and-a11y-evidence-gate/quality-gate-app/src/main.tsx	
++++ b/08 Evidence-led PRs/exercise-03-performance-and-a11y-evidence-gate/quality-gate-app/src/main.tsx	
+@@ -8,12 +8,6 @@ if (!root) {
+   throw new Error("Root element was not found");
+ }
+ 
+-const STARTER_MAIN_THREAD_BLOCK_MS = 3200;
+-const blockStartedAt = performance.now();
+-while (performance.now() - blockStartedAt < STARTER_MAIN_THREAD_BLOCK_MS) {
+-  // Seeded generated-code defect: first render is blocked by synchronous work.
+-}
+-
+ createRoot(root).render(
+   <StrictMode>
+     <App />

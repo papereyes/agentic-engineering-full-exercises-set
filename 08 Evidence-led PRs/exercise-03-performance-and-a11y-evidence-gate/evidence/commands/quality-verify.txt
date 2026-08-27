@@ -1,0 +1,8 @@
+> node ./scripts/verify-quality-evidence.mjs
+Source SHA: 00728a08f6114315fd2ac94d939a9ad64fe05306
+PASS three raw Lighthouse reports use one route and Chrome environment
+PASS pessimistic performance, accessibility, LCP, and axe thresholds met
+PASS raw artifact SHA-256 digests and generated comparison verified
+PASS capture manifest binds configuration, production build, browser, and every raw report
+PASS performance and axe negative controls return non-zero with failed decisions
+PASS Git source binding and evidence-only follow-up history verified

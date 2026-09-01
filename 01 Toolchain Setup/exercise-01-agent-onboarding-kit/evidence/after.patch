@@ -1,0 +1,103 @@
+diff --git a/01 Toolchain Setup/exercise-01-agent-onboarding-kit/agent-onboarding-app/AGENTS.md b/01 Toolchain Setup/exercise-01-agent-onboarding-kit/agent-onboarding-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..25ef3b71ab281d138033545ba3eb3206f22681dc
+--- /dev/null
++++ b/01 Toolchain Setup/exercise-01-agent-onboarding-kit/agent-onboarding-app/AGENTS.md	
+@@ -0,0 +1,18 @@
++# Agent guide
++
++Work only in this app unless the exercise README explicitly requires evidence beside it. Treat the README, `lab-contract.json`, fixtures, verification scripts, and integrity manifests as protected inputs; fix product code instead of weakening checks.
++
++## Start safely
++
++1. Use Node 22.12–24 and install the lockfile with `npm ci`.
++2. Read `package.json`, the relevant `src/` files, and [support notes](docs/support-notes.md) before editing.
++3. Run `npm run agent:check` after changes. Run the task-specific verifier when one exists, then `npm run verify:exercise` only for the final submission.
++
++## Source map and rules
++
++- `src/data/` owns sample data and policy values. Do not duplicate policy constants elsewhere.
++- `src/services/caseRouter.ts` owns reusable routing decisions, risk calculation, and triage ordering. Pass the active policy into behavior that depends on it.
++- `src/App.tsx` owns presentation and filter state. Derive displayed items, their count, and their ordering from one visible list so the UI cannot disagree with itself.
++- `src/types.ts` owns shared domain types; preserve existing status and routing behavior unless the task explicitly changes them.
++
++Keep the diff focused. Reuse the service boundary instead of reimplementing business rules in the component. Preserve existing filters and verify boundary values with the supplied task check.
+diff --git a/01 Toolchain Setup/exercise-01-agent-onboarding-kit/agent-onboarding-app/src/App.tsx b/01 Toolchain Setup/exercise-01-agent-onboarding-kit/agent-onboarding-app/src/App.tsx
+index 2157c31312c1a76f2c410e745ee59967d0fecd1d..9c4ae2fd643bd4aacc2592e2e58b995f61e11e3c 100644
+--- a/01 Toolchain Setup/exercise-01-agent-onboarding-kit/agent-onboarding-app/src/App.tsx	
++++ b/01 Toolchain Setup/exercise-01-agent-onboarding-kit/agent-onboarding-app/src/App.tsx	
+@@ -1,15 +1,27 @@
+ import { useMemo, useState } from "react";
+ import { sampleCases, queuePolicy } from "./data/cases";
+-import { describePolicy, getRoutingHint, sortCasesForTriage } from "./services/caseRouter";
++import { describePolicy, getRoutingHint, needsAttention, sortCasesForTriage } from "./services/caseRouter";
+ import type { CaseStatus } from "./types";
+ 
+-const statuses: Array<CaseStatus | "all"> = ["all", "new", "triaged", "waiting", "blocked"];
++const statuses: Array<CaseStatus | "all" | "needs-attention"> = [
++  "all",
++  "needs-attention",
++  "new",
++  "triaged",
++  "waiting",
++  "blocked"
++];
+ 
+ export default function App() {
+-  const [status, setStatus] = useState<CaseStatus | "all">("all");
++  const [status, setStatus] = useState<CaseStatus | "all" | "needs-attention">("all");
+   const visibleCases = useMemo(() => {
+-    const filtered = status === "all" ? sampleCases : sampleCases.filter((item) => item.status === status);
+-    return sortCasesForTriage(filtered).map((item) => ({
++    const filtered =
++      status === "all"
++        ? sampleCases
++        : status === "needs-attention"
++          ? sampleCases.filter((item) => needsAttention(item, queuePolicy))
++          : sampleCases.filter((item) => item.status === status);
++    return sortCasesForTriage(filtered, queuePolicy).map((item) => ({
+       item,
+       hint: getRoutingHint(item, queuePolicy)
+     }));
+@@ -37,7 +49,7 @@ export default function App() {
+             onClick={() => setStatus(option)}
+             type="button"
+           >
+-            {option}
++            {option === "needs-attention" ? "Needs Attention" : option}
+           </button>
+         ))}
+       </section>
+diff --git a/01 Toolchain Setup/exercise-01-agent-onboarding-kit/agent-onboarding-app/src/services/caseRouter.ts b/01 Toolchain Setup/exercise-01-agent-onboarding-kit/agent-onboarding-app/src/services/caseRouter.ts
+index 08759a577a804cb4be7f13ff73ffe7a9e74e1f5f..78264b61d74df3ea80787e4a15465a31fc859ad0 100644
+--- a/01 Toolchain Setup/exercise-01-agent-onboarding-kit/agent-onboarding-app/src/services/caseRouter.ts	
++++ b/01 Toolchain Setup/exercise-01-agent-onboarding-kit/agent-onboarding-app/src/services/caseRouter.ts	
+@@ -36,10 +36,14 @@ export function getRoutingHint(item: SupportCase, policy: QueuePolicy): RoutingH
+   };
+ }
+ 
+-export function sortCasesForTriage(items: SupportCase[]) {
++export function needsAttention(item: SupportCase, policy: QueuePolicy) {
++  return item.lastActivityHours >= policy.staleAfterHours || item.revenueRiskUsd >= policy.criticalRevenueFloor;
++}
++
++export function sortCasesForTriage(items: SupportCase[], policy: QueuePolicy) {
+   return [...items].sort((first, second) => {
+-    const firstRisk = getRoutingHint(first, defaultPolicyMirror).riskScore;
+-    const secondRisk = getRoutingHint(second, defaultPolicyMirror).riskScore;
++    const firstRisk = getRoutingHint(first, policy).riskScore;
++    const secondRisk = getRoutingHint(second, policy).riskScore;
+     return secondRisk - firstRisk;
+   });
+ }
+@@ -47,10 +51,3 @@ export function sortCasesForTriage(items: SupportCase[]) {
+ export function describePolicy(policy: QueuePolicy) {
+   return `Escalate after ${policy.staleAfterHours} hours or when revenue risk reaches $${policy.criticalRevenueFloor.toLocaleString()}.`;
+ }
+-
+-const defaultPolicyMirror: QueuePolicy = {
+-  staleAfterHours: 18,
+-  criticalRevenueFloor: 75000,
+-  defaultOwner: "support-platform",
+-  restrictedTags: ["billing-export", "vip-contract"]
+-};

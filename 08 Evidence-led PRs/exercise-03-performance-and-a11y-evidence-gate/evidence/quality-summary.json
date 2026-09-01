@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "sourceSha": "00728a08f6114315fd2ac94d939a9ad64fe05306",
+  "sourceSha": "f08168d623b36ad079c544befbada93239c3eb2d",
   "route": "/",
   "aggregation": "pessimistic",
   "thresholds": {
@@ -12,10 +12,10 @@
   "lighthouseRuns": [
     {
       "file": "run-1.json",
-      "sha256": "fa7c4ac46fc3034680c39aded06fc908d18e186a2ef531d288196589d3ac7214",
-      "fetchTime": "2026-08-27T07:12:37.475Z",
+      "sha256": "937ac085b12e98f2c3b33751659033e5e83ca4bf8ebdc2e7c54f2b8d5b0038da",
+      "fetchTime": "2026-09-01T05:39:19.975Z",
       "lighthouseVersion": "13.4.1",
-      "finalUrl": "http://127.0.0.1:33113/",
+      "finalUrl": "http://127.0.0.1:41305/",
       "route": "/",
       "environment": {
         "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.0.0 Safari/537.36",
@@ -33,14 +33,14 @@
       },
       "performance": 1,
       "accessibility": 1,
-      "largestContentfulPaintMs": 1355.3472
+      "largestContentfulPaintMs": 1354.779
     },
     {
       "file": "run-2.json",
-      "sha256": "dfec2773ff03a8065322b699de64e8eb3cc900536910092b9561fb9de7c53537",
-      "fetchTime": "2026-08-27T07:12:44.809Z",
+      "sha256": "fc0464230540f585f7e29f16483fc3978bc16dcdfd5113b01ed9318649bb08ba",
+      "fetchTime": "2026-09-01T05:39:26.172Z",
       "lighthouseVersion": "13.4.1",
-      "finalUrl": "http://127.0.0.1:33113/",
+      "finalUrl": "http://127.0.0.1:41305/",
       "route": "/",
       "environment": {
         "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.0.0 Safari/537.36",
@@ -58,14 +58,14 @@
       },
       "performance": 1,
       "accessibility": 1,
-      "largestContentfulPaintMs": 1352.9099
+      "largestContentfulPaintMs": 1352.3174
     },
     {
       "file": "run-3.json",
-      "sha256": "475bbf971b71b660446f8214da13bdd9a9922cd556f56eead2e857388e6f0687",
-      "fetchTime": "2026-08-27T07:12:51.723Z",
+      "sha256": "7b43bde7c55c3fcd3acbfa58b2ba0e325f5d2ee5adbf1d0aa5f39867dbee49de",
+      "fetchTime": "2026-09-01T05:39:32.250Z",
       "lighthouseVersion": "13.4.1",
-      "finalUrl": "http://127.0.0.1:33113/",
+      "finalUrl": "http://127.0.0.1:41305/",
       "route": "/",
       "environment": {
         "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.0.0 Safari/537.36",
@@ -83,15 +83,15 @@
       },
       "performance": 1,
       "accessibility": 1,
-      "largestContentfulPaintMs": 1409.7759
+      "largestContentfulPaintMs": 1351.9378
     }
   ],
   "axe": {
     "file": "axe.json",
-    "sha256": "19702be58306292b5d7ff60546ef9dca4ec442e46c49b506a11f8716f06b92d5",
-    "testedUrl": "http://127.0.0.1:33113/",
+    "sha256": "40033ca7df3b79fdf12c5b7296b00b432abdf64c6e7db4480fe0130192dcc538",
+    "testedUrl": "http://127.0.0.1:41305/",
     "route": "/",
-    "generatedAt": "2026-08-27T07:12:58.404Z",
+    "generatedAt": "2026-09-01T05:39:38.157Z",
     "browser": {
       "name": "chromium",
       "version": "151.0.7922.34"
@@ -112,7 +112,7 @@
   "worstCase": {
     "performance": 1,
     "accessibility": 1,
-    "largestContentfulPaintMs": 1409.7759,
+    "largestContentfulPaintMs": 1354.779,
     "axeViolations": 0
   },
   "failures": [],

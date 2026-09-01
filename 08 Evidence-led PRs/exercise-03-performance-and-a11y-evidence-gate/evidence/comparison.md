@@ -1,6 +1,6 @@
 # Performance and Accessibility Evidence
 
-Source SHA: 00728a08f6114315fd2ac94d939a9ad64fe05306
+Source SHA: f08168d623b36ad079c544befbada93239c3eb2d
 
 Route: /
 
@@ -14,7 +14,7 @@ Same conditions were used for the Before and After runs. The raw reports below a
 | --- | ---: | ---: | ---: |
 | Performance | 0.82 | 1.00 | >= 0.90 |
 | Accessibility | 0.91 | 1.00 | = 1.00 |
-| LCP | 3380 ms | 1410 ms | <= 2500 ms |
+| LCP | 3380 ms | 1355 ms | <= 2500 ms |
 | Axe violations | 1 | 0 | = 0 |
 
 ## Comparable environment
@@ -31,11 +31,11 @@ Same conditions were used for the Before and After runs. The raw reports below a
 
 | Artifact | SHA-256 | Performance | Accessibility | LCP |
 | --- | --- | ---: | ---: | ---: |
-| run-1.json | fa7c4ac46fc3034680c39aded06fc908d18e186a2ef531d288196589d3ac7214 | 1.00 | 1.00 | 1355 ms |
-| run-2.json | dfec2773ff03a8065322b699de64e8eb3cc900536910092b9561fb9de7c53537 | 1.00 | 1.00 | 1353 ms |
-| run-3.json | 475bbf971b71b660446f8214da13bdd9a9922cd556f56eead2e857388e6f0687 | 1.00 | 1.00 | 1410 ms |
+| run-1.json | 937ac085b12e98f2c3b33751659033e5e83ca4bf8ebdc2e7c54f2b8d5b0038da | 1.00 | 1.00 | 1355 ms |
+| run-2.json | fc0464230540f585f7e29f16483fc3978bc16dcdfd5113b01ed9318649bb08ba | 1.00 | 1.00 | 1352 ms |
+| run-3.json | 7b43bde7c55c3fcd3acbfa58b2ba0e325f5d2ee5adbf1d0aa5f39867dbee49de | 1.00 | 1.00 | 1352 ms |
 
-Axe artifact SHA-256: 19702be58306292b5d7ff60546ef9dca4ec442e46c49b506a11f8716f06b92d5
+Axe artifact SHA-256: 40033ca7df3b79fdf12c5b7296b00b432abdf64c6e7db4480fe0130192dcc538
 
 ## Failure-path proof
 

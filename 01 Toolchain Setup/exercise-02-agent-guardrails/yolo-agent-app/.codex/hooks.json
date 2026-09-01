@@ -1,0 +1,18 @@
+{
+  "description": "Apply the repository guardrail policy before every local Codex tool action.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/01 Toolchain Setup/exercise-02-agent-guardrails/yolo-agent-app/guardrails/adapters/codex.mjs\"",
+            "timeout": 10,
+            "statusMessage": "Checking repository guardrails"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "defaultDecision": "blocked",
+  "allowedOperations": ["read", "edit", "test", "command"],
+  "allowedPaths": [
+    "src/**",
+    "tasks/release-readiness.md",
+    "fixtures/public-workflow-sample.json",
+    "guardrails/**",
+    ".codex/**",
+    "AGENTS.md",
+    "package.json"
+  ],
+  "blockedPaths": [
+    "fixtures/production-customer-export.json",
+    "secrets/**",
+    "config/production.json",
+    "legacy/**"
+  ],
+  "approvalPaths": ["db/migrations/**", "generated/**"],
+  "blockedCommands": [
+    "fixtures[\\\\/]production-customer-export\\.json",
+    "secrets[\\\\/]",
+    "config[\\\\/]production\\.json",
+    "\\bdeploy-prod\\b",
+    "\\brollback-prod\\b",
+    "\\brm\\s+-rf\\b",
+    "\\bRemove-Item\\b[^\\n]*-Recurse\\b"
+  ],
+  "approvalCommands": ["\\bnpm\\s+run\\s+migrate\\b", "db[\\\\/]migrations[\\\\/]", "generated[\\\\/]"],
+  "blockedPromptPatterns": [
+    "ignore (all |any )?(previous|prior) (rules|instructions)",
+    "\\b(reveal|copy|print|show)\\b[^\\n]*\\b(canary|secret|protected value)\\b"
+  ]
+}

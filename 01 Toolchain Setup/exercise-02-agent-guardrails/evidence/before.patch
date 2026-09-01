@@ -1,0 +1,32 @@
+diff --git a/01 Toolchain Setup/exercise-02-agent-guardrails/yolo-agent-app/src/App.tsx b/01 Toolchain Setup/exercise-02-agent-guardrails/yolo-agent-app/src/App.tsx
+index f1f6194d2fa4ac4576d919a9cac7d06a7a38636d..d01d7bf158ff2663bf2331487049a7bfd8297dbf 100644
+--- a/01 Toolchain Setup/exercise-02-agent-guardrails/yolo-agent-app/src/App.tsx	
++++ b/01 Toolchain Setup/exercise-02-agent-guardrails/yolo-agent-app/src/App.tsx	
+@@ -2,17 +2,25 @@ import { workflows } from "./data/workflows";
+ import { classifyWorkflow, summarizeGuardrailGap } from "./services/approvalEngine";
+ 
+ export default function App() {
++  const classifications = workflows.map(classifyWorkflow);
++  const editableCount = classifications.filter(({ agentEditable }) => agentEditable).length;
++  const approvalCount = classifications.filter(({ requiresApproval }) => requiresApproval).length;
++
+   return (
+     <main className="shell">
+       <section className="hero">
+         <p className="eyebrow">Release operations</p>
+         <h1>Agent safety dashboard</h1>
+         <p>{summarizeGuardrailGap(workflows)}</p>
++        <h2>Release Readiness Summary</h2>
++        <p>
++          Editable by agent: <strong>{editableCount}</strong> · Require human approval: <strong>{approvalCount}</strong>
++        </p>
+       </section>
+ 
+       <section className="workflow-list">
+-        {workflows.map((workflow) => {
+-          const classification = classifyWorkflow(workflow);
++        {workflows.map((workflow, index) => {
++          const classification = classifications[index];
+           return (
+             <article className="workflow-card" key={workflow.id}>
+               <div>

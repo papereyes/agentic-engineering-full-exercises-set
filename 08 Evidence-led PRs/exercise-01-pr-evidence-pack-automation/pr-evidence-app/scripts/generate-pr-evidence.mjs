@@ -86,6 +86,16 @@ for (const [index, check] of fixture.checks.entries()) {
     fail(`${label} artifact is unreadable: ${outputPath}`);
   }
 
+  // Filesystem operations follow symbolic links, so an artifact that is textually
+  // inside the fixture directory can still resolve outside it. Validate the
+  // canonical (symlink-resolved) path too, not just the path text.
+  const realFixtureDir = fs.realpathSync(fixtureDir);
+  const realSourcePath = fs.realpathSync(sourcePath);
+  const relativeToRealFixtureDir = path.relative(realFixtureDir, realSourcePath);
+  if (relativeToRealFixtureDir.startsWith("..") || path.isAbsolute(relativeToRealFixtureDir)) {
+    fail(`${label} artifact path escapes the fixture directory through a symbolic link`);
+  }
+
   const filename = path.basename(outputPath);
   if (seenFilenames.has(filename)) fail(`duplicate artifact filename "${filename}"`);
   seenFilenames.add(filename);

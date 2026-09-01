@@ -2,12 +2,19 @@ import { workflows } from "./data/workflows";
 import { classifyWorkflow, summarizeGuardrailGap } from "./services/approvalEngine";
 
 export default function App() {
+  const classifications = workflows.map(classifyWorkflow);
+  const editableCount = classifications.filter(({ agentEditable }) => agentEditable).length;
+  const approvalCount = classifications.filter(({ requiresApproval }) => requiresApproval).length;
+
   return (
     <main className="shell">
       <section className="hero">
         <p className="eyebrow">Release operations</p>
         <h1>Agent safety dashboard</h1>
         <p>{summarizeGuardrailGap(workflows)}</p>
+        <h2>Release Readiness Summary</h2>
+        <p>Editable by agent: {editableCount}</p>
+        <p>Require human approval: {approvalCount}</p>
       </section>
 
       <section className="workflow-list">

@@ -24,15 +24,25 @@ try {
   failures.push("--contract is missing or invalid JSON");
 }
 
-const lighthouse = contract
-  ? readLighthouseReports(lighthouseDir, contract)
-  : { failures: ["contract unavailable, could not validate Lighthouse reports"], runs: [] };
+let lighthouse;
+try {
+  lighthouse = contract
+    ? readLighthouseReports(lighthouseDir, contract)
+    : { failures: ["contract unavailable, could not validate Lighthouse reports"], runs: [] };
+} catch (error) {
+  lighthouse = { failures: [`Lighthouse evidence could not be read: ${error.message}`], runs: [] };
+}
 failures.push(...lighthouse.failures);
 
 const lighthouseMajor = lighthouse.runs[0]?.environment?.browserMajor;
-const axe = contract
-  ? readAxeEvidence(axePath, sourceSha, contract, lighthouseMajor)
-  : { failures: ["contract unavailable, could not validate axe evidence"], axe: null };
+let axe;
+try {
+  axe = contract
+    ? readAxeEvidence(axePath, sourceSha, contract, lighthouseMajor)
+    : { failures: ["contract unavailable, could not validate axe evidence"], axe: null };
+} catch (error) {
+  axe = { failures: [`axe evidence could not be read: ${error.message}`], axe: null };
+}
 failures.push(...axe.failures);
 
 // Every route, browser environment, metric, and digest check above must be

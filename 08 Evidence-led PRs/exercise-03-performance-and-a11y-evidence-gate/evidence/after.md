@@ -45,3 +45,12 @@ Both attempts independently pass the same protected verifier at their own commit
 - Both attempts independently chose the same two-commit structure (implementation, then a separate evidence-only capture commit) and the same `aria-label` accessible-naming approach, without being told to do either.
 
 See `evidence/comparison.md` for the machine-generated protected-baseline-versus-this-implementation comparison (raw Lighthouse/axe evidence, worst-case thresholds, and the failure-path proof).
+
+## Post-review fix (not part of the first-attempt experiment)
+
+PR review found two real defects in the first attempt above (commit `00728a08f6114315fd2ac94d939a9ad64fe05306`, still the commit these first-attempt fields describe):
+
+- `scripts/quality-gate.mjs` did not catch exceptions from `readLighthouseReports`/`readAxeEvidence`. Axe evidence containing JSON `null` (valid JSON, but property access on it throws) crashed the process before it could write `quality-summary.json`, leaving a stale prior summary on disk misreporting `releaseDecision: "passed"`. Fixed by wrapping both calls in `try/catch` so any read failure becomes a normal `failures` entry and a `"failed"` summary is always written.
+- `src/App.tsx`'s icon-only button rendered a download glyph but announced `aria-label="Add work item"` to screen readers — a passing automated accessible-name check does not establish the name is accurate. Changed to `aria-label="Download report"` to match the icon.
+
+These fixes landed in commit `f08168d623b36ad079c544befbada93239c3eb2d`, with browser evidence recaptured against it in a following evidence-only commit. `evidence/quality-summary.json` and the raw Lighthouse/axe reports in this evidence pack are bound to `f08168d...`, not `00728a0...` — the fields above are left unchanged because they document the original, untouched first-attempt experiment, not the current tip of the branch.

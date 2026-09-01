@@ -1,8 +1,131 @@
+Source SHA: f08168d623b36ad079c544befbada93239c3eb2d
+
+=== npm run verify:exercise (fails in this environment) ===
+
+> quality-gate-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+
+node:internal/child_process:1127
+    result.error = new ErrnoException(result.error, 'spawnSync ' + options.file);
+                   ^
+
+<ref *1> Error: spawnSync git ENOBUFS
+    at Object.spawnSync (node:internal/child_process:1127:20)
+    at spawnSync (node:child_process:911:24)
+    at execFileSync (node:child_process:954:15)
+    at git (file:///.../scripts/run-clean-verification.mjs:7:10)
+    at snapshot (file:///.../scripts/run-clean-verification.mjs:26:27)
+    at file:///.../scripts/run-clean-verification.mjs:58:16
+    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)
+    at async node:internal/modules/esm/loader:639:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -105,
+  code: 'ENOBUFS',
+  syscall: 'spawnSync git',
+  path: 'git',
+  spawnargs: [ 'ls-files', '--others', '--ignored', '--exclude-standard', '-z' ],
+  status: null,
+  signal: 'SIGTERM',
+  pid: 14707,
+  stdout: '<truncated: 1,067,ooo+ characters of ignored-file paths under quality-gate-app/node_modules>',
+  stderr: ''
+}
+
+Node.js v25.9.0
+exit: 1
+
+Root cause: run-clean-verification.mjs snapshots ignored files via
+`execFileSync("git", ["ls-files", "--others", "--ignored", "--exclude-standard", "-z"])`
+before filtering node_modules out in JS. quality-gate-app's installed
+dependency tree (Lighthouse + Playwright + axe-core, 15k+ files) produces
+more than 1MB of ignored-path output, and Linux's default pipe buffer
+(/proc/sys/fs/pipe-max-size = 1048576 bytes) cannot hold it, so the
+synchronous git subprocess fails with ENOBUFS. Confirmed independent of
+Node version (reproduced on both system Node v25.9.0 and Node v22.12.0
+matching .nvmrc), independent of sandbox flags, and not reproducible via a
+plain shell pipe (`git ls-files ... | wc -c` succeeds with 2.26MB of
+output) -- isolating it to execFileSync's interaction with the kernel pipe
+cap. Raising fs.pipe-max-size requires root; no passwordless sudo is
+available in this environment, so it was not attempted.
+
+=== npm run verify:exercise:core (unaffected by the above; full transcript) ===
+
+> quality-gate-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+
+
+> quality-gate-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+
+
+> quality-gate-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+
+Verified 44 protected challenge inputs.
+
+> quality-gate-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+
+lint-check passed
+
+> quality-gate-app@0.1.0 test
+> node ./scripts/test-quality-verifier.mjs && node ./scripts/agent-check.mjs
+
+quality evidence verifier self-test passed
+agent-check passed for Performance and Accessibility Release Gate
+
+> quality-gate-app@0.1.0 format
+> node ./scripts/format-check.mjs
+
+format-check passed
+
+> quality-gate-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+
+> quality-gate-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 31 modules transformed.
+rendering chunks...
+computing gzip size...
+built in ~1.1s
+
+> quality-gate-app@0.1.0 verify:implementation
+> npm run quality:verify
+
+> quality-gate-app@0.1.0 quality:verify
 > node ./scripts/verify-quality-evidence.mjs
-Source SHA: 00728a08f6114315fd2ac94d939a9ad64fe05306
+
+Source SHA: f08168d623b36ad079c544befbada93239c3eb2d
 PASS three raw Lighthouse reports use one route and Chrome environment
 PASS pessimistic performance, accessibility, LCP, and axe thresholds met
 PASS raw artifact SHA-256 digests and generated comparison verified
 PASS capture manifest binds configuration, production build, browser, and every raw report
 PASS performance and axe negative controls return non-zero with failed decisions
 PASS Git source binding and evidence-only follow-up history verified
+
+> quality-gate-app@0.1.0 verify:submission
+> node ../../../scripts/comparable-evidence.mjs .. && npm run test:submission
+
+PASS before and after runs use matching conditions and valid Git patches
+PASS both patches match their recorded implementation commits
+PASS protected manifests and inputs match the starting commit
+
+> quality-gate-app@0.1.0 test:submission
+> npm run quality:verify && node ../../../scripts/verify-submission-contract.mjs ./submission-contract.json
+
+> quality-gate-app@0.1.0 quality:verify
+> node ./scripts/verify-quality-evidence.mjs
+
+Source SHA: f08168d623b36ad079c544befbada93239c3eb2d
+PASS three raw Lighthouse reports use one route and Chrome environment
+PASS pessimistic performance, accessibility, LCP, and axe thresholds met
+PASS raw artifact SHA-256 digests and generated comparison verified
+PASS capture manifest binds configuration, production build, browser, and every raw report
+PASS performance and axe negative controls return non-zero with failed decisions
+PASS Git source binding and evidence-only follow-up history verified
+Verified Performance and Accessibility Release Gate: 15 files and 4 directories.
+
+exit: 0

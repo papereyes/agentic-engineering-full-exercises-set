@@ -21,7 +21,8 @@ Fresh-agent commit `3a0b04586999a946b691600de1f74aff816c05d6`, built directly ag
 | `npm run agent:check` | exit 0 | exit 0 |
 | `npm run test:rollout` (6 scenario checks) | 6/6 PASS | 6/6 PASS |
 | Enabled: API calls / telemetry | 1 / 1 | 1 / 1 |
-| Disabled, provider-error, invalid-context, API-failure: API calls / telemetry | 0 / 0 (all four) | 0 / 0 (all four) |
+| Disabled, provider-error, invalid-context: API calls / telemetry | 0 / 0 (all three) | 0 / 0 (all three) |
+| API failure: API calls / telemetry | 1 / 0 (attempted call fails, falls back to legacy) | 1 / 0 (attempted call fails, falls back to legacy) |
 | Targeting key stability (`targetingKey === accountId` passed through unchanged) | Yes | Yes |
 | `npm run rollback:drill` — invalid-input check | rejected, config unchanged | rejected, config unchanged |
 | `npm run rollback:drill` — interruption fault injection | rejected, config unchanged, 0 leftover files | rejected, config unchanged, 0 leftover files |

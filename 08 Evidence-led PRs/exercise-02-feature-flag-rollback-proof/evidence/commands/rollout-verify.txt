@@ -1,7 +1,141 @@
+Source SHA: 3a0b04586999a946b691600de1f74aff816c05d6
+
+=== npm run verify:exercise (fails in this environment) ===
+
+> feature-flag-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+
+node:internal/child_process:1127
+    result.error = new ErrnoException(result.error, 'spawnSync ' + options.file);
+                   ^
+
+<ref *1> Error: spawnSync git ENOBUFS
+    at Object.spawnSync (node:internal/child_process:1127:20)
+    at spawnSync (node:child_process:911:24)
+    at execFileSync (node:child_process:954:15)
+    at git (file:///.../scripts/run-clean-verification.mjs:7:10)
+    at snapshot (file:///.../scripts/run-clean-verification.mjs:26:27)
+    at file:///.../scripts/run-clean-verification.mjs:58:16
+{
+  errno: -105,
+  code: 'ENOBUFS',
+  syscall: 'spawnSync git',
+  path: 'git',
+  spawnargs: [ 'ls-files', '--others', '--ignored', '--exclude-standard', '-z' ],
+  status: null,
+  signal: 'SIGTERM',
+  stdout: '<truncated: 1,067,000+ characters of ignored-file paths, mostly node_modules across every exercise app in this monorepo checkout>',
+  stderr: ''
+}
+
+Node.js v25.9.0
+exit: 1
+
+Root cause: run-clean-verification.mjs snapshots ignored files via
+`execFileSync("git", ["ls-files", "--others", "--ignored", "--exclude-standard", "-z"])`
+before filtering node_modules out in JS. This is a repo-wide git invocation
+(not scoped to this exercise), so it reflects every installed node_modules
+tree across the checkout. Linux's default pipe buffer
+(/proc/sys/fs/pipe-max-size = 1048576 bytes) cannot hold that output, so the
+synchronous git subprocess fails with ENOBUFS. Confirmed independent of
+Node version (system Node v25.9.0 and Node v22.12.0 matching .nvmrc both
+fail identically), independent of sandbox flags, and not reproducible via a
+plain shell pipe (`git ls-files ... | wc -c` succeeds) -- isolating it to
+execFileSync's interaction with the kernel pipe cap. Raising
+fs.pipe-max-size requires root; no passwordless sudo is available in this
+environment, so it was not attempted.
+
+=== npm run verify:exercise:core (unaffected by the above; full transcript) ===
+
+> feature-flag-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+
+> feature-flag-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+
+> feature-flag-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+
+Verified protected challenge inputs.
+
+> feature-flag-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+
+lint-check passed
+
+> feature-flag-app@0.1.0 test
+> node ./scripts/test-rollout-verifier.mjs && node ./scripts/agent-check.mjs
+
+rollout verifier self-test passed
+agent-check passed
+
+> feature-flag-app@0.1.0 format
+> node ./scripts/format-check.mjs
+
+format-check passed
+
+> feature-flag-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+
+> feature-flag-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+
+vite building client environment for production...
+✓ built in ~0.9s
+
+> feature-flag-app@0.1.0 verify:implementation
+> npm run test:rollout
+
+> feature-flag-app@0.1.0 test:rollout
+> node ./scripts/run-rollout-tests.mjs
+
+PASS enabled state evaluates safely and emits after one successful API call
+PASS disabled target stays legacy with no preview side effects
+PASS provider error fails closed with no preview side effects
+PASS mismatched targeting context is rejected before evaluation
+PASS empty targeting context is rejected before evaluation
+PASS preview API error returns legacy without success telemetry
+
+> feature-flag-app@0.1.0 verify:submission
+> node ../../../scripts/comparable-evidence.mjs .. && npm run test:submission
+
+PASS before and after runs use matching conditions and valid Git patches
+PASS both patches match their recorded implementation commits
+PASS protected manifests and inputs match the starting commit
+
+> feature-flag-app@0.1.0 test:submission
+> npm run test:rollout && npm run rollout:verify && node ../../../scripts/verify-submission-contract.mjs ./submission-contract.json
+
+> feature-flag-app@0.1.0 test:rollout
+> node ./scripts/run-rollout-tests.mjs
+
+PASS enabled state evaluates safely and emits after one successful API call
+PASS disabled target stays legacy with no preview side effects
+PASS provider error fails closed with no preview side effects
+PASS mismatched targeting context is rejected before evaluation
+PASS empty targeting context is rejected before evaluation
+PASS preview API error returns legacy without success telemetry
+
+> feature-flag-app@0.1.0 rollout:verify
 > node ./scripts/verify-rollout-submission.mjs
+
 Source SHA: 3a0b04586999a946b691600de1f74aff816c05d6
 PASS enabled evidence proves one evaluation, one API call, and one accurate telemetry event
 PASS disabled and provider-error evidence prove legacy behavior with zero preview side effects
 PASS rollback drill atomically disables the flag, clears targeting, records audit data, and meets the 1000 ms objective
 PASS protected scenarios and rollback drill reproduce from the submitted implementation
 PASS Git source binding and evidence-only follow-up history verified
+Verified Feature Flag Kill-Switch Proof: 12 files and 2 directories.
+
+exit: 0
+
+=== Scenario proof: "API failure" makes one attempted API call, not zero ===
+
+scripts/run-rollout-tests.mjs (agent-authored, unmodified) asserts:
+  assert.deepEqual(result.observations.apiCalls, [{ accountId: "acct-100" }]);
+for the "preview API error returns legacy without success telemetry" check,
+i.e. loadPreview() is called and throws (src/rollout/invoicePreview.mjs:31),
+the error is caught, and the outcome falls back to legacy with zero
+telemetry events. This distinguishes a failed request (1 API call, 0
+telemetry) from a request that never happened (0 API calls, 0 telemetry) as
+in the disabled/provider-error/invalid-context rows above.

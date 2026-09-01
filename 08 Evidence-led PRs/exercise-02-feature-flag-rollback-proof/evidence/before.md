@@ -17,7 +17,7 @@
 | Disabled | legacy | 0 | 0 | 0 |
 | Provider error | legacy | 0 | 0 | 0 |
 | Invalid context | legacy | 0 | 0 | 0 |
-| API failure | legacy | 0 | 0 | 0 |
+| API failure | legacy | 1 | 0 | 0 |
 
 - Files changed: 2 (`src/rollout/invoicePreview.mjs`, `scripts/rollback-invoice-preview.mjs`)
 - Lines added / removed: +116 / -11

@@ -1,13 +1,123 @@
-$ npm run evidence:verify
+Source SHA: 20f968187098d5cfcbcc9d3887f3cac45f862c1e
+
+=== npm run verify:exercise (fails in this environment) ===
+
+> pr-evidence-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+
+node:internal/child_process:1127
+    result.error = new ErrnoException(result.error, 'spawnSync ' + options.file);
+                   ^
+
+<ref *1> Error: spawnSync git ENOBUFS
+    at Object.spawnSync (node:internal/child_process:1127:20)
+    at spawnSync (node:child_process:911:24)
+    at execFileSync (node:child_process:954:15)
+    at git (file:///.../scripts/run-clean-verification.mjs:7:10)
+    at snapshot (file:///.../scripts/run-clean-verification.mjs:26:27)
+    at file:///.../scripts/run-clean-verification.mjs:58:16
+{
+  errno: -105,
+  code: 'ENOBUFS',
+  syscall: 'spawnSync git',
+  path: 'git',
+  spawnargs: [ 'ls-files', '--others', '--ignored', '--exclude-standard', '-z' ],
+  status: null,
+  signal: 'SIGTERM',
+  stdout: '<truncated: 1,067,000+ characters of ignored-file paths, mostly node_modules across every exercise app in this monorepo checkout>',
+  stderr: ''
+}
+
+Node.js v25.9.0
+exit: 1
+
+Root cause: run-clean-verification.mjs snapshots ignored files via
+`execFileSync("git", ["ls-files", "--others", "--ignored", "--exclude-standard", "-z"])`
+before filtering node_modules out in JS. This is a repo-wide git invocation
+(not scoped to this exercise), so it reflects every installed node_modules
+tree across the checkout. Linux's default pipe buffer
+(/proc/sys/fs/pipe-max-size = 1048576 bytes) cannot hold that output, so the
+synchronous git subprocess fails with ENOBUFS. Confirmed independent of
+Node version (system Node v25.9.0 and Node v22.12.0 matching .nvmrc both
+fail identically), independent of sandbox flags, and not reproducible via a
+plain shell pipe (`git ls-files ... | wc -c` succeeds) -- isolating it to
+execFileSync's interaction with the kernel pipe cap. Raising
+fs.pipe-max-size requires root; no passwordless sudo is available in this
+environment, so it was not attempted.
+
+=== npm run verify:exercise:core (unaffected by the above; full transcript) ===
+
+> pr-evidence-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+
+> pr-evidence-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+
+> pr-evidence-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+
+Verified 27 protected challenge inputs.
+
+> pr-evidence-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+
+lint-check passed
+
+> pr-evidence-app@0.1.0 test
+> node ./scripts/test-evidence-verifier.mjs && node ./scripts/agent-check.mjs
+
+PR evidence verifier self-test passed
+agent-check passed for Failure-Preserving PR Evidence Pack
+
+> pr-evidence-app@0.1.0 format
+> node ./scripts/format-check.mjs
+
+format-check passed
+
+> pr-evidence-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+
+> pr-evidence-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+
+vite v7.3.6 building client environment for production...
+✓ 31 modules transformed.
+✓ built in ~0.8s
+
+> pr-evidence-app@0.1.0 verify:implementation
+> npm run evidence:verify
 
 > pr-evidence-app@0.1.0 evidence:verify
 > node ./scripts/verify-evidence-submission.mjs
 
-Source SHA: 2f719be07e54362969a43abf20f8ab22b9c3b111
+Source SHA: 20f968187098d5cfcbcc9d3887f3cac45f862c1e
 PASS submitted failing pack preserves all fixture results and artifact bytes
 PASS generator preserves the first failing exit code for single and multiple failures, and exit 0 for all-passing results
 PASS generator rejects missing artifacts, path traversal, and inconsistent result fixtures without writing a pack
 PASS .github/workflows/evidence-led-pr-01.yml uses pull_request, read-only permissions, pinned actions, stable paths, always-run verification and upload, and no failure masking
 PASS Git history contains the generator and workflow at source SHA; later changes are evidence only
 PASS verified evidence contract for 08 Evidence-led PRs/exercise-01-pr-evidence-pack-automation
-exit code: 0
+
+> pr-evidence-app@0.1.0 verify:submission
+> node ../../../scripts/comparable-evidence.mjs .. && npm run test:submission
+
+PASS before and after runs use matching conditions and valid Git patches
+PASS both patches match their recorded implementation commits
+PASS protected manifests and inputs match the starting commit
+
+> pr-evidence-app@0.1.0 test:submission
+> npm run evidence:verify && node ../../../scripts/verify-submission-contract.mjs ./submission-contract.json
+
+> pr-evidence-app@0.1.0 evidence:verify
+> node ./scripts/verify-evidence-submission.mjs
+
+Source SHA: 20f968187098d5cfcbcc9d3887f3cac45f862c1e
+PASS submitted failing pack preserves all fixture results and artifact bytes
+PASS generator preserves the first failing exit code for single and multiple failures, and exit 0 for all-passing results
+PASS generator rejects missing artifacts, path traversal, and inconsistent result fixtures without writing a pack
+PASS .github/workflows/evidence-led-pr-01.yml uses pull_request, read-only permissions, pinned actions, stable paths, always-run verification and upload, and no failure masking
+PASS Git history contains the generator and workflow at source SHA; later changes are evidence only
+PASS verified evidence contract for 08 Evidence-led PRs/exercise-01-pr-evidence-pack-automation
+Verified Failure-Preserving PR Evidence Pack: 14 files and 4 directories.
+
+exit: 0

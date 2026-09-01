@@ -49,7 +49,7 @@ index 0000000000000000000000000000000000000000..675b9e16d93b0c384d7e1957e9b377b7
 +          retention-days: 7
 diff --git a/08 Evidence-led PRs/exercise-01-pr-evidence-pack-automation/pr-evidence-app/scripts/generate-pr-evidence.mjs b/08 Evidence-led PRs/exercise-01-pr-evidence-pack-automation/pr-evidence-app/scripts/generate-pr-evidence.mjs
 new file mode 100644
-index 0000000000000000000000000000000000000000..c3b58c74f4ba3de0cb444ee24f8d31643812bd6a
+index 0000000000000000000000000000000000000000..1a40db820614abd2e221bd88ed123a50e52fd64e
 --- /dev/null
 +++ b/08 Evidence-led PRs/exercise-01-pr-evidence-pack-automation/pr-evidence-app/scripts/generate-pr-evidence.mjs	
 @@ -0,0 +1,165 @@
@@ -217,4 +217,4 @@ index 0000000000000000000000000000000000000000..c3b58c74f4ba3de0cb444ee24f8d3164
 +
 +fs.writeFileSync(path.join(outputRoot, "summary.md"), `${summaryLines.join("\n")}\n`);
 +
-+process.exitCode = pack.overallExitCode;
++process.exit(pack.overallExitCode);

@@ -54,7 +54,11 @@ export function evaluateAction(policy, action) {
   if (!policy.allowedOperations.includes(action.operation)) {
     return { decision: policy.defaultDecision, reason: "Operation is not allowed" };
   }
-  if (action.operation === "command" && command) return { decision: "allowed", reason: "Command is allowed" };
+  if (command) {
+    return matchesRegex(policy.allowedCommands ?? [], command)
+      ? { decision: "allowed", reason: "Command matches an allow rule" }
+      : { decision: policy.defaultDecision, reason: "Command has no allow rule" };
+  }
   if (normalizedPaths.length && normalizedPaths.every((value) => policy.allowedPaths.some((pattern) => matchesGlob(pattern, value)))) {
     return { decision: "allowed", reason: "Operation and path are allowed" };
   }

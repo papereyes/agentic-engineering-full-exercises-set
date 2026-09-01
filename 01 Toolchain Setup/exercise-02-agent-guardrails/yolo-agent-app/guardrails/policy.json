@@ -18,6 +18,12 @@
     "legacy/**"
   ],
   "approvalPaths": ["db/migrations/**", "generated/**"],
+  "allowedCommands": [
+    "^(?:rtk\\s+)?npm\\s+ci$",
+    "^(?:rtk\\s+)?npm\\s+run\\s+(?:test|agent:check|verify:implementation|test:policy-engine|test:guardrails|verify:submission|verify:exercise|lint|format|typecheck|build)$",
+    "^(?:rtk\\s+)?git\\s+(?:status(?:\\s+--short(?:\\s+--branch)?)?|diff\\s+--check)$",
+    "^(?:rtk\\s+)?node\\s+--test\\s+\\./tests/review-regressions\\.test\\.mjs$"
+  ],
   "blockedCommands": [
     "fixtures[\\\\/]production-customer-export\\.json",
     "secrets[\\\\/]",

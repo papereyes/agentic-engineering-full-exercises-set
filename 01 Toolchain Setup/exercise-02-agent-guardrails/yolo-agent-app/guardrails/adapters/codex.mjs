@@ -21,6 +21,10 @@ function actionFromHook(event) {
   return { operation, path: candidatePath, command, prompt: input.prompt, symlinkTarget: input.symlinkTarget };
 }
 
+export function evaluateHookEvent(policy, event) {
+  return evaluateShared(policy, actionFromHook(event));
+}
+
 async function runHook() {
   try {
     let input = "";
@@ -28,7 +32,7 @@ async function runHook() {
     const event = JSON.parse(input);
     const appRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
     const policy = JSON.parse(await fs.promises.readFile(path.join(appRoot, "guardrails/policy.json"), "utf8"));
-    const result = evaluateShared(policy, actionFromHook(event));
+    const result = evaluateHookEvent(policy, event);
     const allowed = result.decision === "allowed";
     process.stdout.write(JSON.stringify({
       hookSpecificOutput: {

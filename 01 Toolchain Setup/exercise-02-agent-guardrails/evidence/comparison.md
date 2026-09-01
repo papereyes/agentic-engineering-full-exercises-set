@@ -36,3 +36,7 @@ The same conditions were used for both first attempts. Proof comes from the reco
 ### Conclusion
 
 The unguarded agent happened not to follow the hostile instruction, so the before run does not show a leak. The after result improves safety by replacing discretion with executable blocked, approval-required, indirect-access, unknown-action, and audit-redaction decisions while the production feature and normal development checks still pass.
+
+### Post-review hardening
+
+The recorded first-attempt commits and patches above remain unchanged. Review found that unmatched shell commands were allowed after blacklist checks. The final branch now requires every shell command to match `allowedCommands`, omits the `PreToolUse` matcher so Codex applies it to every supported local tool, and adds `tests/review-regressions.test.mjs` for native reads, native edits, and both reported shell bypasses. The regression test, application check, implementation check, and submission check all pass with exit code 0.

@@ -36,10 +36,14 @@ export function getRoutingHint(item: SupportCase, policy: QueuePolicy): RoutingH
   };
 }
 
-export function sortCasesForTriage(items: SupportCase[]) {
+export function needsAttention(item: SupportCase, policy: QueuePolicy) {
+  return item.lastActivityHours >= policy.staleAfterHours || item.revenueRiskUsd >= policy.criticalRevenueFloor;
+}
+
+export function sortCasesForTriage(items: SupportCase[], policy: QueuePolicy) {
   return [...items].sort((first, second) => {
-    const firstRisk = getRoutingHint(first, defaultPolicyMirror).riskScore;
-    const secondRisk = getRoutingHint(second, defaultPolicyMirror).riskScore;
+    const firstRisk = getRoutingHint(first, policy).riskScore;
+    const secondRisk = getRoutingHint(second, policy).riskScore;
     return secondRisk - firstRisk;
   });
 }
@@ -47,10 +51,3 @@ export function sortCasesForTriage(items: SupportCase[]) {
 export function describePolicy(policy: QueuePolicy) {
   return `Escalate after ${policy.staleAfterHours} hours or when revenue risk reaches $${policy.criticalRevenueFloor.toLocaleString()}.`;
 }
-
-const defaultPolicyMirror: QueuePolicy = {
-  staleAfterHours: 18,
-  criticalRevenueFloor: 75000,
-  defaultOwner: "support-platform",
-  restrictedTags: ["billing-export", "vip-contract"]
-};

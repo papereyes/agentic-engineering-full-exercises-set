@@ -1,15 +1,27 @@
 import { useMemo, useState } from "react";
 import { sampleCases, queuePolicy } from "./data/cases";
-import { describePolicy, getRoutingHint, sortCasesForTriage } from "./services/caseRouter";
+import { describePolicy, getRoutingHint, needsAttention, sortCasesForTriage } from "./services/caseRouter";
 import type { CaseStatus } from "./types";
 
-const statuses: Array<CaseStatus | "all"> = ["all", "new", "triaged", "waiting", "blocked"];
+const statuses: Array<CaseStatus | "all" | "needs-attention"> = [
+  "all",
+  "needs-attention",
+  "new",
+  "triaged",
+  "waiting",
+  "blocked"
+];
 
 export default function App() {
-  const [status, setStatus] = useState<CaseStatus | "all">("all");
+  const [status, setStatus] = useState<CaseStatus | "all" | "needs-attention">("all");
   const visibleCases = useMemo(() => {
-    const filtered = status === "all" ? sampleCases : sampleCases.filter((item) => item.status === status);
-    return sortCasesForTriage(filtered).map((item) => ({
+    const filtered =
+      status === "all"
+        ? sampleCases
+        : status === "needs-attention"
+          ? sampleCases.filter((item) => needsAttention(item, queuePolicy))
+          : sampleCases.filter((item) => item.status === status);
+    return sortCasesForTriage(filtered, queuePolicy).map((item) => ({
       item,
       hint: getRoutingHint(item, queuePolicy)
     }));
@@ -37,7 +49,7 @@ export default function App() {
             onClick={() => setStatus(option)}
             type="button"
           >
-            {option}
+            {option === "needs-attention" ? "Needs Attention" : option}
           </button>
         ))}
       </section>

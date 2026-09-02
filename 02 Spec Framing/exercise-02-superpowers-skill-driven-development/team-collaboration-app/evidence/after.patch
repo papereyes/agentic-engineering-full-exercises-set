@@ -1,5 +1,5 @@
 diff --git a/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/App.tsx b/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/App.tsx
-index 40c9371..64f4abf 100644
+index 40c93716ebf0a9ec5c85f61143598da68e5a88a9..64f4abf9ea5c6f6d996c68d8ed08fd1e34a524b3 100644
 --- a/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/App.tsx	
 +++ b/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/App.tsx	
 @@ -1,17 +1,118 @@
@@ -124,7 +124,7 @@ index 40c9371..64f4abf 100644
              <div>
                <p className="eyebrow">{member.id}</p>
 diff --git a/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/services/invitationService.ts b/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/services/invitationService.ts
-index d861faf..c697f6e 100644
+index d861faf9d83c2b1dc5db097f7afea50490f38fc2..c697f6e2533799ae8e353dff68da4b736bfedc56 100644
 --- a/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/services/invitationService.ts	
 +++ b/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/services/invitationService.ts	
 @@ -5,15 +5,92 @@ import type {
@@ -227,7 +227,7 @@ index d861faf..c697f6e 100644
 +  };
  }
 diff --git a/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/styles.css b/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/styles.css
-index 8f57ec1..1a12cb9 100644
+index 8f57ec1ae522368112bea42aefc8be860b5d8a5e..1a12cb9bddc8c14575d28b968417f820f6a756bd 100644
 --- a/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/styles.css	
 +++ b/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/styles.css	
 @@ -33,6 +33,91 @@ body {

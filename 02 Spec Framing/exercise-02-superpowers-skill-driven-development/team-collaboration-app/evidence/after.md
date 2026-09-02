@@ -3,7 +3,7 @@
 ### Run
 
 - Starting commit: 52090edddf032d026ece16ef90feb627bf8e67ac
-- Implementation commit: working tree on exercise-02-02-after
+- Implementation commit: 5e8b4dea96d1bda789d48b2fc8eaff132f35f396
 - Agent: OpenAI Codex
 - Model: gpt-5.6-sol, medium reasoning
 - Tools: Codex workspace tools
@@ -15,6 +15,7 @@
 - Superpowers available: Yes; superpowers:brainstorming, design approval, planning, test-driven development, review, and verification governed the run
 - Prompt: Add a Team Invitations section. An active owner or admin allowed by the workspace policy may invite an email as a member or guest. Guest invitations are allowed only when the workspace policy permits them. Prevent invitations for existing members or an email with a pending invitation. Invitations must use the configured expiry period and may be accepted or revoked only once. Rejected actions must not change invitation or member data.
 - Patch: `evidence/after.patch`
+- Patch SHA-256: 57d1adae67cb2e2099a0b8524946ed0f06e524158e38f7cfd5874df4312feb73
 
 ### Results
 
@@ -24,7 +25,7 @@
 | `npm run submission:verify` | Pass; exit code: 0; workflow evidence, implementation wiring, and challenge integrity complete |
 | `npm run agent:check` | Pass; exit code: 0; protected challenge files unchanged |
 | `npm run verify:exercise:core` | Pass; exit code: 0; integrity, implementation, submission, typecheck, and build gates complete |
-| `npm run verify:exercise` | Environment-blocked; the clean wrapper received `EPERM` while its Node process spawned `git rev-parse`; the full core target passed directly |
+| `npm run verify:exercise` | Pass; exit code: 0; the full core suite completed and left tracked, index, untracked, and ignored state unchanged |
 | Design created before code | Yes; approved design committed as 672ec99 |
 | Plan created before code | Yes; implementation plan committed as 5e8b5f7 |
 | Failing test recorded first | Yes; see `evidence/tdd.md` |

@@ -1,0 +1,105 @@
+diff --git a/03 Context Engineering/exercise-02-domain-modeling-product-rules-rescue/CONTEXT.md b/03 Context Engineering/exercise-02-domain-modeling-product-rules-rescue/CONTEXT.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..ce633d0b33598b7bf3c458ee2aeab4702b234d5f
+--- /dev/null
++++ b/03 Context Engineering/exercise-02-domain-modeling-product-rules-rescue/CONTEXT.md	
+@@ -0,0 +1,47 @@
++# Workspace AI-History Export
++
++This context names the product and access-control concepts used for AI-history export. Terminology follows [the approved access policy](docs/current-access-policy.md); the boundary decision is recorded in [ADR 0001](docs/adr/0001-ai-history-export.md).
++
++## Language
++
++**Billing Customer**:
++The commercial entity that pays for one or more Workspaces. It is not a product-access boundary.
++_Avoid_: Account
++
++**Billing Ownership**:
++The billing relationship between a User and a Billing Customer. Billing ownership never grants export access.
++_Avoid_: Workspace ownership
++
++**User**:
++A person who may request access to a Workspace through a Membership.
++_Avoid_: Account
++
++**Workspace**:
++The product and data-security boundary whose plan, Data Residency, Memberships, and AI History are evaluated independently.
++_Avoid_: Account
++
++**Membership**:
++The relationship connecting exactly one User to exactly one Workspace. Authorization uses the Membership for the requesting User in the same Workspace being exported.
++_Avoid_: Account access
++
++**Membership Role**:
++A permission label attached to a Membership and scoped only to that Membership's Workspace. The canonical administrative role is `admin`.
++_Avoid_: Global role
++
++**Membership Status**:
++The lifecycle state of a Membership. Only `active` participates in authorization; `suspended` represents no access.
++
++**Data Residency**:
++The Workspace's data-handling mode. `standard` can participate in export eligibility; `restricted` cannot.
++
++**Workspace Plan**:
++The product tier assigned to a Workspace. Only `Enterprise` can participate in export eligibility.
++
++**AI History**:
++The Workspace-scoped history produced by AI features. It belongs to one Workspace's security and residency boundary.
++
++**AI-History Export**:
++The operation that releases a Workspace's AI History to the requesting User.
++
++**Export Eligibility**:
++The state in which the Workspace is Enterprise with standard Data Residency and the requesting User has an active admin Membership in that same Workspace. Every relationship and condition is required.
+diff --git a/03 Context Engineering/exercise-02-domain-modeling-product-rules-rescue/docs/adr/0001-ai-history-export.md b/03 Context Engineering/exercise-02-domain-modeling-product-rules-rescue/docs/adr/0001-ai-history-export.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..4a21b6b0e8a9da04c5bba339e8d84d421c8819fa
+--- /dev/null
++++ b/03 Context Engineering/exercise-02-domain-modeling-product-rules-rescue/docs/adr/0001-ai-history-export.md	
+@@ -0,0 +1,21 @@
++---
++status: accepted
++---
++
++# Authorize AI-history export at the workspace-membership boundary
++
++## Decision
++
++AI-history export is authorized only when the Workspace plan is `Enterprise`, its Data Residency is `standard`, and the requesting User has an `active` Membership with the `admin` Role in that same Workspace. Billing ownership does not grant Workspace access or export authority.
++
++The authoritative source is `docs/current-access-policy.md`. The support scenario in `docs/support-example.md` demonstrates the boundary without replacing that policy.
++
++## Rejected Interpretations
++
++- The Growth-tier and billing-owner interpretation from `docs/legacy-rollout-notes.md` is rejected because that document is a superseded draft.
++- A matching admin label without matching Membership user, Membership status, and same-Workspace scope is insufficient.
++- The completion claim in `docs/previous-agent-progress.md` is unsupported because it follows the legacy interpretation.
++
++## Consequences
++
++Authorization must fail closed when any plan, data-residency, user, Workspace, status, or Role condition is absent or mismatched. A User who owns the Billing Customer still needs an eligible active admin Membership in the Workspace being exported.
+diff --git a/03 Context Engineering/exercise-02-domain-modeling-product-rules-rescue/product-rules-app/src/services/aiHistoryExportPolicy.ts b/03 Context Engineering/exercise-02-domain-modeling-product-rules-rescue/product-rules-app/src/services/aiHistoryExportPolicy.ts
+index fb368e8db888c9a23654abf9a038f8ab6ec2d90e..de57fca29d6bbc42a36b5026e764a357911ada44 100644
+--- a/03 Context Engineering/exercise-02-domain-modeling-product-rules-rescue/product-rules-app/src/services/aiHistoryExportPolicy.ts	
++++ b/03 Context Engineering/exercise-02-domain-modeling-product-rules-rescue/product-rules-app/src/services/aiHistoryExportPolicy.ts	
+@@ -24,12 +24,13 @@ export interface ExportAuthorizationContext {
+   membership: WorkspaceMembership | null;
+ }
+ 
+-/**
+- * Seeded previous-agent implementation. It follows the legacy `account owner`
+- * rule and treats a role name as sufficient without checking its scope.
+- */
+ export function canExportAIHistory(context: ExportAuthorizationContext) {
+-  const isLegacyAccountOwner = context.billingCustomer.ownerUserId === context.callerUserId;
+-  const hasAdminLabel = context.membership?.role === "admin";
+-  return context.workspace.plan !== "Starter" && (isLegacyAccountOwner || hasAdminLabel);
++  return (
++    context.workspace.plan === "Enterprise" &&
++    context.workspace.dataResidency === "standard" &&
++    context.membership?.userId === context.callerUserId &&
++    context.membership.workspaceId === context.workspace.id &&
++    context.membership.status === "active" &&
++    context.membership.role === "admin"
++  );
+ }

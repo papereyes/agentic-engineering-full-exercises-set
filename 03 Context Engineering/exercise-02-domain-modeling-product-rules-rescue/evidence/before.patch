@@ -1,0 +1,25 @@
+diff --git a/03 Context Engineering/exercise-02-domain-modeling-product-rules-rescue/product-rules-app/src/services/aiHistoryExportPolicy.ts b/03 Context Engineering/exercise-02-domain-modeling-product-rules-rescue/product-rules-app/src/services/aiHistoryExportPolicy.ts
+index fb368e8db888c9a23654abf9a038f8ab6ec2d90e..de57fca29d6bbc42a36b5026e764a357911ada44 100644
+--- a/03 Context Engineering/exercise-02-domain-modeling-product-rules-rescue/product-rules-app/src/services/aiHistoryExportPolicy.ts	
++++ b/03 Context Engineering/exercise-02-domain-modeling-product-rules-rescue/product-rules-app/src/services/aiHistoryExportPolicy.ts	
+@@ -24,12 +24,13 @@ export interface ExportAuthorizationContext {
+   membership: WorkspaceMembership | null;
+ }
+ 
+-/**
+- * Seeded previous-agent implementation. It follows the legacy `account owner`
+- * rule and treats a role name as sufficient without checking its scope.
+- */
+ export function canExportAIHistory(context: ExportAuthorizationContext) {
+-  const isLegacyAccountOwner = context.billingCustomer.ownerUserId === context.callerUserId;
+-  const hasAdminLabel = context.membership?.role === "admin";
+-  return context.workspace.plan !== "Starter" && (isLegacyAccountOwner || hasAdminLabel);
++  return (
++    context.workspace.plan === "Enterprise" &&
++    context.workspace.dataResidency === "standard" &&
++    context.membership?.userId === context.callerUserId &&
++    context.membership.workspaceId === context.workspace.id &&
++    context.membership.status === "active" &&
++    context.membership.role === "admin"
++  );
+ }

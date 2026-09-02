@@ -1,0 +1,361 @@
+diff --git a/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/clarifications.md b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/clarifications.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..a9fa967cb2f27df3c1434e1f11b5c47448049171
+--- /dev/null
++++ b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/clarifications.md	
+@@ -0,0 +1,41 @@
++# Subscription management clarifications
++
++## Q1: Which account roles may perform each subscription action?
++
++- Category: Authorization, Scope
++- Repository evidence: `docs/stakeholder-notes.md` says account owners and billing admins should manage plans and viewers remain read-only, while cancellation authority is explicitly unclear; `src/types.ts` defines only `account_owner`, `billing_admin`, and `viewer` roles.
++- Status: Assumption
++- Decision: Account owners may change plans, change seats, and cancel; billing admins may change plans and seats but may not cancel; viewers remain read-only.
++- Consequence: Both the interface and the mutation boundary must enforce the action matrix, and the owner-only cancellation rule must be confirmed before implementation ships.
++
++## Q2: When do plan, seat, and cancellation changes take effect?
++
++- Category: Billing, Scope
++- Repository evidence: `docs/billing-constraints.md` supports immediate upgrades and seat increases plus term-end downgrades and cancellations, while `docs/stakeholder-notes.md` contains a conflicting support expectation for immediate decreases and does not settle seat-decrease timing.
++- Status: Assumption
++- Decision: Upgrades and seat increases apply immediately with provider-calculated proration; downgrades, seat decreases, and cancellations are scheduled for the renewal date, with no immediate cancellation refund.
++- Consequence: Every charged change needs a provider preview before confirmation, and the product must label scheduled changes rather than promise unsupported immediate decreases or refunds.
++
++## Q3: How are pending requests and retries kept from creating conflicts or duplicate charges?
++
++- Category: Billing, Failure
++- Repository evidence: `docs/billing-constraints.md` confirms one pending plan-change request per account, asynchronous webhook completion, conflict responses for a second request, and duplicate-charge risk when retries change the idempotency key; `src/types.ts` already exposes `pendingChange` on the account.
++- Status: Confirmed
++- Decision: An account with pending work cannot submit another change; accepted work stays pending until its final webhook result, and an unknown-outcome retry reuses the original request and idempotency key.
++- Consequence: The service must enforce one pending request, preserve retry identity, and keep the interface from presenting an accepted request as already applied.
++
++## Q4: What customer-visible state and recovery are required when billing fails?
++
++- Category: Failure, Scope
++- Repository evidence: `docs/stakeholder-notes.md` requires clear pending, rejected, and post-submission failure states; `docs/billing-constraints.md` says provider errors contain internal details that require safe translation, but neither source defines when a failed request may be retried.
++- Status: Assumption
++- Decision: Rejections leave the subscription unchanged and allow correction; asynchronous failures remain visible with a safe message, and a new attempt is allowed only after reconciliation confirms no charge, applied change, or pending request.
++- Consequence: Raw provider errors never reach customer-visible state, and recovery must reconcile the authoritative result before issuing a fresh preview or idempotency key.
++
++## Q5: Which requested-adjacent capabilities are outside the first release?
++
++- Category: Scope, Authorization
++- Repository evidence: `docs/stakeholder-notes.md` says an Enterprise approval workflow is unresolved and only asks for a complete first release; `docs/billing-constraints.md` does not support automatic immediate-cancellation refunds, while `src/App.tsx` currently provides only a subscription overview.
++- Status: Assumption
++- Decision: The first release covers plan changes, positive-integer seat changes, and term-end cancellation; Enterprise approval workflows, cadence changes, payment methods, immediate decreases, automatic refunds, concurrent requests, and support-agent tools are out of scope.
++- Consequence: Enterprise accounts use the same role rules until a separate approval policy is confirmed, and implementation tasks must not invent unsupported billing or administration workflows.
+diff --git a/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/plan.md b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/plan.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..9e8ce24c0afbe634c70a38385e778004eee7c65f
+--- /dev/null
++++ b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/plan.md	
+@@ -0,0 +1,80 @@
++# Subscription management technical plan
++
++## Approach
++
++Keep the existing React application and native browser controls. Extend the current account model and `subscriptionService` client rather than introducing state-management, form, or component libraries. Billing mutations must use an existing trusted server deployment because this repository contains no server runtime and provider credentials, authorization, idempotency, and webhooks cannot safely live in the browser.
++
++The minimal HTTP contract is:
++
++- `GET /api/accounts/:accountId/subscription` returns the authoritative subscription, caller permissions, available plans, and current request.
++- `POST /api/accounts/:accountId/subscription/preview` accepts only the action and requested value, then returns a provider-backed preview ID, effect timing/date, currency, price impact, and expiry.
++- `POST /api/accounts/:accountId/subscription/changes` accepts the preview ID and an `Idempotency-Key` header, authorizes again, rejects stale previews or pending conflicts, and returns the request state.
++- The existing billing integration consumes verified webhooks, deduplicates provider event IDs, reconciles the request, and exposes the resulting state through the GET endpoint.
++
++The API uses safe error codes (`forbidden`, `invalid_change`, `preview_expired`, `pending_conflict`, `provider_unavailable`, `reconciliation_required`) plus customer-safe messages. Raw provider payloads stay server-side.
++
++## Delivery sequence
++
++### PLAN-001 Confirm policy and API contract
++
++Requirements: REQ-001, REQ-002, REQ-003, REQ-004, REQ-006, REQ-008.
++
++- Obtain approval for the assumptions recorded in Q1, Q2, Q4, and Q5 before production release.
++- Agree the three HTTP payloads, stable error codes, preview expiry behavior, idempotency ownership, and webhook event identifiers with the existing billing integration owner.
++- Define the server transaction/constraint that enforces one pending request per account and the audit fields in REQ-008.
++- Do not add a server framework to this frontend repository; server changes belong beside the existing billing integration.
++
++### PLAN-002 Extend domain types and the existing service seam
++
++Requirements: REQ-002, REQ-003, REQ-004, REQ-005, REQ-006.
++
++- In `src/types.ts`, replace free-text pending state with typed action, preview, permissions, request status, price impact, and safe error shapes while preserving current account display fields.
++- In `src/services/subscriptionService.ts`, retain the display helpers and add small `fetch` functions for load, preview, and submit. Generate one idempotency key when confirmation begins and retain it for retries of that confirmation.
++- Map HTTP status/error codes to typed outcomes; never return raw provider response text to UI components.
++- Keep effect-timing and authorization decisions server-authored. The client may render them but must not calculate or override them.
++
++### PLAN-003 Build the management flow in the current screen
++
++Requirements: REQ-001, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007.
++
++- In `src/App.tsx`, load authoritative account data, render actions from server permissions, and use a single native form for plan, seats, or cancellation.
++- Validate basic presence and positive-integer seat input before preview; treat server validation as authoritative.
++- Render a separate confirmation state from the returned preview. Disable confirmation during submission, show pending state after acceptance, and refresh authoritative state after completion or page reload.
++- For pending or reconciliation-required accounts, show the request summary and status instead of mutation controls.
++- Add only the styles needed for form layout, focus visibility, status/error presentation, and destructive confirmation in `src/styles.css`.
++
++### PLAN-004 Implement trusted billing orchestration
++
++Requirements: REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-008.
++
++- At the existing server billing boundary, authorize from the authenticated account membership on every preview and submission.
++- Ask the provider for the preview, persist its opaque identifier and expiry, and verify the account/current state again during submission.
++- Atomically create no more than one pending request per account and bind the stable idempotency key to that request. Reuse it until the outcome is known.
++- Translate provider rejections to safe errors. On ambiguous results, retain a reconciliation-required failure that blocks fresh work.
++- Verify webhook authenticity, deduplicate event IDs, reconcile against the stored request, update subscription/request state exactly once, and append audit transitions.
++
++### PLAN-005 Verify behavior and rollout safety
++
++Requirements: REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008.
++
++- Add focused service tests for the role matrix, timing, preview expiry/state mismatch, concurrent pending requests, same-key retry, ambiguous outcomes, safe errors, and duplicate webhooks.
++- Add UI tests for all role states, immediate and scheduled previews, validation, repeat-click protection, pending reload, safe failure, focus movement, and cancellation confirmation.
++- Run the repository typecheck, lint, build, and tests. Exercise provider sandbox flows for one immediate charge, one scheduled change, rejection, delayed webhook, duplicate webhook, and retry after timeout.
++- Release behind the existing deployment control if one exists; do not create a feature-flag system solely for this feature. Monitor provider errors, pending age, duplicate attempts, and webhook processing failures.
++
++## Data and concurrency rules
++
++- Money is transported as provider-formatted display text plus integer minor units and ISO currency; the browser does not perform billing arithmetic.
++- Dates are ISO calendar dates from the server and displayed with the account's established locale/time-zone policy.
++- The pending-account constraint and idempotency record are atomic at the trusted storage layer, not an in-memory or client-side check.
++- Webhook processing is idempotent by provider event ID and request ID. Out-of-order or unrelated events are logged for reconciliation and do not overwrite a terminal result.
++
++## Verification mapping
++
++| Area | Acceptance coverage |
++| --- | --- |
++| Roles and supported actions | AC-001, AC-002, AC-003 |
++| Preview, timing, and validation | AC-004, AC-005, AC-006 |
++| Pending and asynchronous completion | AC-007, AC-008, AC-009 |
++| Failure, retry, and accessibility | AC-010, AC-011, AC-012 |
++
+diff --git a/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/spec.md b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/spec.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..3505a44e98921f7c33223f78eedcb8cef4478ace
+--- /dev/null
++++ b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/spec.md	
+@@ -0,0 +1,138 @@
++# Subscription management specification
++
++## Objective
++
++Let authorized users change plans and seat counts or schedule cancellation without support intervention, while preventing unauthorized actions, conflicting requests, duplicate charges, and exposure of billing-provider details.
++
++This specification uses the decisions in `specs/clarifications.md`. Decisions marked there as assumptions are release-blocking policy assumptions that must be confirmed before production launch; they are explicit here so implementation can proceed without silently inventing behavior.
++
++## Evidence and current state
++
++- `src/App.tsx` renders read-only account cards from local data.
++- `src/types.ts` defines `account_owner`, `billing_admin`, and `viewer`, plus a free-text `pendingChange`.
++- `src/services/subscriptionService.ts` contains only display helpers; no mutation or billing API exists in this repository.
++- `docs/billing-constraints.md` confirms preview support, immediate increases, term-end decreases and cancellation, one pending request, asynchronous completion, idempotency requirements, and unsafe provider error details.
++
++## Scope
++
++In scope for the first release:
++
++- View the current plan, seats, cadence, renewal date, and any pending or failed change.
++- Change to another available plan.
++- Change seats to a positive integer.
++- Schedule cancellation for the current renewal date.
++- Preview price impact, confirm a change, track an accepted request, and recover safely from rejection or asynchronous failure.
++
++Not in scope: billing-cadence changes, payment-method management, automatic refunds, immediate downgrades, immediate seat decreases, immediate cancellation, concurrent requests, support-agent tooling, and Enterprise-specific approvals. Enterprise accounts follow the same role matrix until a separate approval policy is approved.
++
++## Policy assumptions
++
++| Topic | First-release decision | Source |
++| --- | --- | --- |
++| Cancellation permission | Only `account_owner` may cancel. | Q1 |
++| Timing | Upgrades and seat increases apply immediately; downgrades, seat decreases, and cancellations apply at renewal. | Q2 |
++| Recovery | A fresh attempt is allowed only after reconciliation proves that no charge, applied change, or request remains pending. | Q4 |
++| Enterprise | No separate approval flow. | Q5 |
++
++## Domain model and states
++
++A change request contains: stable request ID, account ID, action (`plan_change`, `seat_change`, or `cancel`), requested value when applicable, effect timing (`immediate` or `renewal`), provider preview ID, idempotency key, safe price summary, status, timestamps, and a safe customer message when failed.
++
++Request status is one of:
++
++- `pending`: the provider accepted the request but its webhook outcome is not final.
++- `applied`: the webhook confirms an immediate change was applied or a renewal-date change was scheduled.
++- `failed`: submission or later processing failed and reconciliation is required before another attempt.
++
++A preview is not a change request and does not alter the subscription. A synchronous rejection leaves the subscription unchanged and creates no pending request. The server is authoritative for account role, subscription values, pending state, price preview, and final provider result.
++
++## Requirements
++
++### REQ-001 Authorization
++
++The server-side mutation boundary shall permit account owners to change plan, change seats, and cancel; permit billing admins to change plan and seats but not cancel; and reject all viewer mutations. The interface shall hide or disable unavailable actions, but interface state is not an authorization control.
++
++### REQ-002 Supported changes and effective timing
++
++The workflow shall accept only an available target plan, a positive-integer seat count different from the current count, or cancellation. The server shall classify upgrades and seat increases as immediate with provider-calculated proration. It shall classify downgrades, seat decreases, and cancellation as scheduled for the account renewal date without promising an immediate refund.
++
++### REQ-003 Preview and confirmation
++
++Every proposed change shall receive a fresh provider preview before confirmation. The confirmation view shall show the action, current and requested values, whether it is immediate or scheduled, the effective date, currency, and provider-calculated amount due now or the next-renewal price impact. Confirmation shall submit the preview identifier rather than trusting amounts supplied by the browser. If the subscription or preview expires before submission, the server shall reject it and require a new preview.
++
++### REQ-004 Submission safety and pending conflicts
++
++The server shall accept at most one pending change per account. Submission shall use one stable idempotency key per user confirmation and reuse that key while the outcome is unknown. Controls for another change shall be unavailable while work is pending, and the server shall return a conflict for racing or stale second submissions.
++
++### REQ-005 Asynchronous completion
++
++Provider acceptance shall display as pending, not applied. A verified, duplicate-safe webhook shall transition the request to `applied` or `failed`; only an applied result may update the displayed plan, seats, or scheduled cancellation. Refreshing or reopening the page shall load the authoritative current request state.
++
++### REQ-006 Failure handling and recovery
++
++Provider errors shall be mapped to safe customer messages and logged with internal correlation details outside customer-visible state. Validation or provider rejection shall preserve the current subscription and let the user correct the proposal. An asynchronous failure shall remain visible and block a fresh request until server-side reconciliation establishes a safe terminal state. A retry made while the original result is unknown shall reuse the original request and idempotency key.
++
++### REQ-007 User experience and accessibility
++
++The management form shall use labeled native controls, expose validation and request status to assistive technology, move focus to the confirmation or error summary after an action, and keep status understandable without color alone. Destructive cancellation shall require an explicit confirmation step. Loading shall prevent repeat submission without removing the current subscription context.
++
++### REQ-008 Auditability
++
++The trusted service shall record actor identity and role, account, action, old and requested values, preview ID, idempotency key, request status changes, provider correlation ID, and timestamps. Customer-visible data shall not include raw provider errors or secret billing data.
++
++## Acceptance criteria
++
++### AC-001 Viewer remains read-only
++
++Given a viewer opens an account, When the subscription screen loads or the viewer sends a mutation directly, Then management actions are unavailable and the server rejects the mutation without creating a preview, request, or charge.
++
++### AC-002 Billing admin cannot cancel
++
++Given a billing admin can manage plan and seats, When the screen loads or the admin sends a cancellation directly, Then cancellation is unavailable in the interface and rejected by the server while plan and seat actions remain available.
++
++### AC-003 Account owner can choose supported actions
++
++Given an account owner with no pending request, When the owner opens management, Then plan change, positive-integer seat change, and term-end cancellation actions are available with current subscription context.
++
++### AC-004 Immediate charged change is previewed
++
++Given an authorized user proposes an upgrade or seat increase, When the provider preview succeeds, Then confirmation shows the provider-calculated currency and amount due now, identifies proration, and states that the change takes effect immediately.
++
++### AC-005 Decrease or cancellation is scheduled
++
++Given an authorized user proposes a downgrade, seat decrease, or permitted cancellation, When the provider preview succeeds, Then confirmation states that the current subscription continues through the displayed renewal date and shows the next-renewal price impact without promising an immediate refund.
++
++### AC-006 Invalid or stale input cannot be submitted
++
++Given a missing target, unavailable plan, non-integer or non-positive seat count, unchanged value, expired preview, or subscription changed after preview, When confirmation is attempted, Then the server rejects the request, leaves the subscription unchanged, and directs the user to correct the input or obtain a fresh preview.
++
++### AC-007 Pending work prevents a conflict
++
++Given an account already has a pending request, When any user opens management or attempts another submission, Then the pending action and status are shown, new change controls are unavailable, and a direct second submission receives a conflict without a provider mutation.
++
++### AC-008 Accepted work remains pending until webhook completion
++
++Given the provider accepts a confirmed change without a final result, When the response is displayed or the page is refreshed, Then the request is shown as pending and current subscription values are not presented as changed.
++
++### AC-009 Successful webhook finalizes the result once
++
++Given a pending request, When a valid success webhook is received one or more times, Then the request becomes applied exactly once, the current or scheduled subscription state reflects the result, and the audit history records the transition.
++
++### AC-010 Safe rejection and correction
++
++Given preview or submission is rejected, When the failure is shown, Then the current subscription remains unchanged, the user sees a safe actionable message with no raw provider detail, and may correct the proposal and request a new preview.
++
++### AC-011 Unknown outcome does not duplicate a charge
++
++Given submission times out or an asynchronous request fails without a reconciled outcome, When the user retries or attempts a new change, Then the system either reuses the original request and idempotency key or blocks the new attempt until reconciliation confirms it is safe.
++
++### AC-012 Accessible cancellation confirmation
++
++Given an account owner selects cancellation, When the owner proceeds, Then a labeled confirmation identifies the renewal-date effect and retained access, keyboard focus reaches that confirmation, and no cancellation is submitted until the owner explicitly confirms.
++
++## Release conditions
++
++- Product confirms the assumptions in Q1, Q2, Q4, and Q5.
++- The server API and webhook handler satisfy the trusted-boundary requirements; a browser-only implementation is not releasable.
++- Automated checks cover the role matrix, timing classification, preview integrity, pending conflict, idempotent retry, duplicate webhook, safe error mapping, and the acceptance flows above.
++
+diff --git a/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/tasks.md b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/tasks.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..499aaf916b7f651f4de32bcb43ec05606b0c7ef9
+--- /dev/null
++++ b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/tasks.md	
+@@ -0,0 +1,78 @@
++# Subscription management implementation tasks
++
++Tasks are ordered by dependency. A task is complete only when its listed verification passes and no protected starter evidence is altered unintentionally.
++
++## TASK-001 Approve policy and freeze the billing contract
++
++Traceability: REQ-001, REQ-002, REQ-003, REQ-004, REQ-006, REQ-008; AC-001, AC-002, AC-004, AC-005, AC-006, AC-011.
++
++- Confirm Q1, Q2, Q4, and Q5 with Product, Finance, Security, and the billing integration owner.
++- Document the GET, preview, submit, error, and webhook payloads described in PLAN-001, including preview expiry and the definition of an unknown outcome.
++- Identify the trusted server repository/module and its existing authorization, persistence, logging, and provider-client conventions.
++
++Verification: contract examples cover every action/role combination, immediate and renewal timing, stale preview, pending conflict, unknown outcome, and safe error without raw provider data.
++
++## TASK-002 Add server-side authorization, preview, and submission
++
++Depends on: TASK-001.
++
++Traceability: REQ-001, REQ-002, REQ-003, REQ-004, REQ-006, REQ-008; AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-010, AC-011.
++
++- Implement authenticated account loading and the role/action matrix at the trusted mutation boundary.
++- Implement provider-backed previews and reject unavailable plans, invalid seats, unchanged values, stale previews, and changed subscription state.
++- On confirmation, reauthorize and atomically enforce one pending request per account; bind and persist the request's idempotency key.
++- Translate provider responses into the agreed safe codes/messages and persist the audit fields from REQ-008.
++
++Verification: focused server tests prove unauthorized calls never reach the provider, amounts cannot be supplied by the browser, racing submissions produce one provider request, and same-key retries cannot duplicate a charge.
++
++## TASK-003 Add webhook completion and reconciliation
++
++Depends on: TASK-002.
++
++Traceability: REQ-004, REQ-005, REQ-006, REQ-008; AC-007, AC-008, AC-009, AC-011.
++
++- Verify webhook authenticity and reject untrusted events.
++- Deduplicate provider event IDs and transition the matching request exactly once to applied or failed.
++- Update current or scheduled subscription data only after confirmed success.
++- Keep ambiguous failures blocked, add reconciliation using the existing provider lookup capability, and allow a new request only after a safe terminal result.
++
++Verification: tests cover delayed, duplicate, out-of-order, failed, and unrelated events plus timeout recovery; audit entries and subscription state remain correct after repeated delivery.
++
++## TASK-004 Type the API and extend the existing client service
++
++Depends on: TASK-001.
++
++Traceability: REQ-002, REQ-003, REQ-004, REQ-005, REQ-006; AC-004, AC-005, AC-006, AC-007, AC-008, AC-010, AC-011.
++
++- Add the agreed permission, proposal, preview, request-status, price, and safe-error types to `src/types.ts`.
++- Add load, preview, and submit functions to `src/services/subscriptionService.ts` using native `fetch`.
++- Create one idempotency key per confirmation and retain it across retries while the result is unknown.
++- Convert non-success API responses to typed safe errors without exposing raw response bodies to the screen.
++
++Verification: typecheck passes and service-level tests cover successful payloads, every safe error code, network timeout with retained identity, and malformed responses.
++
++## TASK-005 Build the accessible account-management flow
++
++Depends on: TASK-004; integration completion also requires TASK-002 and TASK-003.
++
++Traceability: REQ-001, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007; AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, AC-010, AC-012.
++
++- Update `src/App.tsx` to render actions from authoritative permissions and a single labeled native form for plan, seats, or cancellation.
++- Show provider preview details in an explicit confirmation step; require explicit cancellation confirmation.
++- Prevent repeat confirmation while submitting. Show pending, safe rejection, failed/reconciliation-required, and applied/scheduled states from server data.
++- Move focus to confirmation or the error summary and announce status changes. Add minimal supporting rules to `src/styles.css` with visible focus and non-color status cues.
++
++Verification: UI tests exercise every listed acceptance criterion at keyboard-only and narrow viewport sizes; direct server tests remain the proof of authorization.
++
++## TASK-006 Run end-to-end billing scenarios and release checks
++
++Depends on: TASK-002, TASK-003, TASK-004, TASK-005.
++
++Traceability: REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008; AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, AC-012.
++
++- Run repository lint, typecheck, tests, and production build.
++- In the provider sandbox, execute an immediate charged increase, scheduled decrease, cancellation, rejection, timeout retry, delayed webhook, and duplicate webhook.
++- Confirm audit records, customer-safe errors, pending-age monitoring, webhook-failure monitoring, and refresh/reload behavior.
++- Record Product/Security/Finance approval of assumed policies before enabling production access.
++
++Verification: all AC-001 through AC-012 pass with captured request IDs and no duplicate charge, raw provider error, unauthorized mutation, or premature subscription update.

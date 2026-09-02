@@ -1,0 +1,474 @@
+.../subscription-management-app/specs/plan.md      |  49 +++++++++
+ .../subscription-management-app/specs/spec.md      | 117 +++++++++++++++++++++
+ .../subscription-management-app/specs/tasks.md     |  60 +++++++++++
+ 3 files changed, 226 insertions(+)
+
+diff --git a/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/plan.md b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/plan.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..94f76db87080620c72d8bcf3a3fbabc859825cbe
+--- /dev/null
++++ b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/plan.md	
+@@ -0,0 +1,49 @@
++# Technical Plan
++
++The implementation will extend the existing React screen and `subscriptionService` rather than introduce routing, global state, a component library, or a new test framework. The current repository is a client-side fixture application, so the service will model the billing boundary asynchronously and keep provider-shaped details out of the UI.
++
++## PLAN-001: Extend the domain model and fixtures
++
++**Requirements:** REQ-001, REQ-003, REQ-005, REQ-006, REQ-007
++
++- In `src/types.ts`, add the minimal draft, preview, request-status, and safe-error types described by the specification state model. Replace the free-form `pendingChange?: string` with a structured optional change request.
++- In `src/data/subscriptions.ts`, migrate the existing pending fixture to the structured type and retain the three evidenced plans. Add only fixture values needed to exercise preview and final-result states.
++- Keep `renewalDate` as a date-only string and format it at display time without UTC conversion.
++
++## PLAN-002: Make the existing service the business-rule boundary
++
++**Requirements:** REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008
++
++- Extend `src/services/subscriptionService.ts` with pure validation/classification helpers plus asynchronous `previewChange`, `submitChange`, and `reconcileChange` functions.
++- Enforce role permissions, the single-pending-request rule, preview validity, and effective timing in `submitChange`, even when the UI has already checked them.
++- Generate one idempotency key per confirmed submission with `crypto.randomUUID()` and retain it for unknown-outcome retries. Do not generate a replacement inside retry logic.
++- Return customer-safe error codes/messages from the service. Keep provider/internal error objects private to the service and map unknown failures to one generic recovery message.
++- Treat provider preview amounts and dates as authoritative. Do not implement local price or proration formulas.
++
++## PLAN-003: Add one inline management workflow
++
++**Requirements:** REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008
++
++- Update `src/App.tsx` to own per-account draft, preview, submission, and feedback state with React state. Render the management form inline in the selected account card; only one card needs to be open at a time.
++- Use native `select`, `input type="number"`, and buttons. Derive allowed actions and disabled states from the account role and structured request status.
++- Use a two-step draft then confirmation flow. Changing any draft field clears the preview; confirmation displays provider amounts and effective date before calling submit.
++- On accepted submission, render pending state and poll the service's reconciliation function until a final fixture result is returned. On conflict, refresh the account request. On unknown outcome, expose a retry that reuses the retained key.
++- Update `src/styles.css` only for the form, status, error, disabled, and focus-visible states; retain the existing responsive card layout.
++
++## PLAN-004: Verify policy and observable flows
++
++**Requirements:** REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008
++
++- Add a small Node built-in test script covering authorization, classification/timing, pending conflicts, safe error mapping, and idempotent retry. Wire it into the existing `npm test` command without adding a package.
++- Exercise each acceptance criterion against the three fixture roles and include final verification with `npm test`, `npm run typecheck`, and `npm run build`.
++- Verify keyboard focus, labels, live status/error announcements, and narrow-screen layout manually because the repository has no browser-test dependency.
++
++## Implementation sequence
++
++1. PLAN-001 establishes types and fixtures.
++2. PLAN-002 implements and tests the shared policy boundary.
++3. PLAN-003 connects the UI to that boundary.
++4. PLAN-004 runs traceable acceptance and repository checks.
++
++No route, backend server, approval engine, refund logic, cadence editor, or payment UI is added under this plan.
++
+diff --git a/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/spec.md b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/spec.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0da92f44a6955a05e911ac88c901b9a01c9945e1
+--- /dev/null
++++ b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/spec.md	
+@@ -0,0 +1,117 @@
++# Subscription Management Specification
++
++## Status and evidence
++
++This first-attempt specification turns the request in `docs/feature-request.md` into an implementable scope using the current React application in `src/`. It treats `docs/billing-constraints.md` as authoritative for provider capabilities and records conservative assumptions where `docs/stakeholder-notes.md` is unresolved or conflicting.
++
++## Goal
++
++Let an authorized user preview and submit plan changes, seat changes, and cancellation without contacting support, while preventing duplicate charges, conflicting requests, and disclosure of provider errors.
++
++## Assumptions requiring product approval
++
++- Cancellation is restricted to `account_owner`. The stakeholder notes explicitly leave billing-admin cancellation unresolved; the narrower permission is safer.
++- `billing_admin` may change plans and seats. `viewer` is read-only, as confirmed by the stakeholder notes and the existing `OwnerRole` values in `src/types.ts`.
++- A seat decrease is treated like a downgrade and takes effect at renewal. The provider constraints explicitly support immediate seat increases but do not define seat-decrease timing.
++- Plan order is Starter, Growth, Enterprise for classifying upgrades and downgrades. These are the only plan names evidenced by `src/data/subscriptions.ts`; pricing and price impact come from the provider preview, not this ordering.
++- After a terminal asynchronous failure, the user may start a new attempt only after the service confirms no change or charge is pending. An unknown transport outcome is retried with the original idempotency key.
++
++## Functional requirements
++
++### REQ-001: Show actionable subscription state
++
++The account card shall continue to show company, plan, seats, cadence, renewal date, role, and pending state. It shall show a Manage subscription action for an account with no pending request. For a pending, failed, or rejected request, it shall show the request type, status, requested effect, and a safe customer-facing message where applicable.
++
++### REQ-002: Enforce role permissions
++
++An `account_owner` may submit plan changes, seat changes, and cancellation. A `billing_admin` may submit plan and seat changes but may not cancel. A `viewer` may view subscription and request state but may not open or submit management controls. The service method that accepts a mutation shall enforce the same rule; hiding a control alone is insufficient.
++
++### REQ-003: Validate and classify requested changes
++
++The workflow shall accept one target plan and/or target seat count, or a cancellation, per request. Seats shall be a positive integer. A request identical to current state shall be rejected before preview. Starter, Growth, and Enterprise shall be ordered in that sequence solely to classify plan direction. An increase is a higher plan or larger seat count; a decrease is a lower plan or smaller seat count. A request containing both an increase and a decrease shall be rejected so that billing timing is unambiguous.
++
++### REQ-004: Preview price and timing before confirmation
++
++Every valid change shall be previewed by the billing service before submission. The confirmation view shall display the current state, requested state, currency-formatted amount due now, recurring amount after the change, and effective date supplied by the preview. A plan upgrade or seat increase takes effect immediately and may include prorated amount due now. A plan downgrade or seat decrease takes effect on `renewalDate` and has no immediate charge. Preview data shall be invalidated whenever the draft changes. The client shall not calculate prices or proration.
++
++### REQ-005: Submit once and represent pending work
++
++Submission shall require an unexpired preview token and a stable idempotency key created once for that submission. The confirmation control shall disable while the request is in flight. An accepted request shall become `pending` until its final result is received; it shall not be shown as applied merely because submission was accepted. While any request is pending, all new mutation actions for that account shall be disabled. A provider conflict shall refresh and display the existing pending request rather than create another request.
++
++### REQ-006: Reconcile results and recover safely
++
++A successful final result shall update the current subscription and clear the pending request. A synchronous rejection shall leave the current subscription unchanged and allow the draft to be corrected. An asynchronous failure shall retain a visible `failed` request and a safe recovery message. Raw provider errors shall never be stored in customer-visible state or rendered. For a timeout or unknown submission outcome, retry shall reuse the original request body and idempotency key. A terminal failed request may be retried only by obtaining a fresh preview and key after reconciliation confirms that no charge or change is pending.
++
++### REQ-007: Schedule cancellation at renewal
++
++Only an `account_owner` may request cancellation. Cancellation shall require a provider preview and an explicit confirmation showing the current renewal date as the effective date and no automatic immediate refund. Once accepted, cancellation shall use the same pending and final-result lifecycle as other changes. Immediate cancellation is not offered.
++
++### REQ-008: Keep the first release within supported scope
++
++The first release covers existing subscription display, plan changes among Starter, Growth, and Enterprise, positive-integer seat changes, and end-of-term cancellation. Enterprise approval workflow, cadence changes, payment-method changes, immediate downgrade or cancellation, automatic refunds, multiple simultaneous requests, and support-agent tooling are out of scope. Enterprise accounts use the same role rules as other accounts until an approval policy is approved.
++
++## State model
++
++Each account has at most one `ChangeRequest` with type `plan_change`, `seat_change`, or `cancellation`; timing `immediate` or `term_end`; and status `submitting`, `pending`, `applied`, `rejected`, or `failed`. `submitting` is local/in-flight, `pending` is provider-accepted awaiting a final result, `applied` is final success, `rejected` is a synchronous refusal, and `failed` is failure after acceptance. Only `submitting` and `pending` block another mutation; a provider conflict is represented by refreshing the provider's pending request.
++
++## Acceptance criteria
++
++### AC-001: Viewer remains read-only
++
++Given an account whose role is `viewer`, When its card is displayed or a mutation is attempted through the service, Then no management control is available and the service returns a permission-safe rejection without changing account state.
++
++### AC-002: Authorized roles see only allowed actions
++
++Given an account with no pending request, When an `account_owner` opens management controls, Then plan, seat, and cancellation actions are available; and Given the same state for a `billing_admin`, When controls open, Then plan and seat actions are available and cancellation is absent and rejected by the service.
++
++### AC-003: Invalid or mixed changes stop before preview
++
++Given a management draft with a non-positive or fractional seat count, no difference from current state, or both an increase and a decrease, When the user requests a preview, Then an inline validation message is shown and the billing preview is not called.
++
++### AC-004: Increase preview exposes immediate price impact
++
++Given an authorized user requests a higher plan or larger seat count, When the billing service returns a preview, Then confirmation shows the provider-supplied amount due now, new recurring amount, and immediate effective date before submission is enabled.
++
++### AC-005: Decrease preview schedules renewal-date effect
++
++Given an authorized user requests a lower plan or smaller seat count, When the billing service returns a preview, Then confirmation shows zero due now and the account renewal date as the effective date.
++
++### AC-006: Cancellation is owner-only and scheduled
++
++Given an `account_owner` selects cancellation, When its preview succeeds, Then confirmation states that cancellation occurs on the renewal date and no immediate refund is provided; and Given a `billing_admin`, When cancellation is attempted through the service, Then the request is rejected without provider submission.
++
++### AC-007: Existing pending work blocks a conflicting request
++
++Given an account already has a pending change, When any authorized user views or attempts to mutate that account, Then the pending change and status are shown, mutation controls are disabled, and a provider conflict refreshes that pending state without creating a second request.
++
++### AC-008: Accepted submission stays pending
++
++Given a valid, unexpired preview and no pending request, When the user confirms once, Then one request with one idempotency key is submitted, the confirmation control disables, and an accepted response is displayed as pending rather than applied.
++
++### AC-009: Final success updates the subscription
++
++Given an accepted request is pending, When its final success result is received, Then the displayed plan or seats are updated immediately for an increase, or the scheduled term-end change remains clearly labeled with its effective date, and the request status is `applied`.
++
++### AC-010: Rejections and provider errors are safe
++
++Given the provider rejects a preview or submission and includes internal details, When the error is handled, Then the current subscription remains unchanged, only a mapped customer-safe message is displayed, and raw provider content is neither rendered nor copied into customer-visible request state.
++
++### AC-011: Unknown outcomes retry without duplicate charge
++
++Given submission times out before its outcome is known, When the user retries, Then the service sends the identical request with the same idempotency key and does not create a second local request.
++
++### AC-012: Asynchronous failure has a recoverable state
++
++Given a pending request later receives a failure result, When the account refreshes, Then status `failed` and a safe message are visible; and When reconciliation confirms no charge or change is pending, Then the user can create a new preview and submission with a new idempotency key.
++
++### AC-013: Enterprise does not invent an approval flow
++
++Given an Enterprise account, When an authorized user manages it, Then the normal role, preview, timing, pending, and failure rules apply and no approval-workflow UI or state is created.
++
++## Non-functional requirements
++
++- Use existing React and browser capabilities; add no UI, state-management, or test dependency.
++- All controls shall have programmatic labels, validation and status messages shall be announced with appropriate live regions, focus shall move to the confirmation heading or first error, and keyboard operation shall remain complete.
++- Currency and dates shall use `Intl` formatting. Date-only renewal values shall be interpreted without a timezone shift.
++- The service layer shall be the only caller-facing boundary for preview, mutation, reconciliation, authorization checks, and provider-error mapping.
++
+diff --git a/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/tasks.md b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/tasks.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0ad94441170ba7ab1d35542ccd24a3d1e867f381
+--- /dev/null
++++ b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/tasks.md	
+@@ -0,0 +1,60 @@
++# Implementation Tasks
++
++Tasks are ordered so policy is testable before UI wiring. Each task includes its requirement and acceptance-criterion trace.
++
++## TASK-001: Define structured change state
++
++**Trace:** REQ-001, REQ-003, REQ-005, REQ-006, REQ-007; AC-007, AC-008, AC-009, AC-012
++
++- Add draft, preview, change type/timing/status, and safe-error types in `src/types.ts`.
++- Migrate the pending account in `src/data/subscriptions.ts` from a string to a structured request and add the minimum fixture response data needed for final success and failure.
++- Confirm `npm run typecheck` passes before behavior changes begin.
++
++## TASK-002: Implement authorization and draft validation
++
++**Trace:** REQ-002, REQ-003, REQ-008; AC-001, AC-002, AC-003, AC-013
++
++- Add pure permission, validation, and increase/decrease classification helpers to `src/services/subscriptionService.ts`.
++- Enforce owner, billing-admin, viewer, cancellation, positive-integer seat, unchanged-draft, mixed-direction, and Enterprise-without-approval rules at the service boundary.
++- Add Node built-in checks for every role and invalid draft class.
++
++## TASK-003: Implement authoritative preview behavior
++
++**Trace:** REQ-003, REQ-004, REQ-007; AC-003, AC-004, AC-005, AC-006, AC-010
++
++- Add asynchronous preview behavior to `src/services/subscriptionService.ts` using fixture provider results.
++- Return immediate timing and provider-supplied proration for increases; return renewal-date timing and zero due now for decreases and cancellation.
++- Map preview failures to safe codes/messages and prove raw provider details cannot reach the returned preview error.
++
++## TASK-004: Implement submission, pending, and reconciliation
++
++**Trace:** REQ-005, REQ-006, REQ-007; AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, AC-012
++
++- Add submit and reconciliation behavior to `src/services/subscriptionService.ts`, including preview-token validation, service-side permissions, one-pending-request enforcement, accepted-versus-final status, and structured success/failure updates.
++- Create the idempotency key once with `crypto.randomUUID()` and preserve the body and key for an unknown-outcome retry; start a new key only after a reconciled terminal failure and a fresh preview.
++- Add built-in checks proving one accepted request, conflict refresh, same-key retry, final success, terminal failure recovery, and safe error mapping.
++
++## TASK-005: Build the accessible management form and preview
++
++**Trace:** REQ-001, REQ-002, REQ-003, REQ-004, REQ-007, REQ-008; AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-013
++
++- In `src/App.tsx`, add one inline form using native controls for allowed plan, seat, and cancellation actions.
++- Hide disallowed actions, disable mutation for blocking states, show inline validation, invalidate stale previews, and format preview currency/date with `Intl`.
++- Add labels, focus movement, live regions, and visible focus/error styles in `src/styles.css`; retain the existing responsive layout.
++
++## TASK-006: Connect request lifecycle and recovery UI
++
++**Trace:** REQ-001, REQ-005, REQ-006, REQ-007; AC-007, AC-008, AC-009, AC-010, AC-011, AC-012
++
++- Connect confirmation to submit, prevent repeat clicks, show accepted work as pending, and reconcile to applied or failed.
++- Refresh the existing pending request on conflict. Expose same-key retry only for an unknown outcome and fresh-preview retry only after reconciled terminal failure.
++- Ensure every rendered failure is the service's safe message and current subscription data remains unchanged on rejection or failure.
++
++## TASK-007: Run acceptance and repository verification
++
++**Trace:** REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008; AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, AC-012, AC-013
++
++- Run the built-in policy checks, `npm run typecheck`, and `npm run build`.
++- Walk through AC-001 through AC-013 using the owner, billing-admin, viewer, and pending fixtures, recording pass/fail results.
++- Check keyboard-only operation, focus placement, announced status/error content, narrow viewport behavior, absence of raw provider details, and absence of out-of-scope controls.
++
+
+Changes:
+
+02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/plan.md
+  @@ -0,0 +1,49 @@
+  +# Technical Plan
+  +
+  +The implementation will extend the existing React screen and `subscriptionService` rather than introduce routing, global state, a component library, or a new test framework. The current repository is a client-side fixture application, so the service will model the billing boundary asynchronously and keep provider-shaped details out of the UI.
+  +
+  +## PLAN-001: Extend the domain model and fixtures
+  +
+  +**Requirements:** REQ-001, REQ-003, REQ-005, REQ-006, REQ-007
+  +
+  +- In `src/types.ts`, add the minimal draft, preview, request-status, and safe-error types described by the specification state model. Replace the free-form `pendingChange?: string` with a structured optional change request.
+  +- In `src/data/subscriptions.ts`, migrate the existing pending fixture to the structured type and retain the three evidenced plans. Add only fixture values needed to exercise preview and final-result states.
+  +- Keep `renewalDate` as a date-only string and format it at display time without UTC conversion.
+  +
+  +## PLAN-002: Make the existing service the business-rule boundary
+  +
+  +**Requirements:** REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008
+  +
+  +- Extend `src/services/subscriptionService.ts` with pure validation/classification helpers plus asynchronous `previewChange`, `submitChange`, and `reconcileChange` functions.
+  +- Enforce role permissions, the single-pending-request rule, preview validity, and effective timing in `submitChange`, even when the UI has already checked them.
+  +- Generate one idempotency key per confirmed submission with `crypto.randomUUID()` and retain it for unknown-outcome retries. Do not generate a replacement inside retry logic.
+  +- Return customer-safe error codes/messages from the service. Keep provider/internal error objects private to the service and map unknown failures to one generic recovery message.
+  +- Treat provider preview amounts and dates as authoritative. Do not implement local price or proration formulas.
+  +
+  +## PLAN-003: Add one inline management workflow
+  +
+  +**Requirements:** REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008
+  +
+  +- Update `src/App.tsx` to own per-account draft, preview, submission, and feedback state with React state. Render the management form inline in the selected account card; only one card needs to be open at a time.
+  +- Use native `select`, `input type="number"`, and buttons. Derive allowed actions and disabled states from the account role and structured request status.
+  +- Use a two-step draft then confirmation flow. Changing any draft field clears the preview; confirmation displays provider amounts and effective date before calling submit.
+  +- On accepted submission, render pending state and poll the service's reconciliation function until a final fixture result is returned. On conflict, refresh the account request. On unknown outcome, expose a retry that reuses the retained key.
+  +- Update `src/styles.css` only for the form, status, error, disabled, and focus-visible states; retain the existing responsive card layout.
+  +
+  +## PLAN-004: Verify policy and observable flows
+  +
+  +**Requirements:** REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008
+  +
+  +- Add a small Node built-in test script covering authorization, classification/timing, pending conflicts, safe error mapping, and idempotent retry. Wire it into the existing `npm test` command without adding a package.
+  +- Exercise each acceptance criterion against the three fixture roles and include final verification with `npm test`, `npm run typecheck`, and `npm run build`.
+  +- Verify keyboard focus, labels, live status/error announcements, and narrow-screen layout manually because the repository has no browser-test dependency.
+  +
+  +## Implementation sequence
+  +
+  +1. PLAN-001 establishes types and fixtures.
+  +2. PLAN-002 implements and tests the shared policy boundary.
+  +3. PLAN-003 connects the UI to that boundary.
+  +4. PLAN-004 runs traceable acceptance and repository checks.
+  +
+  +No route, backend server, approval engine, refund logic, cadence editor, or payment UI is added under this plan.
+  +
+  +49 -0
+
+02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/spec.md
+  @@ -0,0 +1,117 @@
+  +# Subscription Management Specification
+  +
+  +## Status and evidence
+  +
+  +This first-attempt specification turns the request in `docs/feature-request.md` into an implementable scope using the current React application in `src/`. It treats `docs/billing-constraints.md` as authoritative for provider capabilities and records conservative assumptions where `docs/stakeholder-notes.md` is unresolved or conflicting.
+  +
+  +## Goal
+  +
+  +Let an authorized user preview and submit plan changes, seat changes, and cancellation without contacting support, while preventing duplicate charges, conflicting requests, and disclosure of provider errors.
+  +
+  +## Assumptions requiring product approval
+  +
+  +- Cancellation is restricted to `account_owner`. The stakeholder notes explicitly leave billing-admin cancellation unresolved; the narrower permission is safer.
+  +- `billing_admin` may change plans and seats. `viewer` is read-only, as confirmed by the stakeholder notes and the existing `OwnerRole` values in `src/types.ts`.
+  +- A seat decrease is treated like a downgrade and takes effect at renewal. The provider constraints explicitly support immediate seat increases but do not define seat-decrease timing.
+  +- Plan order is Starter, Growth, Enterprise for classifying upgrades and downgrades. These are the only plan names evidenced by `src/data/subscriptions.ts`; pricing and price impact come from the provider preview, not this ordering.
+  +- After a terminal asynchronous failure, the user may start a new attempt only after the service confirms no change or charge is pending. An unknown transport outcome is retried with the original idempotency key.
+  +
+  +## Functional requirements
+  +
+  +### REQ-001: Show actionable subscription state
+  +
+  +The account card shall continue to show company, plan, seats, cadence, renewal date, role, and pending state. It shall show a Manage subscription action for an account with no pending request. For a pending, failed, or rejected request, it shall show the request type, status, requested effect, and a safe customer-facing message where applicable.
+  +
+  +### REQ-002: Enforce role permissions
+  +
+  +An `account_owner` may submit plan changes, seat changes, and cancellation. A `billing_admin` may submit plan and seat changes but may not cancel. A `viewer` may view subscription and request state but may not open or submit management controls. The service method that accepts a mutation shall enforce the same rule; hiding a control alone is insufficient.
+  +
+  +### REQ-003: Validate and classify requested changes
+  +
+  +The workflow shall accept one target plan and/or target seat count, or a cancellation, per request. Seats shall be a positive integer. A request identical to current state shall be rejected before preview. Starter, Growth, and Enterprise shall be ordered in that sequence solely to classify plan direction. An increase is a higher plan or larger seat count; a decrease is a lower plan or smaller seat count. A request containing both an increase and a decrease shall be rejected so that billing timing is unambiguous.
+  +
+  +### REQ-004: Preview price and timing before confirmation
+  +
+  +Every valid change shall be previewed by the billing service before submission. The confirmation view shall display the current state, requested state, currency-formatted amount due now, recurring amount after the change, and effective date supplied by the preview. A plan upgrade or seat increase takes effect immediately and may include prorated amount due now. A plan downgrade or seat decrease takes effect on `renewalDate` and has no immediate charge. Preview data shall be invalidated whenever the draft changes. The client shall not calculate prices or proration.
+  +
+  +### REQ-005: Submit once and represent pending work
+  +
+  +Submission shall require an unexpired preview token and a stable idempotency key created once for that submission. The confirmation control shall disable while the request is in flight. An accepted request shall become `pending` until its final result is received; it shall not be shown as applied merely because submission was accepted. While any request is pending, all new mutation actions for that account shall be disabled. A provider conflict shall refresh and display the existing pending request rather than create another request.
+  +
+  +### REQ-006: Reconcile results and recover safely
+  +
+  +A successful final result shall update the current subscription and clear the pending request. A synchronous rejection shall leave the current subscription unchanged and allow the draft to be corrected. An asynchronous failure shall retain a visible `failed` request and a safe recovery message. Raw provider errors shall never be stored in customer-visible state or rendered. For a timeout or unknown submission outcome, retry shall reuse the original request body and idempotency key. A terminal failed request may be retried only by obtaining a fresh preview and key after reconciliation confirms that no charge or change is pending.
+  +
+  +### REQ-007: Schedule cancellation at renewal
+  +
+  +Only an `account_owner` may request cancellation. Cancellation shall require a provider preview and an explicit confirmation showing the current renewal date as the effective date and no automatic immediate refund. Once accepted, cancellation shall use the same pending and final-result lifecycle as other changes. Immediate cancellation is not offered.
+  +
+  +### REQ-008: Keep the first release within supported scope
+  +
+  +The first release covers existing subscription display, plan changes among Starter, Growth, and Enterprise, positive-integer seat changes, and end-of-term cancellation. Enterprise approval workflow, cadence changes, payment-method changes, immediate downgrade or cancellation, automatic refunds, multiple simultaneous requests, and support-agent tooling are out of scope. Enterprise accounts use the same role rules as other accounts until an approval policy is approved.
+  +
+  +## State model
+  +
+  +Each account has at most one `ChangeRequest` with type `plan_change`, `seat_change`, or `cancellation`; timing `immediate` or `term_end`; and status `submitting`, `pending`, `applied`, `rejected`, or `failed`. `submitting` is local/in-flight, `pending` is provider-accepted awaiting a final result, `applied` is final success, `rejected` is a synchronous refusal, and `failed` is failure after acceptance. Only `submitting` and `pending` block another mutation; a provider conflict is represented by refreshing the provider's pending request.
+  +
+  +## Acceptance criteria
+  +
+  +### AC-001: Viewer remains read-only
+  +
+  +Given an account whose role is `viewer`, When its card is displayed or a mutation is attempted through the service, Then no management control is available and the service returns a permission-safe rejection without changing account state.
+  +
+  +### AC-002: Authorized roles see only allowed actions
+  +
+  +Given an account with no pending request, When an `account_owner` opens management controls, Then plan, seat, and cancellation actions are available; and Given the same state for a `billing_admin`, When controls open, Then plan and seat actions are available and cancellation is absent and rejected by the service.
+  +
+  +### AC-003: Invalid or mixed changes stop before preview
+  +
+  +Given a management draft with a non-positive or fractional seat count, no difference from current state, or both an increase and a decrease, When the user requests a preview, Then an inline validation message is shown and the billing preview is not called.
+  +
+  +### AC-004: Increase preview exposes immediate price impact
+  +
+  +Given an authorized user requests a higher plan or larger seat count, When the billing service returns a preview, Then confirmation shows the provider-supplied amount due now, new recurring amount, and immediate effective date before submission is enabled.
+  +
+  +### AC-005: Decrease preview schedules renewal-date effect
+  +
+  +Given an authorized user requests a lower plan or smaller seat count, When the billing service returns a preview, Then confirmation shows zero due now and the account renewal date as the effective date.
+  +
+  +### AC-006: Cancellation is owner-only and scheduled
+  +
+  +Given an `account_owner` selects cancellation, When its preview succeeds, Then confirmation states that cancellation occurs on the renewal date and no immediate refund is provided; and Given a `billing_admin`, When cancellation is attempted through the service, Then the request is rejected without provider submission.
+  +
+  +### AC-007: Existing pending work blocks a conflicting request
+  +
+  +Given an account already has a pending change, When any authorized user views or attempts to mutate that account, Then the pending change and status are shown, mutation controls are disabled, and a provider conflict refreshes that pending state without creating a second request.
+  +
+  +### AC-008: Accepted submission stays pending
+  +
+  +Given a valid, unexpired preview and no pending request, When the user confirms once, Then one request with one idempotency key is submitted, the confirmation control disables, and an accepted response is displayed as pending rather than applied.
+  +
+  +### AC-009: Final success updates the subscription
+  +
+  +Given an accepted request is pending, When its final success result is received, Then the displayed plan or seats are updated immediately for an increase, or the scheduled term-end change remains clearly labeled with its effective date, and the request status is `applied`.
+  +
+  +### AC-010: Rejections and provider errors are safe
+  +
+  +Given the provider rejects a preview or submission and includes internal details, When the error is handled, Then the current subscription remains unchanged, only a mapped customer-safe message is displayed, and raw provider content is neither rendered nor copied into customer-visible request state.
+  +
+  +### AC-011: Unknown outcomes retry without duplicate charge
+  +
+  ... (17 lines truncated)
+  +117 -0
+
+02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/tasks.md
+  @@ -0,0 +1,60 @@
+  +# Implementation Tasks
+  +
+  +Tasks are ordered so policy is testable before UI wiring. Each task includes its requirement and acceptance-criterion trace.
+  +
+  +## TASK-001: Define structured change state
+  +
+  +**Trace:** REQ-001, REQ-003, REQ-005, REQ-006, REQ-007; AC-007, AC-008, AC-009, AC-012
+  +
+  +- Add draft, preview, change type/timing/status, and safe-error types in `src/types.ts`.
+  +- Migrate the pending account in `src/data/subscriptions.ts` from a string to a structured request and add the minimum fixture response data needed for final success and failure.
+  +- Confirm `npm run typecheck` passes before behavior changes begin.
+  +
+  +## TASK-002: Implement authorization and draft validation
+  +
+  +**Trace:** REQ-002, REQ-003, REQ-008; AC-001, AC-002, AC-003, AC-013
+  +
+  +- Add pure permission, validation, and increase/decrease classification helpers to `src/services/subscriptionService.ts`.
+  +- Enforce owner, billing-admin, viewer, cancellation, positive-integer seat, unchanged-draft, mixed-direction, and Enterprise-without-approval rules at the service boundary.
+  +- Add Node built-in checks for every role and invalid draft class.
+  +
+  +## TASK-003: Implement authoritative preview behavior
+  +
+  +**Trace:** REQ-003, REQ-004, REQ-007; AC-003, AC-004, AC-005, AC-006, AC-010
+  +
+  +- Add asynchronous preview behavior to `src/services/subscriptionService.ts` using fixture provider results.
+  +- Return immediate timing and provider-supplied proration for increases; return renewal-date timing and zero due now for decreases and cancellation.
+  +- Map preview failures to safe codes/messages and prove raw provider details cannot reach the returned preview error.
+  +
+  +## TASK-004: Implement submission, pending, and reconciliation
+  +
+  +**Trace:** REQ-005, REQ-006, REQ-007; AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, AC-012
+  +
+  +- Add submit and reconciliation behavior to `src/services/subscriptionService.ts`, including preview-token validation, service-side permissions, one-pending-request enforcement, accepted-versus-final status, and structured success/failure updates.
+  +- Create the idempotency key once with `crypto.randomUUID()` and preserve the body and key for an unknown-outcome retry; start a new key only after a reconciled terminal failure and a fresh preview.
+  +- Add built-in checks proving one accepted request, conflict refresh, same-key retry, final success, terminal failure recovery, and safe error mapping.
+  +
+  +## TASK-005: Build the accessible management form and preview
+  +
+  +**Trace:** REQ-001, REQ-002, REQ-003, REQ-004, REQ-007, REQ-008; AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-013
+  +
+  +- In `src/App.tsx`, add one inline form using native controls for allowed plan, seat, and cancellation actions.
+  +- Hide disallowed actions, disable mutation for blocking states, show inline validation, invalidate stale previews, and format preview currency/date with `Intl`.
+  +- Add labels, focus movement, live regions, and visible focus/error styles in `src/styles.css`; retain the existing responsive layout.
+  +
+  +## TASK-006: Connect request lifecycle and recovery UI
+  +
+  +**Trace:** REQ-001, REQ-005, REQ-006, REQ-007; AC-007, AC-008, AC-009, AC-010, AC-011, AC-012
+  +
+  +- Connect confirmation to submit, prevent repeat clicks, show accepted work as pending, and reconcile to applied or failed.
+  +- Refresh the existing pending request on conflict. Expose same-key retry only for an unknown outcome and fresh-preview retry only after reconciled terminal failure.
+  +- Ensure every rendered failure is the service's safe message and current subscription data remains unchanged on rejection or failure.
+  +
+  +## TASK-007: Run acceptance and repository verification
+  +
+  +**Trace:** REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008; AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, AC-012, AC-013
+  +
+  +- Run the built-in policy checks, `npm run typecheck`, and `npm run build`.
+  +- Walk through AC-001 through AC-013 using the owner, billing-admin, viewer, and pending fixtures, recording pass/fail results.
+  +- Check keyboard-only operation, focus placement, announced status/error content, narrow viewport behavior, absence of raw provider details, and absence of out-of-scope controls.
+  +
+  +60 -0
+[full diff: rtk git diff --no-compact]

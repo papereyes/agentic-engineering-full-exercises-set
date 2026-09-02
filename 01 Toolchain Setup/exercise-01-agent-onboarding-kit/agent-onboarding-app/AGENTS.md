@@ -12,7 +12,7 @@ Work only in this app unless the exercise README explicitly requires evidence be
 
 - `src/data/` owns sample data and policy values. Do not duplicate policy constants elsewhere.
 - `src/services/caseRouter.ts` owns reusable routing decisions, risk calculation, and triage ordering. Pass the active policy into behavior that depends on it.
-- `src/App.tsx` owns presentation and filter state. Derive displayed items, their count, and their ordering from one visible list so the UI cannot disagree with itself.
+- `src/App.tsx` owns presentation and UI state. Name shared view-model calculations and reuse them wherever the interface presents the same derived state.
 - `src/types.ts` owns shared domain types; preserve existing status and routing behavior unless the task explicitly changes them.
 
 Keep the diff focused. Reuse the service boundary instead of reimplementing business rules in the component. Preserve existing filters and verify boundary values with the supplied task check.

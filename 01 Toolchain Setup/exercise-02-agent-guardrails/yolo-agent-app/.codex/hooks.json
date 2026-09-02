@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/01 Toolchain Setup/exercise-02-agent-guardrails/yolo-agent-app/guardrails/adapters/codex.mjs\"",
+            "command": "node \"$(git rev-parse --show-toplevel)/01 Toolchain Setup/exercise-02-agent-guardrails/yolo-agent-app/guardrails/adapters/codex.mjs\" --hook",
             "timeout": 10,
             "statusMessage": "Checking repository guardrails"
           }

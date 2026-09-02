@@ -66,10 +66,12 @@ export function evaluateAction(policy, action) {
 }
 
 export function createAuditRecord(action, result) {
+  const operations = new Set(["read", "edit", "test", "command"]);
+  const decisions = new Set(["allowed", "blocked", "approval-required"]);
   return {
-    operation: typeof action?.operation === "string" ? action.operation : "unknown",
-    path: typeof action?.path === "string" ? action.path : "",
-    decision: result?.decision ?? "blocked",
-    reason: result?.reason ?? "No decision reason"
+    operation: operations.has(action?.operation) ? action.operation : "unknown",
+    path: typeof action?.path === "string" && action.path ? "[redacted]" : "",
+    decision: decisions.has(result?.decision) ? result.decision : "blocked",
+    reason: "Guardrail policy decision recorded"
   };
 }

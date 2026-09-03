@@ -1,0 +1,6 @@
+Command: npm run test:network
+Network stability seed: 104 — 12 passed
+Network stability seed: 108 — 12 passed
+Network stability seed: 220 — 12 passed
+Network stability passed for seeds: 104, 108, 220
+Exit code: 0

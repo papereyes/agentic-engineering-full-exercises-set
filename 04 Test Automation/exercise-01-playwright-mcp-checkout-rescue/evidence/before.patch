@@ -1,0 +1,99 @@
+diff --git a/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/checkout.spec.ts b/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/checkout.spec.ts
+new file mode 100644
+index 0000000..2d4c436
+--- /dev/null
++++ b/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/checkout.spec.ts	
+@@ -0,0 +1,72 @@
++import { randomUUID } from "node:crypto";
++import { expect, test, type APIRequestContext, type Page } from "@playwright/test";
++
++async function openCheckout(page: Page, request: APIRequestContext, parallelIndex: number) {
++  const session = `${parallelIndex}-${randomUUID()}`;
++  const headers = { "x-checkout-session": session };
++  await page.setExtraHTTPHeaders(headers);
++  await request.post("/api/testing/reset", { headers });
++  const taxRequest = page.waitForRequest((candidate) => candidate.url().endsWith("/api/tax-quote"));
++  await page.goto("/");
++  return { pay: page.getByRole("button", { name: /Pay/ }), session, taxRequest: await taxRequest };
++}
++
++test("approval sends the tax and authorization contracts", async ({ page, request }, testInfo) => {
++  const { pay, session, taxRequest } = await openCheckout(page, request, testInfo.parallelIndex);
++  await expect(pay).toBeDisabled();
++  expect(taxRequest.postDataJSON()).toEqual({ country: "IN", subtotal: 99 });
++  await expect(pay).toBeEnabled();
++
++  const authorizationRequest = page.waitForRequest((candidate) => candidate.url().endsWith("/api/payments/authorize"));
++  await pay.click();
++  expect((await authorizationRequest).postDataJSON()).toEqual({
++    cardholder: "Asha Kumar",
++    cardNumber: "4242424242424242",
++    total: 106.92,
++  });
++  await expect(page.getByRole("heading", { name: "Order confirmed" })).toBeVisible();
++  await expect(page.getByText(`Authorization AUTH-${session}-1`)).toBeVisible();
++});
++
++test("decline recovery retries with a valid card", async ({ page, request }, testInfo) => {
++  const { pay } = await openCheckout(page, request, testInfo.parallelIndex);
++  await expect(pay).toBeEnabled();
++  await page.getByLabel("Card number").fill("4000000000000000");
++
++  const declinedRequest = page.waitForRequest((candidate) => candidate.url().endsWith("/api/payments/authorize"));
++  await pay.click();
++  expect((await declinedRequest).postDataJSON()).toEqual({
++    cardholder: "Asha Kumar",
++    cardNumber: "4000000000000000",
++    total: 106.92,
++  });
++  await expect(page.getByRole("heading", { name: "Payment declined" })).toBeVisible();
++
++  await page.getByRole("button", { name: "Try another payment" }).click();
++  await page.getByLabel("Card number").fill("4242424242424242");
++  const retryRequest = page.waitForRequest((candidate) => candidate.url().endsWith("/api/payments/authorize"));
++  await pay.click();
++  expect((await retryRequest).postDataJSON()).toEqual({
++    cardholder: "Asha Kumar",
++    cardNumber: "4242424242424242",
++    total: 106.92,
++  });
++  await expect(page.getByRole("heading", { name: "Order confirmed" })).toBeVisible();
++});
++
++test("duplicate submit sends exactly one authorization request", async ({ page, request }, testInfo) => {
++  const { pay } = await openCheckout(page, request, testInfo.parallelIndex);
++  await expect(pay).toBeEnabled();
++  const authorizationRequests: string[] = [];
++  page.on("request", (candidate) => {
++    if (candidate.url().endsWith("/api/payments/authorize")) authorizationRequests.push(candidate.url());
++  });
++
++  await pay.evaluate((button: HTMLButtonElement) => {
++    button.click();
++    button.click();
++  });
++  await expect(pay).toBeDisabled();
++  await expect(page.getByRole("heading", { name: "Order confirmed" })).toBeVisible();
++  expect(authorizationRequests).toHaveLength(1);
++});
+diff --git a/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/flaky-checkout.spec.ts b/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/flaky-checkout.spec.ts
+deleted file mode 100644
+index d604f40..0000000
+--- a/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/flaky-checkout.spec.ts	
++++ /dev/null
+@@ -1,15 +0,0 @@
+-import { expect, test } from "@playwright/test";
+-
+-test("completes checkout using the generated button class", async ({ page }) => {
+-  await page.goto("/");
+-  await page.waitForTimeout(500);
+-  await page.locator(".checkout-primary-0").click({ timeout: 2_000 });
+-  await expect(page.getByRole("heading", { name: "Order confirmed" })).toBeVisible({ timeout: 3_000 });
+-});
+-
+-test("payment authorization is approved", async ({ page }) => {
+-  await page.goto("/");
+-  await page.waitForTimeout(500);
+-  await page.getByRole("button", { name: /Pay/ }).click();
+-  await expect(page.getByRole("heading", { name: "Order confirmed" })).toBeVisible({ timeout: 3_000 });
+-});

@@ -1,0 +1,5 @@
+Command: npx playwright test tests/e2e/flaky-checkout.spec.ts --repeat-each=20 --workers=2 --reporter=line
+Result: 60 passed
+Exit code: 0
+
+The run exercised three independent tests twenty times with two workers.

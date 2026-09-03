@@ -1,0 +1,129 @@
+diff --git a/04 Test Automation/exercise-03-verification-skill-workflow-gate/scripts/verification-gate.mjs b/04 Test Automation/exercise-03-verification-skill-workflow-gate/scripts/verification-gate.mjs
+index 71d756d..2591ff3 100644
+--- a/04 Test Automation/exercise-03-verification-skill-workflow-gate/scripts/verification-gate.mjs	
++++ b/04 Test Automation/exercise-03-verification-skill-workflow-gate/scripts/verification-gate.mjs	
+@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
+ 
+ const exerciseRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+ const provider = path.join(exerciseRoot, "workflow-rules-api");
++const client = path.join(exerciseRoot, "workflow-gate-app");
+ 
+ function executeCommand(command, args, options) {
+   if (process.platform === "win32") {
+@@ -15,12 +16,29 @@ function executeCommand(command, args, options) {
+   return spawnSync(command, args, { ...options, shell: false });
+ }
+ 
+-// Seeded previous-agent shortcut: this proves one provider unit-test class only.
+ export const releaseSteps = [
+   {
+-    id: "focused-provider-unit",
++    id: "gate-contract",
++    command: "npm",
++    args: ["run", "test:gate"],
++    cwd: client,
++  },
++  {
++    id: "client-release",
++    command: "npm",
++    args: ["run", "test:release"],
++    cwd: client,
++  },
++  {
++    id: "client-quality-build",
++    command: "npm",
++    args: ["run", "agent:check"],
++    cwd: client,
++  },
++  {
++    id: "provider-tests-build",
+     command: process.platform === "win32" ? "mvnw.cmd" : "./mvnw",
+-    args: ["-q", "-Dtest=WorkflowServiceTest", "test"],
++    args: ["-q", "verify"],
+     cwd: provider,
+   },
+ ];
+@@ -34,14 +52,18 @@ export function runReleaseGate(steps = releaseSteps, execute = executeCommand, l
+       shell: false,
+     });
+ 
+-    if (result.status && result.status !== 0) {
++    if (result.error || !Number.isInteger(result.status)) {
++      logger.error(`FAILED ${step.id}: ${result.error?.message ?? "process did not return an exit code"}`);
++      return 1;
++    }
++    if (result.status !== 0) {
+       logger.error(`FAILED ${step.id} with exit code ${result.status}`);
+       return result.status;
+     }
+     logger.log(`PASS ${step.id}`);
+   }
+ 
+-  logger.log("VERIFIED focused provider check passed.");
++  logger.log("VERIFIED release gate passed.");
+   return 0;
+ }
+ 
+diff --git a/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-gate-app/src/services/workflowContractClient.ts b/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-gate-app/src/services/workflowContractClient.ts
+index 0ed7251..107d0cd 100644
+--- a/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-gate-app/src/services/workflowContractClient.ts	
++++ b/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-gate-app/src/services/workflowContractClient.ts	
+@@ -11,7 +11,16 @@ export interface ContractWorkflow {
+ // Seeded previous-agent shortcut: a TypeScript assertion does not validate a
+ // provider response at runtime.
+ export function parseWorkflowResponse(value: unknown): ContractWorkflow {
+-  return value as ContractWorkflow;
++  if (typeof value !== "object" || value === null) {
++    throw new Error("Invalid workflow response");
++  }
++
++  const workflow = value as Record<string, unknown>;
++  if (!["needs-evidence", "pending-review", "accepted"].includes(workflow.decisionState as string)) {
++    throw new Error("Invalid decisionState");
++  }
++
++  return workflow as unknown as ContractWorkflow;
+ }
+ 
+ export async function listWorkflows(baseUrl = ""): Promise<ContractWorkflow[]> {
+diff --git a/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowItem.java b/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowItem.java
+index b947fb2..5b4b4c7 100644
+--- a/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowItem.java	
++++ b/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowItem.java	
+@@ -1,5 +1,7 @@
+ package dev.agentic.exercise.workflow;
+ 
++import com.fasterxml.jackson.annotation.JsonProperty;
++
+ public record WorkflowItem(
+     String id,
+     String customer,
+@@ -7,4 +9,13 @@ public record WorkflowItem(
+     int score,
+     String owner,
+     String note) {
++  @JsonProperty
++  public String decisionState() {
++    return switch (status) {
++      case "Blocked" -> "needs-evidence";
++      case "In Review" -> "pending-review";
++      case "Ready" -> "accepted";
++      default -> throw new IllegalStateException("Unknown workflow status: " + status);
++    };
++  }
+ }
+diff --git a/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowService.java b/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowService.java
+index 57f8a6d..53e62dc 100644
+--- a/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowService.java	
++++ b/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowService.java	
+@@ -19,6 +19,10 @@ public class WorkflowService {
+     WorkflowItem item = repository.findById(id)
+         .orElseThrow(() -> new WorkflowNotFoundException(id));
+ 
++    if (!"Blocked".equals(decision.status()) && !"Ready".equals(decision.status())) {
++      throw new InvalidWorkflowDecisionException("Unsupported workflow status");
++    }
++
+     if ("Ready".equals(decision.status()) && decision.evidenceNote().length() < 12) {
+       throw new InvalidWorkflowDecisionException("Ready decisions require a longer evidence note");
+     }

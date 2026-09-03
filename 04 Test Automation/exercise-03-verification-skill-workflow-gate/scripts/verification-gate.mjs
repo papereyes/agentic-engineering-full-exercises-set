@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const exerciseRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const provider = path.join(exerciseRoot, "workflow-rules-api");
+const client = path.join(exerciseRoot, "workflow-gate-app");
 
 function executeCommand(command, args, options) {
   if (process.platform === "win32") {
@@ -15,12 +16,29 @@ function executeCommand(command, args, options) {
   return spawnSync(command, args, { ...options, shell: false });
 }
 
-// Seeded previous-agent shortcut: this proves one provider unit-test class only.
 export const releaseSteps = [
   {
-    id: "focused-provider-unit",
+    id: "gate-contract",
+    command: "npm",
+    args: ["run", "test:gate"],
+    cwd: client,
+  },
+  {
+    id: "client-release",
+    command: "npm",
+    args: ["run", "test:release"],
+    cwd: client,
+  },
+  {
+    id: "client-quality-build",
+    command: "npm",
+    args: ["run", "agent:check"],
+    cwd: client,
+  },
+  {
+    id: "provider-tests-build",
     command: process.platform === "win32" ? "mvnw.cmd" : "./mvnw",
-    args: ["-q", "-Dtest=WorkflowServiceTest", "test"],
+    args: ["-q", "verify"],
     cwd: provider,
   },
 ];
@@ -34,14 +52,18 @@ export function runReleaseGate(steps = releaseSteps, execute = executeCommand, l
       shell: false,
     });
 
-    if (result.status && result.status !== 0) {
+    if (result.error || !Number.isInteger(result.status)) {
+      logger.error(`FAILED ${step.id}: ${result.error?.message ?? "process did not return an exit code"}`);
+      return 1;
+    }
+    if (result.status !== 0) {
       logger.error(`FAILED ${step.id} with exit code ${result.status}`);
       return result.status;
     }
     logger.log(`PASS ${step.id}`);
   }
 
-  logger.log("VERIFIED focused provider check passed.");
+  logger.log("VERIFIED release gate passed.");
   return 0;
 }
 

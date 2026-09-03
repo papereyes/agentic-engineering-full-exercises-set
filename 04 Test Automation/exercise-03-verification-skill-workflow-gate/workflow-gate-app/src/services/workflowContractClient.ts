@@ -11,7 +11,16 @@ export interface ContractWorkflow {
 // Seeded previous-agent shortcut: a TypeScript assertion does not validate a
 // provider response at runtime.
 export function parseWorkflowResponse(value: unknown): ContractWorkflow {
-  return value as ContractWorkflow;
+  if (typeof value !== "object" || value === null) {
+    throw new Error("Invalid workflow response");
+  }
+
+  const workflow = value as Record<string, unknown>;
+  if (!["needs-evidence", "pending-review", "accepted"].includes(workflow.decisionState as string)) {
+    throw new Error("Invalid decisionState");
+  }
+
+  return workflow as unknown as ContractWorkflow;
 }
 
 export async function listWorkflows(baseUrl = ""): Promise<ContractWorkflow[]> {

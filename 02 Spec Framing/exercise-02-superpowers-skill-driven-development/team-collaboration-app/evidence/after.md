@@ -3,7 +3,7 @@
 ### Run
 
 - Starting commit: 52090edddf032d026ece16ef90feb627bf8e67ac
-- Implementation commits: 114686b6dd1478e6e7d7b28877600e37f01d086e and 41ee7c5748139dfdad95e4782cb3627e6bcf3aca
+- Implementation commit: ceab3cfd31812e394bd9bf966c1f041eb598ccb4
 - Agent: OpenAI Codex
 - Model: gpt-5.6-sol, medium reasoning
 - Tools: Codex workspace tools
@@ -15,22 +15,37 @@
 - Superpowers available: Yes; superpowers:brainstorming, superpowers:writing-plans, superpowers:subagent-driven-development, superpowers:test-driven-development, superpowers:requesting-code-review, and superpowers:verification-before-completion governed the run
 - Prompt: Add a Team Invitations section. An active owner or admin allowed by the workspace policy may invite an email as a member or guest. Guest invitations are allowed only when the workspace policy permits them. Prevent invitations for existing members or an email with a pending invitation. Invitations must use the configured expiry period and may be accepted or revoked only once. Rejected actions must not change invitation or member data.
 - Patch: `evidence/after.patch`
-- Patch SHA-256: 348f3eedee6f5e0e4949e1502fb3940edb8da769fe343345681f2b92f8b88f8d
+- Patch SHA-256: ab54bd1604d2395f0241bd1e3e2b2bff4daba20f864e8c8f21e2f1d9e0908c2b
 
 ### Results
 
 | Proof | Result |
 |---|---|
-| `npm run test:invitations` | Pass; exit code 0; the invitation lifecycle runner completed without failures. |
-| `npm run submission:verify` | Pass; exit code 0; Superpowers workflow evidence, artifacts, implementation wiring, and challenge integrity were complete. |
-| `npm run agent:check` | Pass; exit code 0; 23 protected inputs, lint, app check, format, typecheck, and production build all passed. |
-| Design created before code | Yes; approved design committed as ed4c7c6. |
-| Plan created before code | Yes; implementation plan committed as 2a83518. |
-| Failing test recorded first | Yes; see `evidence/tdd.md`. |
-| Independent task reviews completed | Yes; both implementation tasks were approved in separate read-only review sessions. |
-| Source files changed | 3 |
-| Source lines added and removed | `+213 / -10` |
+| `npm run test:invitations` | Pass; exit code: 0. |
+| `npm run submission:verify` | Pass; exit code: 0. |
+| `npm run agent:check` | Pass; exit code: 0. |
+| Invitation risks that failed | 0; authorization, normalized identity, guest policy, expiry, single-use transitions, and rejected-state immutability pass the protected suite, and acceptance normalization passes the added regression. |
+| Files changed | 14 |
+| Lines added and removed | `+1280 / -10` |
 
-### Outcome
+### Workflow Artifacts
 
-Fresh isolated CLI workers implemented Tasks 1 and 2 under superpowers:subagent-driven-development. The service uses the shared authorization policy and enforces normalized identity, guest access, configured expiry, single-use transitions, and unchanged state on rejection. The interface delegates creation, acceptance, and revocation to that service.
+| Stage | Superpowers skill | Artifact or proof |
+|---|---|---|
+| Design | `superpowers:brainstorming` | Approved `docs/superpowers/specs/2026-09-04-team-invitations-design.md`, committed before planning and code. |
+| Plan | `superpowers:writing-plans` | `docs/superpowers/plans/2026-09-04-team-invitations.md`, committed before implementation. |
+| Test first | `superpowers:test-driven-development` | `evidence/tdd.md` contains exact Task 1 Red/Green output and the post-review regression Red/Green. |
+| Execution | `superpowers:subagent-driven-development` | Task 1 worker `01a06b0b-2497-7d82-b101-498dbc4a931c`, Task 2 worker `01a06b11-3d98-7903-8301-f5a5e0fe4bd9`, and Task 3 evidence worker `01a06b16-8af8-7f52-b7e8-8c56d27b43f7`; exact logs are listed in `evidence/skill-usage.md`. |
+| Review | `superpowers:requesting-code-review` | Task reviewers and final whole-branch reviewer `01a06b19-e78e-7e90-94c6-44ca67e5ca6c` are recorded with findings and resolutions in `evidence/review.md`. |
+| Verification | `superpowers:verification-before-completion` | The three commands above exit 0; the controller retains the final full `npm run verify:exercise` transcript. |
+
+### Proof
+
+- `evidence/after.patch` was generated from the repository root with `git diff --binary --full-index 52090edddf032d026ece16ef90feb627bf8e67ac ceab3cfd31812e394bd9bf966c1f041eb598ccb4`.
+- Its SHA-256 is `ab54bd1604d2395f0241bd1e3e2b2bff4daba20f864e8c8f21e2f1d9e0908c2b`; the range reports 14 files changed, 1,280 insertions, and 10 deletions.
+- The final implementation commit follows the earlier evidence commit because the acceptance defect was discovered by final review. The full base-to-implementation patch therefore includes the already-tracked workflow artifacts, as the repository submission standard requires.
+- Archived session logs under `/home/papereyes/.codex/sessions/2026/09/04` corroborate the isolated worker and reviewer thread IDs recorded in `evidence/skill-usage.md`.
+
+### Conclusion
+
+The final implementation satisfies the invitation contract and the review resolutions: the shared service enforces the lifecycle rules, acceptance normalizes the invitation email before constructing a member, the UI delegates to the service, and the evidence now proves the skill-driven sequence with immutable commit, patch, test, and session records. The independent review’s original blocking verdict remains documented in `evidence/review.md`; these changes are its post-review resolution, not a rewrite of the original run.

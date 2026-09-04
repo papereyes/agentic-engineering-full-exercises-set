@@ -1,6 +1,6 @@
 diff --git a/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/clarifications.md b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/clarifications.md
 new file mode 100644
-index 0000000000000000000000000000000000000000..a9fa967cb2f27df3c1434e1f11b5c47448049171
+index 0000000000000000000000000000000000000000..52d11d9f06902835fd3557bb758fa67c60a6a1d1
 --- /dev/null
 +++ b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/clarifications.md	
 @@ -0,0 +1,41 @@
@@ -25,9 +25,9 @@ index 0000000000000000000000000000000000000000..a9fa967cb2f27df3c1434e1f11b5c474
 +## Q3: How are pending requests and retries kept from creating conflicts or duplicate charges?
 +
 +- Category: Billing, Failure
-+- Repository evidence: `docs/billing-constraints.md` confirms one pending plan-change request per account, asynchronous webhook completion, conflict responses for a second request, and duplicate-charge risk when retries change the idempotency key; `src/types.ts` already exposes `pendingChange` on the account.
-+- Status: Confirmed
-+- Decision: An account with pending work cannot submit another change; accepted work stays pending until its final webhook result, and an unknown-outcome retry reuses the original request and idempotency key.
++- Repository evidence: `docs/billing-constraints.md` confirms one pending plan-change request per account, asynchronous webhook completion, conflict responses for a second plan-change request, and duplicate-charge risk when retries change the idempotency key; `src/types.ts` already exposes `pendingChange` on the account. Neither source confirms that the same pending-request rule covers seat changes and cancellation.
++- Status: Assumption
++- Decision: For the first release, an account with any pending subscription work cannot submit another plan, seat, or cancellation change; accepted work stays pending until its final webhook result, and an unknown-outcome retry reuses the original request and idempotency key.
 +- Consequence: The service must enforce one pending request, preserve retry identity, and keep the interface from presenting an accepted request as already applied.
 +
 +## Q4: What customer-visible state and recovery are required when billing fails?
@@ -47,10 +47,10 @@ index 0000000000000000000000000000000000000000..a9fa967cb2f27df3c1434e1f11b5c474
 +- Consequence: Enterprise accounts use the same role rules until a separate approval policy is confirmed, and implementation tasks must not invent unsupported billing or administration workflows.
 diff --git a/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/plan.md b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/plan.md
 new file mode 100644
-index 0000000000000000000000000000000000000000..9e8ce24c0afbe634c70a38385e778004eee7c65f
+index 0000000000000000000000000000000000000000..d0502cb2d1f27f0bf21bc6fefa88f26a8671d890
 --- /dev/null
 +++ b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/plan.md	
-@@ -0,0 +1,80 @@
+@@ -0,0 +1,79 @@
 +# Subscription management technical plan
 +
 +## Approach
@@ -72,7 +72,7 @@ index 0000000000000000000000000000000000000000..9e8ce24c0afbe634c70a38385e778004
 +
 +Requirements: REQ-001, REQ-002, REQ-003, REQ-004, REQ-006, REQ-008.
 +
-+- Obtain approval for the assumptions recorded in Q1, Q2, Q4, and Q5 before production release.
++- Obtain approval for the assumptions recorded in Q1 through Q5 before production release.
 +- Agree the three HTTP payloads, stable error codes, preview expiry behavior, idempotency ownership, and webhook event identifiers with the existing billing integration owner.
 +- Define the server transaction/constraint that enforces one pending request per account and the audit fields in REQ-008.
 +- Do not add a server framework to this frontend repository; server changes belong beside the existing billing integration.
@@ -130,10 +130,9 @@ index 0000000000000000000000000000000000000000..9e8ce24c0afbe634c70a38385e778004
 +| Preview, timing, and validation | AC-004, AC-005, AC-006 |
 +| Pending and asynchronous completion | AC-007, AC-008, AC-009 |
 +| Failure, retry, and accessibility | AC-010, AC-011, AC-012 |
-+
 diff --git a/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/spec.md b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/spec.md
 new file mode 100644
-index 0000000000000000000000000000000000000000..3505a44e98921f7c33223f78eedcb8cef4478ace
+index 0000000000000000000000000000000000000000..5e18776ac7c2808bb1b9a457016c4790805e1b67
 --- /dev/null
 +++ b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/spec.md	
 @@ -0,0 +1,138 @@
@@ -170,6 +169,7 @@ index 0000000000000000000000000000000000000000..3505a44e98921f7c33223f78eedcb8ce
 +| --- | --- | --- |
 +| Cancellation permission | Only `account_owner` may cancel. | Q1 |
 +| Timing | Upgrades and seat increases apply immediately; downgrades, seat decreases, and cancellations apply at renewal. | Q2 |
++| Pending-request scope | One pending plan, seat, or cancellation request blocks every new subscription change. | Q3 |
 +| Recovery | A fresh attempt is allowed only after reconciliation proves that no charge, applied change, or request remains pending. | Q4 |
 +| Enterprise | No separate approval flow. | Q5 |
 +
@@ -271,13 +271,12 @@ index 0000000000000000000000000000000000000000..3505a44e98921f7c33223f78eedcb8ce
 +
 +## Release conditions
 +
-+- Product confirms the assumptions in Q1, Q2, Q4, and Q5.
++- Product confirms the assumptions in Q1 through Q5.
 +- The server API and webhook handler satisfy the trusted-boundary requirements; a browser-only implementation is not releasable.
 +- Automated checks cover the role matrix, timing classification, preview integrity, pending conflict, idempotent retry, duplicate webhook, safe error mapping, and the acceptance flows above.
-+
 diff --git a/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/tasks.md b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/tasks.md
 new file mode 100644
-index 0000000000000000000000000000000000000000..499aaf916b7f651f4de32bcb43ec05606b0c7ef9
+index 0000000000000000000000000000000000000000..c89f7f3bbf07d4f74866a8bdd9ec79f20fdc2387
 --- /dev/null
 +++ b/02 Spec Framing/exercise-01-spec-driven-feature-development/subscription-management-app/specs/tasks.md	
 @@ -0,0 +1,78 @@
@@ -289,7 +288,7 @@ index 0000000000000000000000000000000000000000..499aaf916b7f651f4de32bcb43ec0560
 +
 +Traceability: REQ-001, REQ-002, REQ-003, REQ-004, REQ-006, REQ-008; AC-001, AC-002, AC-004, AC-005, AC-006, AC-011.
 +
-+- Confirm Q1, Q2, Q4, and Q5 with Product, Finance, Security, and the billing integration owner.
++- Confirm Q1 through Q5 with Product, Finance, Security, and the billing integration owner.
 +- Document the GET, preview, submit, error, and webhook payloads described in PLAN-001, including preview expiry and the definition of an unknown outcome.
 +- Identify the trusted server repository/module and its existing authorization, persistence, logging, and provider-client conventions.
 +

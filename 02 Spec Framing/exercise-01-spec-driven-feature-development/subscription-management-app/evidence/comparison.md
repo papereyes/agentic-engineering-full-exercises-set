@@ -30,9 +30,9 @@ Both first attempts began at the same commit and used the same product request, 
 
 - Q1 makes the unresolved cancellation permission visible and release-blocking; REQ-001 and `specs/spec.md` now distinguish UI visibility from server authorization.
 - Q2 records the billing/support conflict before choosing timing; REQ-002 and REQ-003 in `specs/spec.md` now require authoritative effect timing and provider-backed previews.
-- Q3 turns documented pending/idempotency constraints into REQ-004 and REQ-005, with matching work in `specs/plan.md` and `specs/tasks.md`.
+- Q3 separates the confirmed plan-change constraint from the broader first-release pending-work assumption traced through REQ-004, REQ-005, the plan, tasks, and release conditions.
 - Q4 prevents an invented retry path: REQ-006 in `specs/spec.md` requires reconciliation before a fresh attempt and safe customer-visible errors.
-- Q5 bounds the first release explicitly; REQ-008 and `specs/tasks.md` avoid inventing Enterprise approvals or unsupported billing workflows.
+- Q5 maps to the specification's Scope and Release Conditions so the first release avoids inventing Enterprise approvals or unsupported billing workflows.
 
 ### Proof
 
@@ -40,4 +40,4 @@ Both first attempts began at the same commit and used the same product request, 
 
 ### Conclusion
 
-Clarification made the specification safer to implement. The after result has no missed decision categories or hidden invented choices: one confirmed policy and four unresolved assumptions are traceable through Q1-Q5 into REQ-001-REQ-008, while both runs retained complete structural traceability.
+Clarification made the specification safer to implement. The after result has no missed decision categories or hidden invented choices: five unresolved assumptions are traceable through Q1-Q5 into requirements, scope, and release conditions, while both runs retained complete structural traceability.

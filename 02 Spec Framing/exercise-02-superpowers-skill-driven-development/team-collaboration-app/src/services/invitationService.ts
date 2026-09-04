@@ -45,11 +45,12 @@ export function acceptInvitation(state: InvitationState, input: AcceptInvitation
   if (isExpired(invitation.expiresAt, input.now)) return reject(state, "INVITATION_EXPIRED");
   if (state.members.some((member) => member.id === input.memberId)) return reject(state, "DUPLICATE_MEMBER_ID");
   const accepted = { ...invitation, status: "accepted" as const };
+  const email = normalizeEmail(invitation.email);
   return {
     ok: true,
     state: {
       ...state,
-      members: [...state.members, { id: input.memberId, name: invitation.email, email: invitation.email, role: invitation.role, status: "active", lastActiveDays: 0 }],
+      members: [...state.members, { id: input.memberId, name: email, email, role: invitation.role, status: "active", lastActiveDays: 0 }],
       invitations: state.invitations.map((item) => item.id === invitation.id ? accepted : item)
     },
     invitation: accepted

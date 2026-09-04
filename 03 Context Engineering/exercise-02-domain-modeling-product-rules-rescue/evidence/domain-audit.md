@@ -22,3 +22,5 @@
 ## Context Boundary
 
 The final implementation agent received the exact product prompt and `CONTEXT.md`. It could inspect the current repository files linked from that glossary, including ADR 0001 and its cited sources. The previous implementation and `before.patch` were not provided or shared, and no extra domain explanation, correction, retry, or implementation hint was given.
+
+The immutable session identifiers, hashes, exact invocation boundary, and source-before-implementation chronology are recorded in `evidence/preparation-session.md`.

@@ -1,0 +1,86 @@
+# Final Verification Transcript
+
+Command: `npm run verify:exercise`
+
+```text
+
+> product-rules-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+
+
+> product-rules-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+
+
+> product-rules-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+
+
+> product-rules-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+
+Verified 20 protected challenge inputs.
+
+> product-rules-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+
+lint-check passed
+
+> product-rules-app@0.1.0 test
+> node ./scripts/agent-check.mjs
+
+agent-check passed for Domain Modeling Skill Product Rules Rescue
+
+> product-rules-app@0.1.0 format
+> node ./scripts/format-check.mjs
+
+format-check passed
+
+> product-rules-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+
+
+> product-rules-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 31 modules transformed.
+rendering chunks...
+computing gzip size...
+../../../../exercise-vite-build-3N2EFX/dist/index.html                   0.43 kB │ gzip:  0.29 kB
+../../../../exercise-vite-build-3N2EFX/dist/assets/index-BAmIHqwj.css    3.99 kB │ gzip:  1.44 kB
+../../../../exercise-vite-build-3N2EFX/dist/assets/index-BfdiZ0HQ.js   196.04 kB │ gzip: 61.68 kB
+✓ built in 1.91s
+
+> product-rules-app@0.1.0 verify:implementation
+> npm run test:rules
+
+
+> product-rules-app@0.1.0 test:rules
+> node ./scripts/run-product-rule-tests.mjs
+
+PASS allows the requesting user with an active admin membership in an eligible workspace
+PASS blocks a Growth workspace
+PASS blocks restricted data residency
+PASS blocks a suspended membership
+PASS blocks a non-admin membership
+PASS blocks an admin membership from another workspace
+PASS blocks an admin membership belonging to another user
+PASS blocks a billing owner without workspace membership
+
+8 product-rule checks passed.
+
+> product-rules-app@0.1.0 verify:submission
+> npm run test:domain
+
+
+> product-rules-app@0.1.0 test:domain
+> node ./scripts/verify-domain-submission.mjs
+
+Domain-model verification passed: 272 words, fair first attempts, complete audit, patches, and command evidence.
+PASS verify:exercise left tracked files, the Git index, and untracked or ignored paths unchanged
+```
+
+Exit code: 0
+

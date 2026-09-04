@@ -32,3 +32,5 @@
 | Lines added and removed | `+76 / -7` |
 
 The agent paused once for the repository's mandatory design approval. The reply approved only the agent's independently proposed design and supplied no vocabulary, source-selection, implementation, correction, or retry.
+
+The treatment boundary and chronology are recorded in `evidence/preparation-session.md`. The complete final exercise-verification transcript and exit code are in `evidence/final-verification.txt`.

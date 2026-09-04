@@ -26,8 +26,8 @@ The runs started from the same commit and used the same production request and w
 
 ### After
 
-- Final implementation commit: `ceab3cfd31812e394bd9bf966c1f041eb598ccb4`
-- Patch: `evidence/after.patch`; SHA-256 `ab54bd1604d2395f0241bd1e3e2b2bff4daba20f864e8c8f21e2f1d9e0908c2b`
+- Final implementation commit: `ab46b7dcccf3d9e06b4e8fbfeff79f852566309b`
+- Patch: `evidence/after.patch`; SHA-256 `f00a75c3deea869ab49f3e362c1b1b97cce91bcf67f3cfcd36fbe7f9b1a8c690`
 - Superpowers produced an approved design, executable plan, raw TDD evidence, isolated task sessions, independent task reviews, and a final whole-branch review.
 - The final review found one missed acceptance-normalization path; its test-first resolution is included in the final implementation commit.
 

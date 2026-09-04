@@ -3,7 +3,7 @@
 ### Run
 
 - Starting commit: 52090edddf032d026ece16ef90feb627bf8e67ac
-- Implementation commit: ceab3cfd31812e394bd9bf966c1f041eb598ccb4
+- Implementation commit: ab46b7dcccf3d9e06b4e8fbfeff79f852566309b
 - Agent: OpenAI Codex
 - Model: gpt-5.6-sol, medium reasoning
 - Tools: Codex workspace tools
@@ -15,7 +15,7 @@
 - Superpowers available: Yes; superpowers:brainstorming, superpowers:writing-plans, superpowers:subagent-driven-development, superpowers:test-driven-development, superpowers:requesting-code-review, and superpowers:verification-before-completion governed the run
 - Prompt: Add a Team Invitations section. An active owner or admin allowed by the workspace policy may invite an email as a member or guest. Guest invitations are allowed only when the workspace policy permits them. Prevent invitations for existing members or an email with a pending invitation. Invitations must use the configured expiry period and may be accepted or revoked only once. Rejected actions must not change invitation or member data.
 - Patch: `evidence/after.patch`
-- Patch SHA-256: ab54bd1604d2395f0241bd1e3e2b2bff4daba20f864e8c8f21e2f1d9e0908c2b
+- Patch SHA-256: f00a75c3deea869ab49f3e362c1b1b97cce91bcf67f3cfcd36fbe7f9b1a8c690
 
 ### Results
 
@@ -25,8 +25,8 @@
 | `npm run submission:verify` | Pass; exit code: 0. |
 | `npm run agent:check` | Pass; exit code: 0. |
 | Invitation risks that failed | 0; authorization, normalized identity, guest policy, expiry, single-use transitions, and rejected-state immutability pass the protected suite, and acceptance normalization passes the added regression. |
-| Files changed | 14 |
-| Lines added and removed | `+1280 / -10` |
+| Files changed | 7 |
+| Lines added and removed | `+537 / -10` |
 
 ### Workflow Artifacts
 
@@ -41,9 +41,9 @@
 
 ### Proof
 
-- `evidence/after.patch` was generated from the repository root with `git diff --binary --full-index 52090edddf032d026ece16ef90feb627bf8e67ac ceab3cfd31812e394bd9bf966c1f041eb598ccb4`.
-- Its SHA-256 is `ab54bd1604d2395f0241bd1e3e2b2bff4daba20f864e8c8f21e2f1d9e0908c2b`; the range reports 14 files changed, 1,280 insertions, and 10 deletions.
-- The final implementation commit follows the earlier evidence commit because the acceptance defect was discovered by final review. The full base-to-implementation patch therefore includes the already-tracked workflow artifacts, as the repository submission standard requires.
+- `evidence/after.patch` was generated from the repository root with `git diff --binary --full-index 52090edddf032d026ece16ef90feb627bf8e67ac ab46b7dcccf3d9e06b4e8fbfeff79f852566309b`.
+- Its SHA-256 is `f00a75c3deea869ab49f3e362c1b1b97cce91bcf67f3cfcd36fbe7f9b1a8c690`; the range reports 7 files changed, 537 insertions, and 10 deletions.
+- The rerun commits were replayed from the shared base so this final implementation boundary precedes the regenerated after-evidence and cannot contain its own patch.
 - Archived session logs under `/home/papereyes/.codex/sessions/2026/09/04` corroborate the isolated worker and reviewer thread IDs recorded in `evidence/skill-usage.md`.
 
 ### Conclusion

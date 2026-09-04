@@ -196,8 +196,8 @@ git commit -m "feat: add team invitations interface"
 Use the repository's recorded evidence commit rather than inventing a comparison. The full repository path is required because the evidence files live below the exercise path. This command correction was made after final review; the original plan incorrectly named implementation commit `99829be` and omitted the repository-root path:
 
 ```bash
-git -C /tmp/agentic-exercise-02-02-rerun show d767419736f47a41129bb67d61b1bd120b01f45e:'02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/evidence/before.md'
-git -C /tmp/agentic-exercise-02-02-rerun show d767419736f47a41129bb67d61b1bd120b01f45e:'02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/evidence/before.patch'
+git show d767419736f47a41129bb67d61b1bd120b01f45e:'02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/evidence/before.md'
+git show d767419736f47a41129bb67d61b1bd120b01f45e:'02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/evidence/before.patch'
 ```
 
 Copy those exact tracked artifacts to `evidence/before.md` and `evidence/before.patch`. Confirm they identify attempt 1, the exact supplied prompt, Superpowers disabled, and a genuine patch containing both `src/services/invitationService.ts` and `src/App.tsx`.
@@ -207,7 +207,7 @@ Copy those exact tracked artifacts to `evidence/before.md` and `evidence/before.
 Generate `evidence/after.patch` from the starter parent through the completed implementation commits so it contains changes to both `src/services/invitationService.ts` and `src/App.tsx`:
 
 ```bash
-git diff 99829be^ -- src/services/invitationService.ts src/App.tsx src/styles.css
+git diff --binary --full-index 52090edddf032d026ece16ef90feb627bf8e67ac ab46b7dcccf3d9e06b4e8fbfeff79f852566309b
 ```
 
 Record the current session conditions and exact prompt in `evidence/after.md`. Include the observed results for `npm run test:invitations`, `npm run submission:verify`, and `npm run agent:check`, and identify the Superpowers design, planning, execution, TDD, review, and verification workflow.

@@ -24,4 +24,6 @@
 
 The first graph command was `rtk graphify reflect --if-stale`; the first incident traversal was `rtk graphify query "dashboard recognized revenue calculation path" --dfs --budget 3000`. The implementation agent queried the graph with `query`, `path`, and `explain` before opening or reading application source. Only after answering GQ-01 through GQ-06 did it inspect the cited source files and verify inferred or ambiguous edges. The previous implementation and baseline patch were not shared.
 
+Exact Graphify/rtk provenance and build output are in `evidence/graph-provenance.md`. The immutable chronological session evidence is in `evidence/tool-order-transcript.md`.
+
 Graph health diagnosis reported 15 dangling semantic edges. They did not affect the extracted code call paths or the cited current-rule nodes used for the change, but the warning is retained here rather than hidden.

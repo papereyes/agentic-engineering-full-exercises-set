@@ -32,3 +32,5 @@
 | Lines added and removed | `+3 / -6` |
 
 The agent queried the graph before opening application source, then source-verified the graph's inferred and ambiguous documentation leads. The only human response approved the agent's independently proposed design and supplied no technical hint, correction, or retry.
+
+Exact toolchain/build provenance is in `evidence/graph-provenance.md`, the graph-before-source chronology is in `evidence/tool-order-transcript.md`, and the complete final exercise-verification transcript and exit code are in `evidence/final-verification.txt`.

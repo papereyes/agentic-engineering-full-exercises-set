@@ -1,0 +1,86 @@
+# Final Verification Transcript
+
+Command: `npm run verify:exercise`
+
+```text
+
+> billing-graph-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+
+
+> billing-graph-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+
+
+> billing-graph-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+
+
+> billing-graph-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+
+Verified 35 protected challenge inputs.
+
+> billing-graph-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+
+lint-check passed
+
+> billing-graph-app@0.1.0 test
+> node ./scripts/agent-check.mjs
+
+agent-check passed for Graphify Billing Knowledge Graph
+
+> billing-graph-app@0.1.0 format
+> node ./scripts/format-check.mjs
+
+format-check passed
+
+> billing-graph-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+
+
+> billing-graph-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 34 modules transformed.
+rendering chunks...
+computing gzip size...
+../../../../exercise-vite-build-NrDLG4/dist/index.html                   0.42 kB │ gzip:  0.28 kB
+../../../../exercise-vite-build-NrDLG4/dist/assets/index-B8S07xzC.css    2.83 kB │ gzip:  1.11 kB
+../../../../exercise-vite-build-NrDLG4/dist/assets/index-Cs03GW1e.js   199.39 kB │ gzip: 62.69 kB
+✓ built in 1.81s
+
+> billing-graph-app@0.1.0 verify:implementation
+> npm run test:billing
+
+
+> billing-graph-app@0.1.0 test:billing
+> node ./scripts/run-billing-tests.mjs
+
+PASS subtracts credits from charge revenue
+PASS subtracts refund gross without applying credits twice
+PASS groups multiple tenants under one billing account
+PASS rejects an event without an account mapping
+PASS does not mutate events or account links
+PASS keeps the dashboard on the shared corrected summary
+PASS keeps the scheduled snapshot on the shared corrected summary
+PASS preserves the existing gross-volume metric
+
+8 billing checks passed.
+
+> billing-graph-app@0.1.0 verify:submission
+> npm run test:graph
+
+
+> billing-graph-app@0.1.0 test:graph
+> node ./scripts/verify-graph-submission.mjs
+
+Graph verification passed: 168 nodes, 220 links, comparable first attempts, complete queries, audit, and patches.
+PASS verify:exercise left tracked files, the Git index, and untracked or ignored paths unchanged
+```
+
+Exit code: 0
+

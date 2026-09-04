@@ -1,0 +1,289 @@
+diff --git a/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/App.tsx b/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/App.tsx
+index 40c9371..a30172c 100644
+--- a/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/App.tsx	
++++ b/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/App.tsx	
+@@ -1,7 +1,43 @@
++import { useState, type FormEvent } from "react";
+ import { members, workspacePolicy } from "./data/team";
++import { acceptInvitation, createInvitation, revokeInvitation } from "./services/invitationService";
+ import { canManageInvitations, summarizeMemberAccess } from "./services/teamPolicy";
++import type { InvitationRole, InvitationState } from "./types";
+ 
+ export default function App() {
++  const [team, setTeam] = useState<InvitationState>({ members, invitations: [], policy: workspacePolicy });
++  const [actorId, setActorId] = useState(members.find((member) => member.status === "active" && (member.role === "owner" || member.role === "admin"))?.id ?? "");
++  const [email, setEmail] = useState("");
++  const [role, setRole] = useState<InvitationRole>("member");
++  const [feedback, setFeedback] = useState("");
++  const actors = team.members.filter((member) => member.status === "active" && (member.role === "owner" || member.role === "admin"));
++
++  function create(event: FormEvent<HTMLFormElement>) {
++    event.preventDefault();
++    const result = createInvitation(team, { actorId, email, role, invitationId: `INV-${team.invitations.length + 1}-${Date.now()}`, now: new Date().toISOString() });
++    if (result.ok) {
++      setTeam(result.state);
++      setEmail("");
++      setFeedback("Invitation created.");
++    } else setFeedback(result.code ?? "UNKNOWN_ERROR");
++  }
++
++  function accept(invitationId: string) {
++    const result = acceptInvitation(team, { invitationId, memberId: `USR-${team.members.length + 1}-${Date.now()}`, now: new Date().toISOString() });
++    if (result.ok) {
++      setTeam(result.state);
++      setFeedback("Invitation accepted.");
++    } else setFeedback(result.code ?? "UNKNOWN_ERROR");
++  }
++
++  function revoke(invitationId: string) {
++    const result = revokeInvitation(team, { invitationId, actorId, now: new Date().toISOString() });
++    if (result.ok) {
++      setTeam(result.state);
++      setFeedback("Invitation revoked.");
++    } else setFeedback(result.code ?? "UNKNOWN_ERROR");
++  }
++
+   return (
+     <main className="shell">
+       <section className="hero">
+@@ -10,8 +46,49 @@ export default function App() {
+         <p>Members and roles exist. Invitation behavior is the unclear feature request for this exercise.</p>
+       </section>
+ 
++      <section className="invitations" aria-labelledby="team-invitations-title">
++        <h2 id="team-invitations-title">Team Invitations</h2>
++        <form className="invitation-form" onSubmit={create}>
++          <label>
++            Actor
++            <select value={actorId} onChange={(event) => setActorId(event.target.value)}>
++              {actors.map((member) => <option key={member.id} value={member.id}>{member.name} ({member.role})</option>)}
++            </select>
++          </label>
++          <label>
++            Email
++            <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
++          </label>
++          <label>
++            Role
++            <select value={role} onChange={(event) => setRole(event.target.value as InvitationRole)}>
++              <option value="member">Member</option>
++              <option value="guest" disabled={!team.policy.allowGuestInvites}>Guest</option>
++            </select>
++          </label>
++          <button type="submit">Create invitation</button>
++        </form>
++        <p className="invitation-feedback" aria-live="polite">{feedback}</p>
++        <ul className="invitation-list">
++          {team.invitations.map((invitation) => (
++            <li key={invitation.id}>
++              <div>
++                <strong>{invitation.email}</strong>
++                <span>{invitation.role} · {invitation.status} · Expires {new Date(invitation.expiresAt).toLocaleString()}</span>
++              </div>
++              {invitation.status === "pending" && (
++                <div className="button-row">
++                  <button type="button" onClick={() => accept(invitation.id)}>Accept</button>
++                  <button type="button" onClick={() => revoke(invitation.id)}>Revoke</button>
++                </div>
++              )}
++            </li>
++          ))}
++        </ul>
++      </section>
++
+       <section className="member-grid">
+-        {members.map((member) => (
++        {team.members.map((member) => (
+           <article className="member-card" key={member.id}>
+             <div>
+               <p className="eyebrow">{member.id}</p>
+@@ -25,7 +102,7 @@ export default function App() {
+               </div>
+               <div>
+                 <dt>Can manage invites</dt>
+-                <dd>{canManageInvitations(member, workspacePolicy) ? "yes" : "no"}</dd>
++                <dd>{canManageInvitations(member, team.policy) ? "yes" : "no"}</dd>
+               </div>
+               <div>
+                 <dt>Status</dt>
+diff --git a/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/services/invitationService.ts b/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/services/invitationService.ts
+index d861faf..d861011 100644
+--- a/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/services/invitationService.ts	
++++ b/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/services/invitationService.ts	
+@@ -5,15 +5,64 @@ import type {
+   InvitationState,
+   RevokeInvitationInput
+ } from "../types";
++import type { InvitationErrorCode } from "../types";
++// @ts-expect-error Node's TypeScript test runner requires the source extension.
++import { canManageInvitations } from "./teamPolicy.ts";
+ 
+-export function createInvitation(_state: InvitationState, _input: CreateInvitationInput): InvitationActionResult {
+-  throw new Error("Invitation lifecycle is not implemented");
++const reject = (state: InvitationState, code: InvitationErrorCode): InvitationActionResult => ({ ok: false, state, code });
++const normalizeEmail = (email: string) => email.trim().toLowerCase();
++const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
++const isExpired = (expiresAt: string, now: string) => Date.parse(expiresAt) <= Date.parse(now);
++
++export function createInvitation(state: InvitationState, input: CreateInvitationInput): InvitationActionResult {
++  const actor = state.members.find((member) => member.id === input.actorId);
++  if (!actor || !canManageInvitations(actor, state.policy)) return reject(state, "UNAUTHORIZED");
++  if (input.role !== "member" && input.role !== "guest") return reject(state, "INVALID_ROLE");
++  if (input.role === "guest" && !state.policy.allowGuestInvites) return reject(state, "GUEST_DISABLED");
++  const email = normalizeEmail(input.email);
++  if (!isValidEmail(email)) return reject(state, "INVALID_EMAIL");
++  if (state.members.some((member) => normalizeEmail(member.email) === email)) return reject(state, "MEMBER_EXISTS");
++  if (state.invitations.some((invitation) => invitation.status === "pending" && normalizeEmail(invitation.email) === email && !isExpired(invitation.expiresAt, input.now))) {
++    return reject(state, "INVITATION_PENDING");
++  }
++  if (state.invitations.some((invitation) => invitation.id === input.invitationId)) return reject(state, "DUPLICATE_INVITATION_ID");
++  const invitation = {
++    id: input.invitationId,
++    email,
++    role: input.role,
++    invitedBy: input.actorId,
++    createdAt: input.now,
++    expiresAt: new Date(Date.parse(input.now) + state.policy.defaultInviteExpiryDays * 86_400_000).toISOString(),
++    status: "pending" as const
++  };
++  return { ok: true, state: { ...state, invitations: [...state.invitations, invitation] }, invitation };
+ }
+ 
+-export function acceptInvitation(_state: InvitationState, _input: AcceptInvitationInput): InvitationActionResult {
+-  throw new Error("Invitation lifecycle is not implemented");
++export function acceptInvitation(state: InvitationState, input: AcceptInvitationInput): InvitationActionResult {
++  const invitation = state.invitations.find(({ id }) => id === input.invitationId);
++  if (!invitation) return reject(state, "INVITATION_NOT_FOUND");
++  if (invitation.status !== "pending") return reject(state, "INVITATION_FINAL");
++  if (isExpired(invitation.expiresAt, input.now)) return reject(state, "INVITATION_EXPIRED");
++  if (state.members.some((member) => member.id === input.memberId)) return reject(state, "DUPLICATE_MEMBER_ID");
++  const accepted = { ...invitation, status: "accepted" as const };
++  return {
++    ok: true,
++    state: {
++      ...state,
++      members: [...state.members, { id: input.memberId, name: invitation.email, email: invitation.email, role: invitation.role, status: "active", lastActiveDays: 0 }],
++      invitations: state.invitations.map((item) => item.id === invitation.id ? accepted : item)
++    },
++    invitation: accepted
++  };
+ }
+ 
+-export function revokeInvitation(_state: InvitationState, _input: RevokeInvitationInput): InvitationActionResult {
+-  throw new Error("Invitation lifecycle is not implemented");
++export function revokeInvitation(state: InvitationState, input: RevokeInvitationInput): InvitationActionResult {
++  const actor = state.members.find((member) => member.id === input.actorId);
++  if (!actor || !canManageInvitations(actor, state.policy)) return reject(state, "UNAUTHORIZED");
++  const invitation = state.invitations.find(({ id }) => id === input.invitationId);
++  if (!invitation) return reject(state, "INVITATION_NOT_FOUND");
++  if (invitation.status !== "pending") return reject(state, "INVITATION_FINAL");
++  if (isExpired(invitation.expiresAt, input.now)) return reject(state, "INVITATION_EXPIRED");
++  const revoked = { ...invitation, status: "revoked" as const };
++  return { ok: true, state: { ...state, invitations: state.invitations.map((item) => item.id === invitation.id ? revoked : item) }, invitation: revoked };
+ }
+diff --git a/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/styles.css b/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/styles.css
+index 8f57ec1..c1a07ac 100644
+--- a/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/styles.css	
++++ b/02 Spec Framing/exercise-02-superpowers-skill-driven-development/team-collaboration-app/src/styles.css	
+@@ -16,15 +16,20 @@ body {
+   padding: 36px 0;
+ }
+ 
+-.hero {
++.hero,
++.invitations {
+   padding: 28px;
+   border: 1px solid #d8dee9;
+   border-radius: 8px;
+   background: #ffffff;
+ }
+ 
+-.hero h1 {
++.hero h1,
++.invitations h2 {
+   margin: 0;
++}
++
++.hero h1 {
+   font-size: 32px;
+ }
+ 
+@@ -42,6 +47,78 @@ body {
+   text-transform: uppercase;
+ }
+ 
++.invitations {
++  display: grid;
++  gap: 16px;
++  margin-top: 20px;
++}
++
++.invitation-form {
++  display: grid;
++  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
++  gap: 12px;
++  align-items: end;
++}
++
++.invitation-form label,
++.invitation-list li,
++.invitation-list li > div {
++  display: grid;
++  gap: 6px;
++}
++
++.invitation-form input,
++.invitation-form select,
++button {
++  padding: 8px;
++  border: 1px solid #d8dee9;
++  border-radius: 4px;
++  background: #ffffff;
++  color: #172033;
++  font: inherit;
++}
++
++button {
++  cursor: pointer;
++}
++
++button:focus-visible,
++input:focus-visible,
++select:focus-visible {
++  outline: 3px solid #526178;
++  outline-offset: 2px;
++}
++
++.invitation-feedback {
++  min-height: 1.5em;
++  margin: 0;
++  color: #526178;
++}
++
++.invitation-list {
++  display: grid;
++  gap: 12px;
++  margin: 0;
++  padding: 0;
++  list-style: none;
++}
++
++.invitation-list li {
++  grid-template-columns: 1fr auto;
++  align-items: center;
++  padding: 12px;
++  border: 1px solid #d8dee9;
++}
++
++.invitation-list span {
++  color: #526178;
++}
++
++.button-row {
++  display: flex;
++  gap: 8px;
++}
++
+ .member-grid {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));

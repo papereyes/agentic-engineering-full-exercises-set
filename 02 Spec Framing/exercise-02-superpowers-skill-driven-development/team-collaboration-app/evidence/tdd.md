@@ -1,5 +1,7 @@
 # Test-Driven Development Evidence
 
+- Execution: the fresh isolated Task 1 CLI worker ran Red before implementation commit `114686b`, then ran Green after the minimum lifecycle implementation.
+
 ## Red
 
 - Command: `npm run test:invitations`

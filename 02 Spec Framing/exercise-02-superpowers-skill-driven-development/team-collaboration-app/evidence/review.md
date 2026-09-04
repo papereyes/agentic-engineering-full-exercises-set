@@ -25,6 +25,15 @@ Archived reviewer logs:
 | Important | `evidence/tdd.md` | Task 1 Red and Green were summaries rather than unedited command output. | Reproduced the exact output and exit codes from Task 1 worker session events 61 and 153, without rewriting their text. | The archived Task 1 JSONL records Red exit 1 and Green exit 0 for `npm run test:invitations`. |
 | Important | `evidence/after.patch` and `evidence/after.md` | The patch lacked `--full-index`, was source-only, and `after.md` named two implementation commits. | Replayed the rerun from the shared base, then generated the patch with `git diff --binary --full-index 52090edddf032d026ece16ef90feb627bf8e67ac ab46b7dcccf3d9e06b4e8fbfeff79f852566309b` and recorded that single final implementation SHA. | `sha256sum evidence/after.patch` is `f00a75c3deea869ab49f3e362c1b1b97cce91bcf67f3cfcd36fbe7f9b1a8c690`; Git reports 7 files, 537 insertions, and 10 deletions. |
 | Important | `evidence/after.md` and `evidence/comparison.md` | Required result rows and the Workflow Artifacts, Proof, and evidence-backed Conclusion sections were absent. | Added every template result row and the missing sections, with nine comparison dimensions. | `npm run submission:verify` exited 0 after the final evidence edit; the controller retains the final full exercise transcript. |
-| Minor | `docs/superpowers/plans/2026-09-04-team-invitations.md:194` | Evidence-recovery commands referenced the wrong commit and an incomplete repository path. | Corrected both commands to use `/tmp/agentic-exercise-02-02-rerun`, evidence commit `d767419736f47a41129bb67d61b1bd120b01f45e`, and the full repository-relative artifact paths; the plan labels this as a post-review correction. | Both corrected `git show` object paths resolve to the tracked before-run evidence. |
+| Minor | `docs/superpowers/plans/2026-09-04-team-invitations.md:194` | Evidence-recovery commands referenced the wrong commit and an incomplete repository path. | Corrected both commands to use evidence commit `d767419736f47a41129bb67d61b1bd120b01f45e` and full repository-relative object paths without a machine-specific checkout path; the plan labels this as a post-review correction. | Both corrected `git show` commands resolve and reproduce the tracked before-run evidence byte-for-byte. |
 
 The final whole-branch review initially blocked submission. This document records the resulting fixes; it does not rewrite that reviewer’s original verdict as an approval.
+
+## Scoped final re-review
+
+- Reviewer thread: `01a06b3c-86a0-7442-9ef0-4e15bd5226b2`
+- Reviewed commit: `a0a264ca96c651829f6232bfa1e13d0ac4535eac`
+- Findings: None.
+- Verdict: Approved.
+- Verification: fresh `npm run verify:exercise` exited 0 with 16/16 invitation tests passing and left Git status clean.
+- Complete controller transcript: `evidence/final-verification.txt`.

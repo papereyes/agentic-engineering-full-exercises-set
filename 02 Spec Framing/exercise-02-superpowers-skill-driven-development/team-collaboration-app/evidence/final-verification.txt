@@ -1,0 +1,100 @@
+# Final Verification Transcript
+
+Command: `npm run verify:exercise`
+
+```text
+
+> team-collaboration-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+
+
+> team-collaboration-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+
+
+> team-collaboration-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+
+
+> team-collaboration-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+
+Verified 23 protected challenge inputs.
+
+> team-collaboration-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+
+lint-check passed
+
+> team-collaboration-app@0.1.0 test
+> node ./scripts/agent-check.mjs
+
+agent-check passed for Superpowers Skill-Driven Development; protected challenge files are unchanged.
+
+> team-collaboration-app@0.1.0 format
+> node ./scripts/format-check.mjs
+
+format-check passed
+
+> team-collaboration-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+
+
+> team-collaboration-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 32 modules transformed.
+rendering chunks...
+computing gzip size...
+../../../../exercise-vite-build-B2NI7Y/dist/index.html                   0.42 kB │ gzip:  0.28 kB
+../../../../exercise-vite-build-B2NI7Y/dist/assets/index-CQQLhO7d.css    1.82 kB │ gzip:  0.72 kB
+../../../../exercise-vite-build-B2NI7Y/dist/assets/index-BRZs7ai0.js   199.30 kB │ gzip: 62.57 kB
+✓ built in 820ms
+
+> team-collaboration-app@0.1.0 verify:implementation
+> npm run test:invitations
+
+
+> team-collaboration-app@0.1.0 test:invitations
+> node ./scripts/run-invitation-tests.mjs
+
+✔ authorized creation normalizes email and uses the configured expiry (2.302247ms)
+✔ an active admin listed in inviteRoles may create an invitation (0.257615ms)
+✔ members and suspended actors cannot create invitations (0.298363ms)
+✔ target roles and the guest policy are enforced (0.260316ms)
+✔ invalid email addresses are rejected without mutation (1.151482ms)
+✔ existing member email comparison is case-insensitive (0.183553ms)
+✔ an unexpired pending invitation blocks a case-insensitive duplicate (0.250074ms)
+✔ an expired pending invitation does not block a replacement (0.214046ms)
+✔ duplicate invitation identifiers are rejected (0.189243ms)
+✔ accepting a pending invitation adds one member and finalizes the invitation (0.475731ms)
+✔ expired invitations cannot be accepted (0.155821ms)
+✔ accepted and revoked invitations cannot be accepted (0.153618ms)
+✔ acceptance rejects a duplicate member identifier (0.112183ms)
+✔ an authorized actor may revoke a pending invitation only once (0.272957ms)
+✔ unauthorized actors and expired invitations cannot be revoked (0.131199ms)
+✔ unknown invitation identifiers are rejected (0.127253ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 109.975325
+
+> team-collaboration-app@0.1.0 verify:submission
+> npm run submission:verify
+
+
+> team-collaboration-app@0.1.0 submission:verify
+> node ./scripts/verify-submission.mjs
+
+Submission verification passed: Superpowers workflow evidence, artifacts, implementation wiring, and challenge integrity are complete.
+PASS verify:exercise left tracked files, the Git index, and untracked or ignored paths unchanged
+```
+
+Exit code: 0
+

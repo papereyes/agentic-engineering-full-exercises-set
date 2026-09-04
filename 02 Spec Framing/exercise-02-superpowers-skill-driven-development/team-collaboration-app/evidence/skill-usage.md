@@ -26,5 +26,6 @@ Each row is corroborated by the archived JSONL session log and the retained scra
 | Task 2 reviewer | `01a06b14-f57e-7973-911f-8c50a173b9e0` | `/home/papereyes/.codex/sessions/2026/09/04/rollout-2026-09-04T11-52-10-01a06b14-f57e-7973-911f-8c50a173b9e0.jsonl` | `/tmp/exercise-02-02-task2-review.md` |
 | Task 3 evidence worker | `01a06b16-8af8-7f52-b7e8-8c56d27b43f7` | `/home/papereyes/.codex/sessions/2026/09/04/rollout-2026-09-04T11-53-54-01a06b16-8af8-7f52-b7e8-8c56d27b43f7.jsonl` | `/tmp/exercise-02-02-task3-worker.md` |
 | Final whole-branch reviewer | `01a06b19-e78e-7e90-94c6-44ca67e5ca6c` | `/home/papereyes/.codex/sessions/2026/09/04/rollout-2026-09-04T11-57-34-01a06b19-e78e-7e90-94c6-44ca67e5ca6c.jsonl` | `/tmp/exercise-02-02-final-independent-review.md` |
+| Scoped final re-review | `01a06b3c-86a0-7442-9ef0-4e15bd5226b2` | `/home/papereyes/.codex/sessions/2026/09/04/rollout-2026-09-04T12-35-23-01a06b3c-86a0-7442-9ef0-4e15bd5226b2.jsonl` | `/tmp/exercise-02-02-final-rereview-verified.md` |
 
 The Task 2 worker authored and verified the two UI files but could not write the linked-worktree Git index; the controller created commit `41ee7c5748139dfdad95e4782cb3627e6bcf3aca` from those unchanged worker edits. This is recorded as coordination, not as a second implementation attempt.

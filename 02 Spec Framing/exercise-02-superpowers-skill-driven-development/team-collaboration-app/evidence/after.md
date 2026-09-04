@@ -37,7 +37,7 @@
 | Test first | `superpowers:test-driven-development` | `evidence/tdd.md` contains exact Task 1 Red/Green output and the post-review regression Red/Green. |
 | Execution | `superpowers:subagent-driven-development` | Task 1 worker `01a06b0b-2497-7d82-b101-498dbc4a931c`, Task 2 worker `01a06b11-3d98-7903-8301-f5a5e0fe4bd9`, and Task 3 evidence worker `01a06b16-8af8-7f52-b7e8-8c56d27b43f7`; exact logs are listed in `evidence/skill-usage.md`. |
 | Review | `superpowers:requesting-code-review` | Task reviewers and final whole-branch reviewer `01a06b19-e78e-7e90-94c6-44ca67e5ca6c` are recorded with findings and resolutions in `evidence/review.md`. |
-| Verification | `superpowers:verification-before-completion` | The three commands above exit 0; the controller retains the final full `npm run verify:exercise` transcript. |
+| Verification | `superpowers:verification-before-completion` | `evidence/final-verification.txt` contains the complete unedited `npm run verify:exercise` output and exit code 0. |
 
 ### Proof
 
@@ -45,6 +45,7 @@
 - Its SHA-256 is `f00a75c3deea869ab49f3e362c1b1b97cce91bcf67f3cfcd36fbe7f9b1a8c690`; the range reports 7 files changed, 537 insertions, and 10 deletions.
 - The rerun commits were replayed from the shared base so this final implementation boundary precedes the regenerated after-evidence and cannot contain its own patch.
 - Archived session logs under `/home/papereyes/.codex/sessions/2026/09/04` corroborate the isolated worker and reviewer thread IDs recorded in `evidence/skill-usage.md`.
+- Independent scoped re-review thread `01a06b3c-86a0-7442-9ef0-4e15bd5226b2` found no findings and approved commit `a0a264ca96c651829f6232bfa1e13d0ac4535eac` after its fresh full verifier passed.
 
 ### Conclusion
 

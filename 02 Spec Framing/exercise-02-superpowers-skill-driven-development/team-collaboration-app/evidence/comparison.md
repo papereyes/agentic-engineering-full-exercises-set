@@ -43,7 +43,7 @@ The runs started from the same commit and used the same production request and w
 | Rejected-state mutation | Returned the supplied state from rejection paths. | Returns the exact supplied state and constructs changed arrays only after validation. |
 | Planning quality | No design or plan artifact. | `superpowers:brainstorming` produced the approved design and `superpowers:writing-plans` framed three bounded tasks before code. |
 | Tests | 16 protected tests passed, but no durable raw TDD artifact remained. | The same 16 protected tests pass; raw Task 1 Red/Green output and a Red/Green unprotected acceptance-normalization regression are retained. |
-| Final verification | No independent review or final workflow proof. | `superpowers:requesting-code-review` produced task reviews and a broad final review; post-review focused test, invitation suite, and typecheck exit 0, with the controller retaining the final full verification transcript. |
+| Final verification | No independent review or final workflow proof. | Independent task, whole-branch, and scoped re-review sessions completed; `evidence/final-verification.txt` records the complete final `npm run verify:exercise` output and exit code 0. |
 
 ### Proof
 

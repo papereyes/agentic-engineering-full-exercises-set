@@ -1,0 +1,84 @@
+# Final Verification Transcript
+
+Command: `npm run verify:exercise`
+
+```text
+
+> bugfix-context-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+
+
+> bugfix-context-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+
+
+> bugfix-context-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run format && npm run typecheck && npm run build && node ./scripts/agent-check.mjs
+
+
+> bugfix-context-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+
+Verified 26 protected challenge inputs.
+
+> bugfix-context-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+
+lint-check passed
+
+> bugfix-context-app@0.1.0 format
+> node ./scripts/format-check.mjs
+
+format-check passed
+
+> bugfix-context-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+
+
+> bugfix-context-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 44 modules transformed.
+rendering chunks...
+computing gzip size...
+../../../../exercise-vite-build-eLw8R3/dist/index.html                   0.41 kB │ gzip:  0.28 kB
+../../../../exercise-vite-build-eLw8R3/dist/assets/index-BAmIHqwj.css    3.99 kB │ gzip:  1.44 kB
+../../../../exercise-vite-build-eLw8R3/dist/assets/index-DQVdXHI1.js   203.76 kB │ gzip: 64.10 kB
+✓ built in 1.94s
+Agent check passed for Handoff Skill Incident Rescue: build, starter artifacts, and protected challenge inputs are valid.
+
+> bugfix-context-app@0.1.0 verify:implementation
+> npm run test:incident
+
+
+> bugfix-context-app@0.1.0 test:incident
+> node ./scripts/run-incident-tests.mjs
+
+PASS keeps a high-priority case queued at 47 waiting hours
+PASS escalates a high-priority case at the 48-hour boundary
+PASS preserves ownership and case content during automatic escalation
+PASS leaves an existing manual escalation unchanged
+PASS does not escalate a non-high-priority case
+PASS is idempotent after an automatic escalation
+PASS persists exactly the eligible automatic escalations
+PASS preserves the manually escalated case in saved state
+PASS keeps queue totals consistent with saved state
+PASS does not expose mutable references to saved queue state
+
+10 incident checks passed.
+
+> bugfix-context-app@0.1.0 verify:submission
+> npm run test:handoff
+
+
+> bugfix-context-app@0.1.0 test:handoff
+> node ./scripts/verify-handoff.mjs
+
+Handoff verification passed: 605 words, fair first attempts, complete audit, patches, and command evidence.
+PASS verify:exercise left tracked files, the Git index, and untracked or ignored paths unchanged
+```
+
+Exit code: 0
+

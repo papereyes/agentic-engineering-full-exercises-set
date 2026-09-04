@@ -32,3 +32,5 @@
 | Lines added and removed | `+3 / -5` |
 
 The agent paused once for the same mandatory design approval as the baseline. The reply approved only the independently proposed design and supplied no requirement, implementation, correction, or retry.
+
+The complete final exercise-verification transcript and exit code are in `evidence/final-verification.txt`.

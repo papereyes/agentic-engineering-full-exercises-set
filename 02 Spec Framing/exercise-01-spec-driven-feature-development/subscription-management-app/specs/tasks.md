@@ -6,7 +6,7 @@ Tasks are ordered by dependency. A task is complete only when its listed verific
 
 Traceability: REQ-001, REQ-002, REQ-003, REQ-004, REQ-006, REQ-008; AC-001, AC-002, AC-004, AC-005, AC-006, AC-011.
 
-- Confirm Q1, Q2, Q4, and Q5 with Product, Finance, Security, and the billing integration owner.
+- Confirm Q1 through Q5 with Product, Finance, Security, and the billing integration owner.
 - Document the GET, preview, submit, error, and webhook payloads described in PLAN-001, including preview expiry and the definition of an unknown outcome.
 - Identify the trusted server repository/module and its existing authorization, persistence, logging, and provider-client conventions.
 

@@ -19,9 +19,9 @@
 ## Q3: How are pending requests and retries kept from creating conflicts or duplicate charges?
 
 - Category: Billing, Failure
-- Repository evidence: `docs/billing-constraints.md` confirms one pending plan-change request per account, asynchronous webhook completion, conflict responses for a second request, and duplicate-charge risk when retries change the idempotency key; `src/types.ts` already exposes `pendingChange` on the account.
-- Status: Confirmed
-- Decision: An account with pending work cannot submit another change; accepted work stays pending until its final webhook result, and an unknown-outcome retry reuses the original request and idempotency key.
+- Repository evidence: `docs/billing-constraints.md` confirms one pending plan-change request per account, asynchronous webhook completion, conflict responses for a second plan-change request, and duplicate-charge risk when retries change the idempotency key; `src/types.ts` already exposes `pendingChange` on the account. Neither source confirms that the same pending-request rule covers seat changes and cancellation.
+- Status: Assumption
+- Decision: For the first release, an account with any pending subscription work cannot submit another plan, seat, or cancellation change; accepted work stays pending until its final webhook result, and an unknown-outcome retry reuses the original request and idempotency key.
 - Consequence: The service must enforce one pending request, preserve retry identity, and keep the interface from presenting an accepted request as already applied.
 
 ## Q4: What customer-visible state and recovery are required when billing fails?

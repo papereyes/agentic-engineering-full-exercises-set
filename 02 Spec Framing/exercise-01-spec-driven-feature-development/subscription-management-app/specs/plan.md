@@ -19,7 +19,7 @@ The API uses safe error codes (`forbidden`, `invalid_change`, `preview_expired`,
 
 Requirements: REQ-001, REQ-002, REQ-003, REQ-004, REQ-006, REQ-008.
 
-- Obtain approval for the assumptions recorded in Q1, Q2, Q4, and Q5 before production release.
+- Obtain approval for the assumptions recorded in Q1 through Q5 before production release.
 - Agree the three HTTP payloads, stable error codes, preview expiry behavior, idempotency ownership, and webhook event identifiers with the existing billing integration owner.
 - Define the server transaction/constraint that enforces one pending request per account and the audit fields in REQ-008.
 - Do not add a server framework to this frontend repository; server changes belong beside the existing billing integration.
@@ -77,4 +77,3 @@ Requirements: REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ
 | Preview, timing, and validation | AC-004, AC-005, AC-006 |
 | Pending and asynchronous completion | AC-007, AC-008, AC-009 |
 | Failure, retry, and accessibility | AC-010, AC-011, AC-012 |
-

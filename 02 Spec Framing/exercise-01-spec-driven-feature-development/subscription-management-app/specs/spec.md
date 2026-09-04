@@ -31,6 +31,7 @@ Not in scope: billing-cadence changes, payment-method management, automatic refu
 | --- | --- | --- |
 | Cancellation permission | Only `account_owner` may cancel. | Q1 |
 | Timing | Upgrades and seat increases apply immediately; downgrades, seat decreases, and cancellations apply at renewal. | Q2 |
+| Pending-request scope | One pending plan, seat, or cancellation request blocks every new subscription change. | Q3 |
 | Recovery | A fresh attempt is allowed only after reconciliation proves that no charge, applied change, or request remains pending. | Q4 |
 | Enterprise | No separate approval flow. | Q5 |
 
@@ -132,7 +133,6 @@ Given an account owner selects cancellation, When the owner proceeds, Then a lab
 
 ## Release conditions
 
-- Product confirms the assumptions in Q1, Q2, Q4, and Q5.
+- Product confirms the assumptions in Q1 through Q5.
 - The server API and webhook handler satisfy the trusted-boundary requirements; a browser-only implementation is not releasable.
 - Automated checks cover the role matrix, timing classification, preview integrity, pending conflict, idempotent retry, duplicate webhook, safe error mapping, and the acceptance flows above.
-

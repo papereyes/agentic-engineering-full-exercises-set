@@ -1,10 +1,11 @@
 {
   "algorithm": "sha256-normalized-lf",
   "protectedFiles": {
-    "../../../scripts/comparable-evidence.mjs": "552a2e8e3bd3ac3b70432170737823f4dc8f2f75e14235ee0da3b9dc8198becb",
+    "../../../scripts/comparable-evidence.mjs": "c17afd57721834139072a847e03b4fbce467d8e1db9252c5748212966fbca1d0",
     "../../../scripts/run-clean-verification.mjs": "9b17cbb8865a642a7789113c145be88c6bb965bc2d8c024b82202e8ae85bf368",
     "../../../scripts/run-vite-build.mjs": "b7901ed4f770e6537e80f864392c8c1de841b5c97fa8993246c5df7a86d5d415",
     "../../../scripts/verify-protected-inputs.mjs": "d99346d9a84651bcb654d07d1b5d131d39d5f3b703ee9614db4eafc86cb4d96c",
+    "../../../scripts/verify-submission-contract.mjs": "5c34aab86313eeb825b19c6ceabc8afbaf65cce3d1cde325bdea7a9739e23ca4",
     "../README.md": "62ac84e5da925b43a64ba77de8361f6441ec34505324e57fa61dc4d9dda90f49",
     "../docs/cost-dashboard-sample.md": "59300cf31f65a0170b1795c6ea268058f1581a61b0e299e10a3853fb706e2cdf",
     "../docs/measurement-contract.md": "183944be31f5725e332a8c809ff0a675b5b39c39904f9486bef176c41019b332",

@@ -1,9 +1,9 @@
 {
   "title": "Trace-Measured Session Waste Reduction",
   "competency": "12. Agentic Retrospective - Session review, waste reduction, and improvement",
-  "domain": "Event-derived waste analysis and comparable workflow replay",
-  "mission": "Correct false-positive waste metrics, block unchanged failure retries, and prove the effect in a fresh comparable session.",
-  "outcome": "Raw traces show lower preventable work and final correctness after an executable workflow improvement.",
+  "domain": "Event-derived waste analysis and controlled workflow replay",
+  "mission": "Correct false-positive waste metrics, block unchanged failure retries, and prove the effect in a fresh constructed replay.",
+  "outcome": "Fresh session-bound events show lower preventable work and final correctness after an executable workflow improvement.",
   "entities": [
     "session event",
     "workspace revision",
@@ -19,13 +19,15 @@
     "protected baseline metrics",
     "classification edge cases",
     "executable preflight",
-    "condition-matched replay",
+    "condition-matched constructed replay",
+    "anti-splice event provenance",
+    "matched implementation evidence and automatic command capture",
     "npm run verify:exercise checks protected inputs, implementation quality, and required submission evidence."
   ],
   "agentWorkflow": [
     "Derive baseline metrics from immutable events.",
     "Implement and test the retry preflight.",
-    "Replay the same task in a new matched session.",
+    "Construct the supplied task replay under the fixed simulated profile.",
     "Compare analyzer output and retain raw evidence.",
     "Capture comparable before and after results using the conditions defined in the exercise README."
   ],

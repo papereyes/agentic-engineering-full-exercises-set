@@ -2,11 +2,11 @@
 
 ## Your Mission
 
-Your team repeatedly corrects the same coding-agent persistence mistakes in PR review. Your mission is to turn those repeated corrections into minimal repository guidance and prove it changes a fresh agent's first attempt.
+Your team repeatedly corrects the same coding-agent persistence mistakes in PR review. Your mission is to turn those repeated corrections into minimal repository guidance and test its effect on a fresh agent's first attempt.
 
 Three mistakes recur across separate changes: display labels stored as identity, unnormalized status values, and ambient timestamps inside business logic. The proving task does not reveal these hidden conventions.
 
-Compare the exact task before and after guidance, then keep only rules supported by repeated evidence.
+Compare the exact task before and after guidance, then keep only rules supported by repeated evidence. A correct baseline is a ceiling result, not a forced failure.
 
 The duration for this challenge is 45 min or less.
 
@@ -24,9 +24,9 @@ The duration for this challenge is 45 min or less.
 
 4. Commit the guidance without implementation code. Start a different fresh session from that commit using the same prompt, agent, model, tools, permissions, and time limit.
 
-5. Preserve the unedited first patch in `evidence/after.patch`. The patch grader must show at least two baseline defects and zero final defects.
+5. Preserve the unedited first patch in `evidence/after.patch`. If the baseline has defects, the guided result must remove them. If the baseline is already correct, use the ceiling-aware no-regression result. Identical correct patches are allowed in that case.
 
-6. Apply the successful after patch with one participant test in a separate implementation commit. Final source must be identical to the graded patch.
+6. Agent-run patches must change only `filterPersistence.mjs`. Commit the successful after patch alone, then add one participant test in the next commit. The committed source must be identical to the graded patch.
 
 7. Save `evidence/after.md`, comparison, rule map, history, and command output. Raise a focused PR from the second branch.
 
@@ -36,11 +36,11 @@ Submit:
 
 - `AGENTS.md`, `.agent/persistence.md`, final implementation, and participant test.
 - `evidence/before.md`, unedited `evidence/before.patch`, `evidence/after.md`, and unedited `evidence/after.patch`.
-- Run metadata, `evidence/comparison.md`, `rule-map.md`, `history.json`, and command output.
+- Run metadata, `evidence/comparison.md`, `rule-map.md`, `history.json`, and automatically captured command output.
 - Output from `npm run verify:exercise`.
 - A focused pull request containing only this exercise.
 
-Run `npm run verify:exercise` before raising the PR. It checks protected inputs, application quality, rule support, concise guidance, patch authenticity, matched sessions, objective grading, source identity, history, and required proof.
+From `rule-hardening-app`, run `npm run evidence:capture -- --output ../evidence/commands/rules-verify.txt -- npm run evidence:verify`. This records the command, commit, timestamps, output, and exit code without requiring its own output file. Then run `npm run verify:exercise` before raising the PR. It checks protected inputs, matched run evidence, application quality, rule support, concise guidance, patch authenticity, ceiling-aware grading, source identity, history, and required proof.
 
 For the required before and after files, follow the [evidence instructions and template](./docs/evidence-template.md) and the repository [submission standard](../../docs/SUBMISSION_STANDARD.md).
 
@@ -51,5 +51,5 @@ The challenge is complete when:
 - Both sessions differ only by repository guidance and use unedited first-attempt patches.
 - Every permanent rule is supported by repeated correction events.
 - `AGENTS.md` remains concise and routes to non-duplicated focused guidance.
-- The grader finds at least two before defects and zero after defects, and final source equals the graded after patch.
-- `npm run verify:exercise` passes and Git history separates guidance from implementation.
+- The grader records either defect improvement or a valid ceiling no-regression result, finds zero after defects, and confirms final source equals the graded after patch.
+- `npm run verify:exercise` passes and Git history separates guidance, the graded source patch, and the participant test.

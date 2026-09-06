@@ -2,13 +2,18 @@
   "name": "Trace-Backed Workflow Optimizer",
   "root": "..",
   "requiredFiles": [
+    { "path": "evidence/before.md", "minCharacters": 250, "includeAll": ["Starting commit", "Implementation commit", "Agent and model", "Tools and permissions", "Time limit", "Human hints: 0", "Retries: 0", "Patch SHA-256"] },
+    { "path": "evidence/before.patch", "minCharacters": 80, "includeAll": ["diff --git"] },
+    { "path": "evidence/after.md", "minCharacters": 250, "includeAll": ["Starting commit", "Implementation commit", "Agent and model", "Tools and permissions", "Time limit", "Human hints: 0", "Retries: 0", "Patch SHA-256"] },
+    { "path": "evidence/after.patch", "minCharacters": 80, "includeAll": ["diff --git"] },
+    { "path": "evidence/comparison.md", "minCharacters": 500, "includeAll": ["Before", "After", "Same conditions", "Proof", "Conclusion"] },
     { "path": "workflow-optimizer-app/workflow/instructions.md", "minCharacters": 900, "includeAll": ["scope", "clarify", "authoritative", "contradiction", "context", "failed", "stop", "verification", "exit code", "completion"] },
-    { "path": "evidence/baseline-runs.json", "minCharacters": 12000, "validJson": true, "includeAll": ["baseline", "responseSha256", "settingsHash", "permissionsHash"] },
-    { "path": "evidence/candidate-runs.json", "minCharacters": 12000, "validJson": true, "includeAll": ["candidate", "responseSha256", "settingsHash", "permissionsHash"] },
-    { "path": "evidence/benchmark.json", "minCharacters": 5000, "validJson": true, "includeAll": ["trainQuality", "heldoutQuality", "heldoutStdDev", "heldoutCriticalFailures", "tokenCost", "durationCost", "adopt"] },
+    { "path": "evidence/baseline-runs.json", "minCharacters": 12000, "validJson": true, "includeAll": ["baseline", "responseSha256", "settingsHash", "permissionsHash", "sessionId", "metricsSource", "capturedAt"] },
+    { "path": "evidence/candidate-runs.json", "minCharacters": 12000, "validJson": true, "includeAll": ["candidate", "responseSha256", "settingsHash", "permissionsHash", "sessionId", "metricsSource", "capturedAt"] },
+    { "path": "evidence/benchmark.json", "minCharacters": 5000, "validJson": true, "includeAll": ["mode", "trainQuality", "heldoutQuality", "heldoutStdDev", "heldoutCriticalFailures", "ceilingValue", "tokenCost", "durationCost", "adopt"] },
     { "path": "evidence/failure-clusters.md", "minCharacters": 1200, "includeAll": ["TR-01", "TR-12", "scope-before-action", "evidence-authority", "completion-verification", "context-selection", "clarification-boundary", "frequency", "workflow change"] },
     { "path": "evidence/adoption.md", "minCharacters": 900, "includeAll": ["held-out", "train", "variance", "median tokens", "duration", "critical", "limitation", "adopt"] },
     { "path": "evidence/history.json", "minCharacters": 120, "validJson": true, "includeAll": ["baselineSha", "candidateSha"] },
-    { "path": "evidence/commands/workflow-verify.txt", "minCharacters": 300, "includeAll": ["Baseline SHA", "Candidate SHA", "train", "held-out", "PASS", "exit code: 0"] }
+    { "path": "evidence/commands/workflow-verify.txt", "minCharacters": 300, "includeAll": ["Command: npm run evidence:verify", "Repository commit:", "Started at:", "Finished at:", "Baseline SHA", "Candidate SHA", "train", "held-out", "PASS", "exit code: 0"] }
   ]
 }

@@ -12,7 +12,7 @@ export const labContract: LabContract = {
   outcome: "A pure injected policy and test-first history preserve service, repository, HTTP, and client contracts.",
   entities: ["workflow item", "decision policy", "repository", "HTTP response"],
   seededDefects: ["validation is interleaved with persistence orchestration", "legacy validation gaps are undocumented", "contract changes can escape backend-only tests"],
-  verificationGates: ["characterization-first history", "service and policy architecture", "strict HTTP JSON tests", "React client parser contract"],
+  verificationGates: ["characterization-first history", "service and policy architecture", "strict HTTP JSON tests", "React client parser contract", "Maven verification writes only to temporary storage", "matched run metadata with ceiling-aware identical-patch support and automatic command capture"],
   agentWorkflow: ["Capture protected observations before production edits.", "Extract only decision validation into a pure policy.", "Preserve lookup order and repository effects.", "Verify backend and client before recording evidence."],
   workingDeliverables: ["Participant characterization test.", "DecisionPolicy and focused service wiring.", "Identical before and after contract snapshots.", "Refactor map, rollback, and Git evidence."],
   masterySignals: ["Not-found lookup remains first.", "Policy has no repository dependency.", "Exact errors, fields, gaps, and save counts remain stable.", "Later commits contain evidence only."],

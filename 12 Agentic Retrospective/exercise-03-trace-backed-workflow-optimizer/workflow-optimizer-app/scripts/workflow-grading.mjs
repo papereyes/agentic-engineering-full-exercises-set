@@ -83,23 +83,30 @@ export function computeBenchmark(cases, baselineRuns, candidateRuns) {
     const grades = graded.filter((run) => run.split === split && run.lane === lane).flatMap((run) => run.grades);
     return grades.filter((grade) => grade.passed).length / grades.length;
   }
+  const heldoutBaselineRuns = graded.filter((run) => run.split === "heldout" && run.lane === "baseline");
   const heldoutCandidateRuns = graded.filter((run) => run.split === "heldout" && run.lane === "candidate");
+  const heldoutBaselineQuality = heldoutBaselineRuns.map((run) => run.grades.filter((grade) => grade.passed).length / run.grades.length);
   const heldoutRunQuality = heldoutCandidateRuns.map((run) => run.grades.filter((grade) => grade.passed).length / run.grades.length);
   const criticalIds = new Set(cases.filter((item) => item.split === "heldout").flatMap((item) => item.assertions.filter((assertion) => assertion.critical).map((assertion) => `${item.id}:${assertion.id}`)));
   const criticalFailures = heldoutCandidateRuns.flatMap((run) => run.grades.map((grade) => ({ ...grade, caseId: run.caseId, run: run.run }))).filter((grade) => criticalIds.has(`${grade.caseId}:${grade.id}`) && !grade.passed);
   const summary = {
-    baseline: { trainQuality: quality("train", "baseline"), heldoutQuality: quality("heldout", "baseline"), medianTokens: median(baselineRuns.map((run) => run.tokens)), medianDurationMs: median(baselineRuns.map((run) => run.durationMs)) },
+    baseline: { trainQuality: quality("train", "baseline"), heldoutQuality: quality("heldout", "baseline"), medianTokens: median(baselineRuns.map((run) => run.tokens)), medianDurationMs: median(baselineRuns.map((run) => run.durationMs)), heldoutStdDev: standardDeviation(heldoutBaselineQuality) },
     candidate: { trainQuality: quality("train", "candidate"), heldoutQuality: quality("heldout", "candidate"), medianTokens: median(candidateRuns.map((run) => run.tokens)), medianDurationMs: median(candidateRuns.map((run) => run.durationMs)), heldoutStdDev: standardDeviation(heldoutRunQuality), heldoutCriticalFailures: criticalFailures.length },
   };
+  const ceilingMode = summary.baseline.trainQuality >= 0.95 || summary.baseline.heldoutQuality >= 0.95;
+  const efficiencyImproved = summary.candidate.medianTokens <= summary.baseline.medianTokens * 0.85
+    || summary.candidate.medianDurationMs <= summary.baseline.medianDurationMs * 0.85
+    || summary.baseline.heldoutStdDev - summary.candidate.heldoutStdDev >= 0.02;
   const thresholds = {
     trainQuality: summary.candidate.trainQuality >= 0.85,
     heldoutQuality: summary.candidate.heldoutQuality >= 0.90,
-    trainImprovement: summary.candidate.trainQuality - summary.baseline.trainQuality >= 0.10,
-    heldoutImprovement: summary.candidate.heldoutQuality - summary.baseline.heldoutQuality >= 0.10,
+    trainImprovement: ceilingMode ? summary.candidate.trainQuality >= summary.baseline.trainQuality : summary.candidate.trainQuality - summary.baseline.trainQuality >= 0.10,
+    heldoutImprovement: ceilingMode ? summary.candidate.heldoutQuality >= summary.baseline.heldoutQuality : summary.candidate.heldoutQuality - summary.baseline.heldoutQuality >= 0.10,
+    ceilingValue: !ceilingMode || efficiencyImproved,
     heldoutCritical: criticalFailures.length === 0,
     variance: summary.candidate.heldoutStdDev <= 0.20,
     tokenCost: summary.candidate.medianTokens <= summary.baseline.medianTokens * 1.25,
     durationCost: summary.candidate.medianDurationMs <= summary.baseline.medianDurationMs * 1.50,
   };
-  return { version: 1, summary, thresholds, adopt: Object.values(thresholds).every(Boolean), gradedRuns: graded };
+  return { version: 2, mode: ceilingMode ? "ceiling-aware" : "quality-improvement", summary, thresholds, adopt: Object.values(thresholds).every(Boolean), gradedRuns: graded };
 }

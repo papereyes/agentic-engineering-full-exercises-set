@@ -29,48 +29,61 @@ for (const scenario of cases) {
   });
 }
 
-function routingFakes(cardBehavior = async (request) => ({ orderId: request.orderId, status: "paid", totalCents: 1084, errorCode: null })) {
+function resultFor(request, status = "paid", errorCode = null) {
+  return {
+    orderId: request.orderId,
+    status,
+    totalCents: request.subtotalCents + Math.round(request.subtotalCents * request.taxRateBps / 10000),
+    errorCode,
+  };
+}
+
+function routingFakes(cardBehavior = async (request) => resultFor(request)) {
   const calls = { legacy: [], card: [] };
   return {
     calls,
     dependencies: {
-      legacy: async (request) => { calls.legacy.push(request.paymentType); return { orderId: request.orderId, status: "paid", totalCents: 1084, errorCode: null }; },
-      card: async (request) => { calls.card.push(request.paymentType); return cardBehavior(request); },
+      legacy: async (request) => { calls.legacy.push(structuredClone(request)); return resultFor(request); },
+      card: async (request) => { calls.card.push(structuredClone(request)); return cardBehavior(request); },
       cardSliceEnabled: true,
     },
   };
 }
 const request = { orderId: "ord-route", paymentType: "card", subtotalCents: 1001, taxRateBps: 825, paymentToken: "tok" };
+const expectedPaid = resultFor(request);
 
 const enabled = routingFakes();
-assert.deepEqual(await routeCheckout(request, enabled.dependencies), { orderId: "ord-route", status: "paid", totalCents: 1084, errorCode: null });
-assert.deepEqual(enabled.calls, { legacy: [], card: ["card"] });
+assert.deepEqual(await routeCheckout(structuredClone(request), enabled.dependencies), expectedPaid);
+assert.deepEqual(enabled.calls, { legacy: [], card: [request] });
 
 for (const paymentType of ["gift-card", "invoice", "crypto"]) {
   const current = routingFakes();
-  await routeCheckout({ ...request, paymentType }, current.dependencies);
-  assert.deepEqual(current.calls, { legacy: [paymentType], card: [] }, `${paymentType} must remain legacy`);
+  const routedRequest = { ...request, paymentType };
+  assert.deepEqual(await routeCheckout(structuredClone(routedRequest), current.dependencies), resultFor(routedRequest));
+  assert.deepEqual(current.calls, { legacy: [routedRequest], card: [] }, `${paymentType} must remain legacy with the complete request`);
 }
 
 const disabled = routingFakes();
 disabled.dependencies.cardSliceEnabled = false;
-await routeCheckout(request, disabled.dependencies);
-assert.deepEqual(disabled.calls, { legacy: ["card"], card: [] }, "flag-off card must use legacy only");
+assert.deepEqual(await routeCheckout(structuredClone(request), disabled.dependencies), expectedPaid);
+assert.deepEqual(disabled.calls, { legacy: [request], card: [] }, "flag-off card must use legacy only with the complete request");
 
 const safe = routingFakes(async () => { throw { authorizationCreated: false }; });
-await routeCheckout(request, safe.dependencies);
-assert.deepEqual(safe.calls, { legacy: ["card"], card: ["card"] }, "pre-authorization failure may fall back exactly once");
+assert.deepEqual(await routeCheckout(structuredClone(request), safe.dependencies), expectedPaid);
+assert.deepEqual(safe.calls, { legacy: [request], card: [request] }, "pre-authorization failure must fall back exactly once");
 
-const uncertainResult = { orderId: "ord-route", status: "failed", totalCents: 1084, errorCode: "PAYMENT_STATE_UNKNOWN" };
-for (const failure of [
-  { authorizationCreated: true, result: uncertainResult },
-  { result: uncertainResult },
-  new Error("gateway outcome unknown"),
+const uncertainResult = resultFor(request, "failed", "PAYMENT_STATE_UNKNOWN");
+for (const { failure, expected } of [
+  { failure: { authorizationCreated: true, result: uncertainResult }, expected: uncertainResult },
+  { failure: { result: uncertainResult }, expected: uncertainResult },
+  { failure: { authorizationCreated: true, result: { status: "failed" } }, expected: uncertainResult },
+  { failure: new Error("gateway outcome unknown"), expected: uncertainResult },
+  { failure: "gateway outcome unknown", expected: uncertainResult },
 ]) {
   const unsafe = routingFakes(async () => { throw failure; });
-  const result = await routeCheckout(request, unsafe.dependencies);
-  assert.deepEqual(unsafe.calls, { legacy: [], card: ["card"] }, "unsafe failure must never retry legacy");
-  assert.deepEqual(result, uncertainResult);
+  const result = await routeCheckout(structuredClone(request), unsafe.dependencies);
+  assert.deepEqual(unsafe.calls, { legacy: [], card: [request] }, "unsafe failure must never retry legacy and must receive the complete request");
+  assert.deepEqual(result, expected, "unsafe failure must return a complete public result");
 }
 
-console.log("PASS 2 legacy comparisons and 8 protected strangler route checks");
+console.log("PASS 2 legacy comparisons and 11 protected strangler route checks");

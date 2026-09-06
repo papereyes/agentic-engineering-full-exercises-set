@@ -12,8 +12,8 @@ export const labContract: LabContract = {
   outcome: "An injectable and reversible router proves safe rollout without duplicate authorization.",
   entities: ["checkout request", "public payment result", "legacy path", "card authorization"],
   seededDefects: ["all payment types still use legacy", "card slice is absent", "authorization-safe fallback is unimplemented"],
-  verificationGates: ["legacy-to-card result comparison", "protected route matrix", "flag-off rollback", "focused source history"],
-  agentWorkflow: ["Inspect the immutable route and result contract.", "Build the card slice behind the injected seam.", "Move only enabled card requests and preserve safe failure behavior.", "Run protected checks and capture evidence after the source commit."],
+  verificationGates: ["legacy-to-card result comparison", "protected route matrix", "primitive and ambiguous authorization failures never fall back", "flag-off rollback", "matched run metadata with ceiling-aware identical-patch support and automatic command capture", "focused source history", "npm run verify:exercise checks protected inputs, implementation quality, and required submission evidence."],
+  agentWorkflow: ["Inspect the immutable route and result contract.", "Precommit a public-router test that fails against the starter.", "Move only enabled card requests and preserve safe failure behavior.", "Run protected checks and capture evidence after the source commit.", "Capture comparable before and after results using the conditions defined in the exercise README."],
   workingDeliverables: ["Card slice, router, and participant test.", "Route and contract comparison evidence.", "Rollback and authorization-safety proof.", "Focused source commit record."],
   masterySignals: ["Keeps gift-card, invoice, and unknown types legacy.", "Matches exact approved and declined outputs including rounding.", "Falls back only before authorization.", "Disables the new slice without deleting legacy code."],
 };

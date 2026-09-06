@@ -11,9 +11,15 @@ const additions = new Map([
   ["09 Code Review/exercise-01-security-and-a11y-review-gauntlet", ["scripts/replay-regression-tests.mjs", "scripts/review-component-behavior.test.tsx", "scripts/run-protected-semgrep.mjs", "../../../scripts/comparable-evidence.mjs"]],
   ["09 Code Review/exercise-02-diff-triage-with-fresh-agent", ["scripts/replay-regression-tests.mjs", "scripts/app-cache-behavior.test.tsx", "../../../scripts/comparable-evidence.mjs"]],
   ["09 Code Review/exercise-03-review-regression-lab", ["../docs/skill-contract.md", "../docs/evaluation-contract.md", "eval/verify-catalog.mjs", "skills/regression-review/SKILL.md", "scripts/run-review-session.mjs", "../../../scripts/comparable-evidence.mjs"]],
-  ["10 Token Economics/exercise-01-token-budget-refactor", ["../docs/adapter-refactor-request.md", "src/session/adaptSession.mjs", "scripts/run-adapter-acceptance.mjs", "scripts/replay-context-lanes.mjs", "../../../scripts/comparable-evidence.mjs"]],
+  ["10 Token Economics/exercise-01-token-budget-refactor", ["../docs/adapter-refactor-request.md", "src/session/adaptSession.mjs", "scripts/run-adapter-acceptance.mjs", "scripts/replay-context-lanes.mjs", "../../../scripts/comparable-evidence.mjs", "../../../scripts/capture-verification.mjs"]],
   ["10 Token Economics/exercise-02-risk-based-model-routing-cost-gate", ["../docs/routing-policy-contract.md", "../evals/recorded-runs.json", "src/routing/dispatchTasks.mjs", "scripts/verify-benchmark-pack.mjs", "../../../scripts/comparable-evidence.mjs"]],
   ["10 Token Economics/exercise-03-minimal-diff-scope-budget", ["src/migration/actionButtons.mjs", "scripts/replay-before-scope.mjs", "../../../scripts/comparable-evidence.mjs"]],
+  ["11 Agentic Refactoring/exercise-01-characterization-test-refactor", ["../../../scripts/comparable-evidence.mjs", "../../../scripts/capture-verification.mjs"]],
+  ["11 Agentic Refactoring/exercise-02-strangler-pattern-checkout", ["../../../scripts/comparable-evidence.mjs", "../../../scripts/capture-verification.mjs"]],
+  ["11 Agentic Refactoring/exercise-03-legacy-rules-engine-untangle", ["../../../scripts/comparable-evidence.mjs", "../../../scripts/capture-verification.mjs"]],
+  ["12 Agentic Retrospective/exercise-01-session-waste-retro-from-logs", ["../tasks/implementation-request.md", "../tasks/policy-217-replay.md", "../../../scripts/comparable-evidence.mjs", "../../../scripts/capture-verification.mjs"]],
+  ["12 Agentic Retrospective/exercise-02-rule-hardening-from-repeated-mistakes", ["../../../scripts/comparable-evidence.mjs", "../../../scripts/capture-verification.mjs"]],
+  ["12 Agentic Retrospective/exercise-03-trace-backed-workflow-optimizer", ["../docs/action-schema.md", "scripts/write-workflow-patches.mjs", "../../../scripts/comparable-evidence.mjs", "../../../scripts/capture-verification.mjs"]],
 ]);
 
 function findManifests(directory, results = []) {
@@ -43,7 +49,7 @@ for (const manifestPath of findManifests(repositoryRoot)) {
     document = JSON.parse(execFileSync("git", ["show", `HEAD:${relativeManifest}`], { cwd: repositoryRoot, encoding: "utf8" }));
   }
   const paths = new Set(Object.keys(document.protectedFiles ?? {}));
-  const sharedFiles = ["scripts/verify-protected-inputs.mjs", "scripts/run-clean-verification.mjs", "scripts/run-vite-build.mjs"];
+  const sharedFiles = ["scripts/verify-protected-inputs.mjs", "scripts/verify-submission-contract.mjs", "scripts/run-clean-verification.mjs", "scripts/run-vite-build.mjs"];
   for (const shared of sharedFiles) paths.delete(path.relative(root, path.join(repositoryRoot, shared)).split(path.sep).join("/"));
   if (isApplicationManifest) for (const shared of sharedFiles) {
     paths.add(path.relative(root, path.join(repositoryRoot, shared)).split(path.sep).join("/"));

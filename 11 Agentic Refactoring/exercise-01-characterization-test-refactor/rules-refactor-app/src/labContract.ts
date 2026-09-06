@@ -17,7 +17,7 @@ export const labContract: LabContract = {
   "competency": "11. Agentic Refactoring - Test-driven tech-debt cleanup",
   "domain": "Characterization-first refactor of legacy rule evaluation",
   "mission": "Refactor renewal eligibility only after a public characterization test captures every protected behavior.",
-  "outcome": "Git history and identical snapshots prove that a focused structural refactor preserved all ten observed results.",
+  "outcome": "Git history and identical snapshots prove that a focused structural refactor preserved all twelve observed results.",
   "entities": [
     "renewal account",
     "eligibility result",
@@ -31,9 +31,10 @@ export const labContract: LabContract = {
   ],
   "verificationGates": [
     "characterization commit precedes production edits",
-    "ten public golden observations",
+    "twelve public golden observations",
     "byte-equivalent before and after snapshots",
-    "source-only refactor commit"
+    "source-only refactor commit",
+    "matched run metadata with ceiling-aware identical-patch support and automatic command capture"
   ],
   "agentWorkflow": [
     "Inspect the public rule, behavior notes, and immutable golden cases.",
@@ -49,8 +50,9 @@ export const labContract: LabContract = {
   ],
   "masterySignals": [
     "Tests the public export rather than private implementation details.",
+    "Treats inputs as fixed plain data records rather than preserving unsupported getter side effects.",
     "Preserves exact fields, values, reason strings, precedence, and validation gaps.",
     "Separates characterization and source changes into auditable commits.",
-    "Proves all ten before and after observations are identical."
+    "Proves all twelve before and after observations are identical."
   ]
 };

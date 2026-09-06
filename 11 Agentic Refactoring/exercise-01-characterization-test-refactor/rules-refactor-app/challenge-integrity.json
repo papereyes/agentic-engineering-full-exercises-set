@@ -1,19 +1,22 @@
 {
   "algorithm": "sha256-normalized-lf",
   "protectedFiles": {
+    "../../../scripts/capture-verification.mjs": "857bf77e3359e1e1fe077512e4278045ad90c8b2b4ac1065df23bf1afdfc60e4",
+    "../../../scripts/comparable-evidence.mjs": "c17afd57721834139072a847e03b4fbce467d8e1db9252c5748212966fbca1d0",
     "../../../scripts/run-clean-verification.mjs": "9b17cbb8865a642a7789113c145be88c6bb965bc2d8c024b82202e8ae85bf368",
     "../../../scripts/run-vite-build.mjs": "b7901ed4f770e6537e80f864392c8c1de841b5c97fa8993246c5df7a86d5d415",
     "../../../scripts/verify-protected-inputs.mjs": "d99346d9a84651bcb654d07d1b5d131d39d5f3b703ee9614db4eafc86cb4d96c",
-    "../README.md": "8100cd33d5fa96fbee875d90652720affc6d514785226fb95fe06bad44a74612",
-    "../docs/legacy-behavior-notes.md": "8f130a5a03ce2de9ac4019416d2f49fef55533aeb553820b7a02d9c2dd4a1d0b",
-    "../docs/renewal-golden-cases.json": "c9ae57fe6e9cc2074cc90c55b5ee30ceff2e69ca37396595a7902e770ea5c66c",
-    "lab-contract.json": "589c3b4ad10ee7c164482b44334c42ee5831c1cfdd2ceda3e921afba2e2fe2f5",
-    "package.json": "711b0f722db782d4b26e7a6cabc48d1ef214273abe612283fa3fb8573e0e3a99",
-    "scripts/refactor-verification.mjs": "3e853f04aad964b72452bcc9f908da94349867034459a65ad0b1c5614295ef6c",
+    "../../../scripts/verify-submission-contract.mjs": "5c34aab86313eeb825b19c6ceabc8afbaf65cce3d1cde325bdea7a9739e23ca4",
+    "../README.md": "a580d23c9ac3ce3cab71aba88ee329f4f193ec51918c390181189d73149b592b",
+    "../docs/legacy-behavior-notes.md": "04cca6231d7e73244dd817c2a4a5ac84c3c8f9c038faebdb1a56c4b99a159476",
+    "../docs/renewal-golden-cases.json": "c2336ee98a29169b724e717252bbef8dc121d48772f5303393f448f15473e32a",
+    "lab-contract.json": "914a89e4442e371699cf97d7996a3e72ee375160a2e826309d02e8176b5cdb4d",
+    "package.json": "65ea25c6916ad8cf6de65238601f2662e9c8727a976ba4e337cfa5aaeb9a3dd2",
+    "scripts/refactor-verification.mjs": "0f1cf58c68f306ecde7bb9bb57011b3857f1fbff6b22d7ca1e8ab1b57e08cb5a",
     "scripts/run-characterization-oracle.mjs": "459081434b6a463c4ccb986a3b8de7dcfdcfeb9fd3dcb008e2955f503fdbefee",
     "scripts/test-refactor-verifier.mjs": "325fcd47101f5a6c8e7baf355d6746e8ba23bbfd3df98f39de34e1e4fa3ce69d",
-    "scripts/verify-refactor-submission.mjs": "7d4c443e9804a9cdba31f708b74719c0aff0153fa35e1ce5f85c59ba857c391e",
-    "src/labContract.ts": "edcead27d9ea907928a30f81916e7ed934e8923ac12004d7f79dc147591b4080",
-    "submission-contract.json": "5c1d6a3f8921cf899f199ca15969a83b27a30da43a74b48678315379238a1112"
+    "scripts/verify-refactor-submission.mjs": "8ef486f1c17f870a7e4814c8089a9d2a649aa73ec1d03a9b085f14ddb12b3c0b",
+    "src/labContract.ts": "600a92f24a7ced131355d4c0fa7a5c2c6e4bae4046748e970ea18ca7ce93c8a8",
+    "submission-contract.json": "e576c88e514b1617e5f715e1e3f44e2a11433a498bb7469b043fce73165df11b"
   }
 }

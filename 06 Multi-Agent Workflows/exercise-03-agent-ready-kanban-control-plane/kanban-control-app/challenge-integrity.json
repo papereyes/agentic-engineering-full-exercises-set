@@ -4,6 +4,7 @@
     "../../../scripts/run-clean-verification.mjs": "9b17cbb8865a642a7789113c145be88c6bb965bc2d8c024b82202e8ae85bf368",
     "../../../scripts/run-vite-build.mjs": "b7901ed4f770e6537e80f864392c8c1de841b5c97fa8993246c5df7a86d5d415",
     "../../../scripts/verify-protected-inputs.mjs": "d99346d9a84651bcb654d07d1b5d131d39d5f3b703ee9614db4eafc86cb4d96c",
+    "../../../scripts/verify-submission-contract.mjs": "5c34aab86313eeb825b19c6ceabc8afbaf65cce3d1cde325bdea7a9739e23ca4",
     "../README.md": "1f50606650cdcb990cd9d8cbf935eef021cdbc3f24bfab19f76dde3cacfec960",
     "../docs/card-schema.md": "1765324b276532e66d75020a8bf699dbeb6d15bed59500a3f5a9c571fa5391f3",
     "../docs/evidence-template.md": "402b0e929fe5991e6997ab24720b65670094696f7b8d6e5aaf5515604e7b61eb",

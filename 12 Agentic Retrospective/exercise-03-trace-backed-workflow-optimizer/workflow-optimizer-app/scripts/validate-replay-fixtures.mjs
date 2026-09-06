@@ -10,5 +10,6 @@ for (const item of cases) {
   assert.ok(item.request.length >= 30, `${item.id} needs a substantive request`);
   assert.ok(item.assertions.some((assertion) => assertion.critical), `${item.id} needs a critical assertion`);
   assert.equal(new Set(item.assertions.map((assertion) => assertion.id)).size, item.assertions.length, `${item.id} assertion IDs must be unique`);
+  for (const phrase of item.leakagePhrases ?? []) assert.ok(item.request.toLowerCase().includes(phrase.toLowerCase()), `${item.id} leakage phrase must come from its request`);
 }
-console.log("PASS 6 train, 2 held-out, unique requests, and critical assertions");
+console.log("PASS 6 train, 2 held-out, unique requests, leakage phrases, and critical assertions");

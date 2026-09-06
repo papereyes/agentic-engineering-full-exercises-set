@@ -1,10 +1,11 @@
 {
   "algorithm": "sha256-normalized-lf",
   "protectedFiles": {
-    "../../../scripts/comparable-evidence.mjs": "552a2e8e3bd3ac3b70432170737823f4dc8f2f75e14235ee0da3b9dc8198becb",
+    "../../../scripts/comparable-evidence.mjs": "c17afd57721834139072a847e03b4fbce467d8e1db9252c5748212966fbca1d0",
     "../../../scripts/run-clean-verification.mjs": "9b17cbb8865a642a7789113c145be88c6bb965bc2d8c024b82202e8ae85bf368",
     "../../../scripts/run-vite-build.mjs": "b7901ed4f770e6537e80f864392c8c1de841b5c97fa8993246c5df7a86d5d415",
     "../../../scripts/verify-protected-inputs.mjs": "d99346d9a84651bcb654d07d1b5d131d39d5f3b703ee9614db4eafc86cb4d96c",
+    "../../../scripts/verify-submission-contract.mjs": "5c34aab86313eeb825b19c6ceabc8afbaf65cce3d1cde325bdea7a9739e23ca4",
     "../README.md": "07825b26035f87b21427cf0614ec8ad910ccf3c7758d92478de04af2914a9a69",
     "../docs/evidence-template.md": "7ac8fc1d55d2605b19eb1dc8202c84417726781c61381ab4b68c8bd358a72956",
     "../docs/scope-contract.md": "70cdb90f681ffd9f0c3b47411ccdd394541f8c6df10a4ccf4590078d6ec9aa24",

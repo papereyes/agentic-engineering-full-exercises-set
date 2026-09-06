@@ -2,4 +2,4 @@
 
 Implement `buildSavedFilter` so the selected owner and status can be restored in a later session and each saved record includes `updatedAt`.
 
-Use the existing persistence boundary and add focused tests. Keep the change limited to this feature.
+Change only `rule-hardening-app/src/services/filterPersistence.mjs` in each agent run. Do not add tests to the first-attempt patch. The participant test is added later, after the two first attempts have been graded.

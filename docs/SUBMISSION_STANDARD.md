@@ -19,13 +19,15 @@ When an exercise requests `before.md`, `before.patch`, `after.md`, `after.patch`
 - Use the same starting commit, agent and model, tools and permissions, time limit, zero hints, and zero retries.
 - Record the full 40-character starting SHA and a separate implementation SHA for each run.
 - Record the SHA-256 of each patch in its Markdown file.
-- Generate both patches with `git diff --binary --full-index <starting-commit> <that-run-implementation-commit>`.
+- Generate each patch with `git diff --binary --full-index <run-base-commit> <that-run-implementation-commit>`. The run base is normally the shared starting commit. If the README introduces a guidance-only or skill-only commit before the second run, record that SHA as `Run base commit` in the matching Markdown file.
 - Use `Same conditions`, `Before`, `After`, `Proof`, and `Conclusion` in the comparison.
 
-The shared verifier checks these fields, confirms that both implementation commits descend from the starting commit, and verifies that each patch exactly matches its recorded commit. It also rejects changes to the protected manifest or protected inputs after the starting commit.
+The shared verifier checks these fields, confirms that every run base descends from the shared starting commit, and verifies that each patch exactly matches its recorded implementation commit. An exercise with a specialized benchmark history may define a different baseline snapshot patch and verify its commit binding in the exercise-specific checker. The shared verifier also rejects changes to the protected manifest or protected inputs after the starting commit.
 
 Trusted CI should also set `CHALLENGE_TRUSTED_REF` to the pull request base SHA when running `test:integrity`. This makes the integrity manifest itself part of the protected input instead of trusting a manifest supplied by the learner branch.
 
 ## Final Verification
+
+When the exercise provides `npm run evidence:capture`, use the exact command in its README to generate the command transcript and exit code. Do not type or edit a successful exit code manually.
 
 Run the exercise's final verification command before opening the pull request. The command must not rewrite tracked files, stage changes, or create, remove, or rewrite untracked and ignored paths. Builds run in a temporary output directory. The shared verification guard compares repository state before and after the exercise checks and fails if verification changes it.

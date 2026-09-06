@@ -30,6 +30,6 @@ if (failures.length) {
 console.log(`Characterization SHA: ${history.characterizationSha}`);
 console.log(`Refactor SHA: ${history.refactorSha}`);
 console.log("PASS characterization test and before output preceded production edits");
-console.log("PASS all ten before and after public outputs are identical");
+console.log("PASS all twelve before and after public outputs are identical");
 console.log("PASS refactor commit changes only the legacy rule module");
 console.log("PASS suspected bugs documented and later history limited to evidence");

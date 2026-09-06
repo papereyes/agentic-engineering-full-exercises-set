@@ -13,7 +13,7 @@
     { "path": "token-budget-app/tests/session-adapter.test.mjs", "minCharacters": 700, "includeAll": ["adaptSession", "userId", "roles", "expiresAt", "duplicate", "synchronous"] },
     { "path": "evidence/context-ledger.json", "minCharacters": 1800, "validJson": true, "includeAll": ["planSha", "sourceSha", "selected", "skipped", "totalBytes", "remainingBytes", "reason"] },
     { "path": "evidence/decision.md", "minCharacters": 900, "includeAll": ["planned", "actual", "expanded", "stale", "verification", "correctness", "trade-off"] },
-    { "path": "evidence/commands/context-tests.txt", "minCharacters": 250, "includeAll": ["real UTF-8", "mandatory", "deterministic", "exit code: 0"] },
+    { "path": "evidence/commands/context-tests.txt", "minCharacters": 250, "includeAll": ["Command: npm run evidence:verify", "Repository commit:", "Started at:", "Finished at:", "real UTF-8", "mandatory", "deterministic", "exit code: 0"] },
     { "path": "evidence/commands/context-verify.txt", "minCharacters": 250, "includeAll": ["Plan SHA", "Source SHA", "Selected bytes", "evidence-only follow-up"] }
   ]
 }

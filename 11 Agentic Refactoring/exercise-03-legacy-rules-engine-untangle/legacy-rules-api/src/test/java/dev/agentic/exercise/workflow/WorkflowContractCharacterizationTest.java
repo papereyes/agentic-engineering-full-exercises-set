@@ -5,7 +5,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 class WorkflowContractCharacterizationTest {
   static final class RecordingRepository extends WorkflowRepository {
@@ -64,10 +66,30 @@ class WorkflowContractCharacterizationTest {
   @Test
   void decisionPolicyExistsIsRepositoryFreeAndIsInjectedIntoService() throws Exception {
     Class<?> policyType = Class.forName("dev.agentic.exercise.workflow.DecisionPolicy");
-    assertThat(Arrays.stream(policyType.getDeclaredMethods()).map(method -> method.getName())).contains("validate");
+    assertThat(Arrays.stream(policyType.getDeclaredMethods()))
+        .anyMatch(method -> method.getName().equals("validate") && method.getReturnType().equals(Void.TYPE));
     assertThat(Arrays.stream(policyType.getDeclaredFields()).map(Field::getType)).noneMatch(WorkflowRepository.class::isAssignableFrom);
     assertThat(Arrays.stream(WorkflowService.class.getDeclaredFields()).map(Field::getType)).contains(policyType);
     assertThat(Arrays.stream(WorkflowService.class.getDeclaredConstructors()))
         .anyMatch(constructor -> Arrays.equals(constructor.getParameterTypes(), new Class<?>[] { WorkflowRepository.class, policyType }));
+  }
+
+  @Test
+  void serviceUsesTheInjectedPolicyExactlyOnce() throws Exception {
+    RecordingRepository repository = new RecordingRepository();
+    Class<?> policyType = Class.forName("dev.agentic.exercise.workflow.DecisionPolicy");
+    AtomicInteger calls = new AtomicInteger();
+    Object policy = Mockito.mock(policyType, invocation -> {
+      if (invocation.getMethod().getName().equals("validate")) calls.incrementAndGet();
+      return null;
+    });
+    WorkflowService service = (WorkflowService) WorkflowService.class
+        .getDeclaredConstructor(WorkflowRepository.class, policyType)
+        .newInstance(repository, policy);
+    service
+        .decide("wf-101", new WorkflowDecision("Ready", "Asha", "123456789012"));
+
+    assertThat(calls.get()).isEqualTo(1);
+    assertThat(repository.saves).isEqualTo(1);
   }
 }

@@ -1,9 +1,11 @@
 {
   "taskId": "POLICY-217",
   "sessionId": "baseline-policy-217",
-  "agent": "coding-agent",
-  "model": "standard-reasoning",
-  "promptHash": "sha256:4d9d67b790d3ed36a6044c4b39ac2cb16e03db8bbcd4998f8af820e32d749ec1",
+  "agent": "simulated-coding-agent",
+  "model": "simulated-standard-reasoning",
+  "captureMode": "constructed-replay",
+  "promptPath": "tasks/policy-217-replay.md",
+  "promptHash": "sha256:ae74873cffbeeebefb41aa7e157f4d258d67dd1148f6907a9066c0396b7559a8",
   "timeLimitMinutes": 20,
   "sourceRevision": "starter-v1"
 }

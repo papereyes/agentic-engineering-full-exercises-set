@@ -2,12 +2,17 @@
   "name": "Strangler Checkout Route",
   "root": "..",
   "requiredFiles": [
+    { "path": "evidence/before.md", "minCharacters": 250, "includeAll": ["Starting commit", "Run base commit", "Implementation commit", "Agent and model", "Tools and permissions", "Time limit", "Human hints: 0", "Retries: 0", "Patch SHA-256"] },
+    { "path": "evidence/before.patch", "minCharacters": 80, "includeAll": ["diff --git"] },
+    { "path": "evidence/after.md", "minCharacters": 250, "includeAll": ["Starting commit", "Run base commit", "Implementation commit", "Agent and model", "Tools and permissions", "Time limit", "Human hints: 0", "Retries: 0", "Patch SHA-256"] },
+    { "path": "evidence/after.patch", "minCharacters": 80, "includeAll": ["diff --git"] },
+    { "path": "evidence/comparison.md", "minCharacters": 500, "includeAll": ["Before", "After", "Same conditions", "Proof", "Conclusion"] },
     { "path": "checkout-strangler-app/src/checkout/cardCheckout.mjs", "minCharacters": 800, "includeAll": ["authorize", "amountCents", "PAYMENT_DECLINED"] },
     { "path": "checkout-strangler-app/src/checkout/checkoutRouter.test.mjs", "minCharacters": 900, "includeAll": ["routeCheckout", "cardSliceEnabled", "gift-card", "invoice", "authorizationCreated"] },
     { "path": "evidence/route-matrix.md", "minCharacters": 700, "includeAll": ["card", "gift-card", "invoice", "unknown", "flag off", "pre-authorization", "ambiguous", "legacy", "new slice"] },
     { "path": "evidence/contract-comparison.md", "minCharacters": 600, "includeAll": ["orderId", "status", "totalCents", "errorCode", "approved", "declined"] },
     { "path": "evidence/rollback.md", "minCharacters": 500, "includeAll": ["cardSliceEnabled", "false", "legacy", "authorizationCreated", "no duplicate"] },
-    { "path": "evidence/history.json", "minCharacters": 70, "validJson": true, "includeAll": ["sourceSha"] },
-    { "path": "evidence/commands/strangler-verify.txt", "minCharacters": 180, "includeAll": ["Source SHA", "PASS", "exit code: 0"] }
+    { "path": "evidence/history.json", "minCharacters": 120, "validJson": true, "includeAll": ["characterizationSha", "sourceSha"] },
+    { "path": "evidence/commands/strangler-verify.txt", "minCharacters": 220, "includeAll": ["Command: npm run evidence:verify", "Repository commit:", "Started at:", "Finished at:", "Source SHA", "PASS", "exit code: 0"] }
   ]
 }

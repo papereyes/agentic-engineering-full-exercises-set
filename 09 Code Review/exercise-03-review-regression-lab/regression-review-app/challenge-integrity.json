@@ -1,10 +1,11 @@
 {
   "algorithm": "sha256-normalized-lf",
   "protectedFiles": {
-    "../../../scripts/comparable-evidence.mjs": "bc3026719f3802f793825905c31fd8e9ed626353bd7fa9c08bb7881969da7731",
+    "../../../scripts/comparable-evidence.mjs": "c17afd57721834139072a847e03b4fbce467d8e1db9252c5748212966fbca1d0",
     "../../../scripts/run-clean-verification.mjs": "9b17cbb8865a642a7789113c145be88c6bb965bc2d8c024b82202e8ae85bf368",
     "../../../scripts/run-vite-build.mjs": "b7901ed4f770e6537e80f864392c8c1de841b5c97fa8993246c5df7a86d5d415",
     "../../../scripts/verify-protected-inputs.mjs": "d99346d9a84651bcb654d07d1b5d131d39d5f3b703ee9614db4eafc86cb4d96c",
+    "../../../scripts/verify-submission-contract.mjs": "5c34aab86313eeb825b19c6ceabc8afbaf65cce3d1cde325bdea7a9739e23ca4",
     "../README.md": "2eaed19b4298792f484eb1498b17815be1c346c2e74e2c2b9f97750bd4f673c6",
     "../docs/evaluation-contract.md": "c85308f427f7f93972bf66674b80a347a339e62660a884f7f6a4e05536846f91",
     "../docs/regression-seeds.md": "6e7fe96975fa175898173769dcc69c1e842cd147c0fe55fe95c4ccc33d4ed53a",

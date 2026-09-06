@@ -20,6 +20,8 @@
     "service and policy architecture",
     "strict HTTP JSON tests",
     "React client parser contract",
+    "Maven verification writes only to temporary storage",
+    "matched run metadata with ceiling-aware identical-patch support and automatic command capture",
     "npm run verify:exercise checks protected inputs, implementation quality, and required submission evidence."
   ],
   "agentWorkflow": [

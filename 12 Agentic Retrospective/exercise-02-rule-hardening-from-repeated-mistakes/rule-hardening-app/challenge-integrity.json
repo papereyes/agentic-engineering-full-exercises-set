@@ -1,21 +1,24 @@
 {
   "algorithm": "sha256-normalized-lf",
   "protectedFiles": {
+    "../../../scripts/capture-verification.mjs": "857bf77e3359e1e1fe077512e4278045ad90c8b2b4ac1065df23bf1afdfc60e4",
+    "../../../scripts/comparable-evidence.mjs": "c17afd57721834139072a847e03b4fbce467d8e1db9252c5748212966fbca1d0",
     "../../../scripts/run-clean-verification.mjs": "9b17cbb8865a642a7789113c145be88c6bb965bc2d8c024b82202e8ae85bf368",
     "../../../scripts/run-vite-build.mjs": "b7901ed4f770e6537e80f864392c8c1de841b5c97fa8993246c5df7a86d5d415",
     "../../../scripts/verify-protected-inputs.mjs": "d99346d9a84651bcb654d07d1b5d131d39d5f3b703ee9614db4eafc86cb4d96c",
-    "../README.md": "830808a4bb5dfd0c34911a845b788bfe4f73163a64e03a9ef5fa7139af88e29c",
+    "../../../scripts/verify-submission-contract.mjs": "5c34aab86313eeb825b19c6ceabc8afbaf65cce3d1cde325bdea7a9739e23ca4",
+    "../README.md": "470021dfc28256e9c680dc2c0218d30b2da3c880fd8f4268e957a7dbe601df99",
     "../docs/correction-history.json": "f4ecc786da63cb7fc74022c25ea14013802184b56b7fd47f63a43473ed8827a7",
     "../docs/guidance-contract.md": "a05c716572cb0d39970a737a6ea13063e82674f9ddf3067e1e8acb023ba8d0b3",
     "../fixtures/filterPersistence.starter.mjs": "801adf0af856741067a8446159c4ec0cd8bcd7dd117fcb0a851a46ef50f23361",
-    "../tasks/proving-change.md": "6bbb8fa2d7f53643b69bb7c23b34fc834d62b11a9a23dc525827238640fee761",
-    "lab-contract.json": "4d9000561a97796f0c79f22b4105395d1a00414a0179f47175f84adbcc6c578d",
-    "package.json": "c1ed6a64ead2edb8fe6b0112b5246d9302bcaec021f924e6120bddaf65354430",
-    "scripts/rule-hardening-verification.mjs": "adaa0f2ad6122061a1c176777157f4eeed704918c9db044567ddc2d433a3095c",
+    "../tasks/proving-change.md": "3beb136414c1ead0e70ec15fd169fbb57170f7508841223fdb28f7b45dbb2eda",
+    "lab-contract.json": "d19f4b76cdac6c3ee6c9503ca97686670abedfed0d51c09005bb75eff92ba302",
+    "package.json": "7ea333c6d80f07850cc5652c867fb858c6b29ed828ad94f276cfa06c83ed9a34",
+    "scripts/rule-hardening-verification.mjs": "0d49cb9499884a4dba5cc02320ab4b06c97ecd930a5d6d40e3e269e3b4d578a0",
     "scripts/run-persistence-tests.mjs": "5cc2d656f1d7838a9406f0048ebc76dd072d2dcfdba3850ddc7fc103033096f7",
-    "scripts/test-rule-hardening-verifier.mjs": "9e0a6f81cececfe1d9d51ba9c10bdda9d2fa85e2e72bbb50783fd0f7a251611a",
-    "scripts/verify-rule-hardening-submission.mjs": "89fa7bef8a4a04d19715ab98638593aca63cbe0794de4969a6c9d6409f3a9998",
-    "src/labContract.ts": "d80bb27d6d7fe43c3ab64952a5228394a343726784b6b4b6e4b001d953128d82",
-    "submission-contract.json": "c45bb6c72dff2e2a23b4e163d88bddaf8f0b28c979e38890a9077c84b0aa641c"
+    "scripts/test-rule-hardening-verifier.mjs": "ffa73b3ea75c4a1c1671e4cc6ca53a836a8671f424c11381d372ee8221ef106f",
+    "scripts/verify-rule-hardening-submission.mjs": "b9faef2d72dbf628650800d345546505e997f79f325dc898be7fc5af433395aa",
+    "src/labContract.ts": "a98768fab33861c26a532f3227d645064f41017bc62cf8385c31f1867939cbf1",
+    "submission-contract.json": "716206f4e3c62f6d4f63358b09001cf55c03c4561c73141230f7ce09e83ebfcb"
   }
 }

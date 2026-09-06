@@ -1,10 +1,11 @@
 {
   "algorithm": "sha256-normalized-lf",
   "protectedFiles": {
-    "../../../scripts/comparable-evidence.mjs": "bc3026719f3802f793825905c31fd8e9ed626353bd7fa9c08bb7881969da7731",
+    "../../../scripts/comparable-evidence.mjs": "c17afd57721834139072a847e03b4fbce467d8e1db9252c5748212966fbca1d0",
     "../../../scripts/run-clean-verification.mjs": "9b17cbb8865a642a7789113c145be88c6bb965bc2d8c024b82202e8ae85bf368",
     "../../../scripts/run-vite-build.mjs": "b7901ed4f770e6537e80f864392c8c1de841b5c97fa8993246c5df7a86d5d415",
     "../../../scripts/verify-protected-inputs.mjs": "d99346d9a84651bcb654d07d1b5d131d39d5f3b703ee9614db4eafc86cb4d96c",
+    "../../../scripts/verify-submission-contract.mjs": "5c34aab86313eeb825b19c6ceabc8afbaf65cce3d1cde325bdea7a9739e23ca4",
     "../README.md": "ba050df9159978944418693dc14ff10e633a183cca90a65f7ab58964db37bc46",
     "../docs/finding-contract.md": "bef8079cca2bcf3e4c811aebb74b0a496797554e5553f2020c63b99fca9c633e",
     "../docs/review-brief.md": "1c65e93165a9277741e544b44a9440471a5227a7dc28d353cc0ab0061513ad29",

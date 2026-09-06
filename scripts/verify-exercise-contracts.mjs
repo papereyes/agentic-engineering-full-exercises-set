@@ -305,12 +305,17 @@ const requiredArtifacts = [
   "12 Agentic Retrospective/exercise-03-trace-backed-workflow-optimizer/workflow-optimizer-app/scripts/workflow-grading.mjs",
   "12 Agentic Retrospective/exercise-03-trace-backed-workflow-optimizer/workflow-optimizer-app/scripts/workflow-submission-verification.mjs",
   "12 Agentic Retrospective/exercise-03-trace-backed-workflow-optimizer/workflow-optimizer-app/scripts/score-workflow-results.mjs",
+  "12 Agentic Retrospective/exercise-03-trace-backed-workflow-optimizer/workflow-optimizer-app/scripts/write-workflow-patches.mjs",
   "12 Agentic Retrospective/exercise-03-trace-backed-workflow-optimizer/workflow-optimizer-app/scripts/test-workflow-verifier.mjs",
   "11 Agentic Refactoring/exercise-02-strangler-pattern-checkout/checkout-strangler-app/scripts/run-checkout-tests.mjs",
   "11 Agentic Refactoring/exercise-03-legacy-rules-engine-untangle/legacy-rules-api/src/test/java/dev/agentic/exercise/workflow/WorkflowContractCharacterizationTest.java",
   "12 Agentic Retrospective/exercise-01-session-waste-retro-from-logs/docs/session-events.json",
+  "12 Agentic Retrospective/exercise-01-session-waste-retro-from-logs/tasks/implementation-request.md",
+  "12 Agentic Retrospective/exercise-01-session-waste-retro-from-logs/tasks/policy-217-replay.md",
   "12 Agentic Retrospective/exercise-02-rule-hardening-from-repeated-mistakes/tasks/proving-change.md",
+  "12 Agentic Retrospective/exercise-03-trace-backed-workflow-optimizer/docs/action-schema.md",
   "12 Agentic Retrospective/exercise-03-trace-backed-workflow-optimizer/workflow-optimizer-app/evals/replay-cases.json",
+  "scripts/capture-verification.mjs",
 ];
 for (const relative of requiredArtifacts) assert.ok(existsSync(path.join(root, relative)), `Missing starter artifact: ${relative}`);
 
@@ -328,6 +333,8 @@ for (const relative of exercisePackages) {
     assert.ok(files.includes(path.join(project, artifact)), `${relative} is missing ${artifact}`);
   }
   const manifest = JSON.parse(readFileSync(path.join(root, relative), "utf8"));
+  const integrity = JSON.parse(readFileSync(path.join(root, project, "challenge-integrity.json"), "utf8"));
+  assert.ok(integrity.protectedFiles?.["../../../scripts/verify-submission-contract.mjs"], `${relative} must protect the shared submission verifier`);
   assert.ok(manifest.scripts?.["test:integrity"], `${relative} is missing test:integrity`);
   assert.ok(manifest.scripts?.["agent:check"]?.startsWith("npm run test:integrity"), `${relative} must run integrity first`);
   assert.ok(manifest.scripts?.["verify:implementation"], `${relative} is missing verify:implementation`);
@@ -338,6 +345,29 @@ for (const relative of exercisePackages) {
   assert.ok(manifest.scripts["verify:exercise:core"].includes("verify:implementation"), `${relative} verify:exercise:core must run verify:implementation`);
   assert.ok(manifest.scripts["verify:exercise:core"].includes("verify:submission"), `${relative} verify:exercise:core must run verify:submission`);
   assert.equal(manifest.scripts["verify:exercise"], "node ../../../scripts/run-clean-verification.mjs", `${relative} verify:exercise must use the shared clean-verification guard`);
+  const submissionContractPath = path.join(root, project, "submission-contract.json");
+  if (existsSync(submissionContractPath)) {
+    const submissionContract = JSON.parse(readFileSync(submissionContractPath, "utf8"));
+    const requiredPaths = new Set((submissionContract.requiredFiles ?? []).map((item) => item.path));
+    const requiresComparableEvidence = ["evidence/before.md", "evidence/after.md", "evidence/comparison.md"].every((required) => requiredPaths.has(required));
+    if (requiresComparableEvidence) {
+      assert.ok(manifest.scripts["verify:submission"].includes("comparable-evidence.mjs"), `${relative} requires matched before and after evidence but does not call the shared verifier`);
+    }
+    const requiresCapturedExitCode = (submissionContract.requiredFiles ?? []).some((item) =>
+      item.path?.startsWith("evidence/commands/") && item.includeAll?.includes("exit code: 0"),
+    );
+    if (requiresCapturedExitCode) {
+      assert.equal(manifest.scripts["evidence:capture"], "node ../../../scripts/capture-verification.mjs", `${relative} must use the shared verification capture`);
+      assert.ok(manifest.scripts["evidence:verify"], `${relative} must provide a non-circular evidence:verify command`);
+      assert.ok(!manifest.scripts["evidence:verify"].includes("verify:submission") && !manifest.scripts["evidence:verify"].includes("evidence:capture"), `${relative} evidence:verify must not call submission verification or capture itself`);
+      for (const item of submissionContract.requiredFiles ?? []) {
+        if (!item.path?.startsWith("evidence/commands/") || !item.includeAll?.includes("exit code: 0")) continue;
+        for (const marker of ["Command: npm run evidence:verify", "Repository commit:", "Started at:", "Finished at:"]) {
+          assert.ok(item.includeAll.includes(marker), `${relative} command transcript ${item.path} must require ${marker}`);
+        }
+      }
+    }
+  }
 }
 assert.equal(readFileSync(path.join(root, ".nvmrc"), "utf8").trim(), "22.12.0", "Unexpected Node version");
 assert.equal(readFileSync(path.join(root, ".java-version"), "utf8").trim(), "21", "Unexpected Java version");

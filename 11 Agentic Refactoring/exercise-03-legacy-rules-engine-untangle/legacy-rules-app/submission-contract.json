@@ -2,6 +2,11 @@
   "name": "Contract-Safe Full-Stack Rules Extraction",
   "root": "..",
   "requiredFiles": [
+    { "path": "evidence/before.md", "minCharacters": 250, "includeAll": ["Starting commit", "Run base commit", "Implementation commit", "Agent and model", "Tools and permissions", "Time limit", "Human hints: 0", "Retries: 0", "Patch SHA-256"] },
+    { "path": "evidence/before.patch", "minCharacters": 80, "includeAll": ["diff --git"] },
+    { "path": "evidence/after.md", "minCharacters": 250, "includeAll": ["Starting commit", "Run base commit", "Implementation commit", "Agent and model", "Tools and permissions", "Time limit", "Human hints: 0", "Retries: 0", "Patch SHA-256"] },
+    { "path": "evidence/after.patch", "minCharacters": 80, "includeAll": ["diff --git"] },
+    { "path": "evidence/comparison.md", "minCharacters": 500, "includeAll": ["Before", "After", "Same conditions", "Proof", "Conclusion"] },
     { "path": "legacy-rules-api/src/main/java/dev/agentic/exercise/workflow/DecisionPolicy.java", "minCharacters": 400, "includeAll": ["class DecisionPolicy", "validate", "Ready", "InvalidWorkflowDecisionException"] },
     { "path": "legacy-rules-api/src/test/java/dev/agentic/exercise/workflow/WorkflowPolicyCharacterizationTest.java", "minCharacters": 1200, "includeAll": ["WorkflowService", "WorkflowNotFoundException", "InvalidWorkflowDecisionException", "123456789012", "Escalated Later"] },
     { "path": "evidence/contract-before.json", "minCharacters": 700, "validJson": true, "includeAll": ["ready-note-length-11", "missing-id-precedes-policy", "unknown-status-gap"] },
@@ -9,6 +14,6 @@
     { "path": "evidence/refactor-map.md", "minCharacters": 700, "includeAll": ["lookup", "DecisionPolicy", "validation", "construction", "persistence", "WorkflowService"] },
     { "path": "evidence/rollback.md", "minCharacters": 500, "includeAll": ["revert", "DecisionPolicy", "WorkflowService", "contract", "repository"] },
     { "path": "evidence/history.json", "minCharacters": 120, "validJson": true, "includeAll": ["characterizationSha", "refactorSha"] },
-    { "path": "evidence/commands/rules-verify.txt", "minCharacters": 250, "includeAll": ["Characterization SHA", "Refactor SHA", "PASS", "exit code: 0"] }
+    { "path": "evidence/commands/rules-verify.txt", "minCharacters": 250, "includeAll": ["Command: npm run evidence:verify", "Repository commit:", "Started at:", "Finished at:", "Characterization SHA", "Refactor SHA", "PASS", "exit code: 0"] }
   ]
 }

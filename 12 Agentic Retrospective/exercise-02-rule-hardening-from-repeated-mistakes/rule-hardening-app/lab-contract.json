@@ -2,8 +2,8 @@
   "title": "Repeated Mistake to Repository Rule",
   "competency": "12. Agentic Retrospective - Session review, waste reduction, and improvement",
   "domain": "Trace-backed repository guidance with behavioral patch comparison",
-  "mission": "Convert three recurring persistence mistakes into minimal routed guidance that improves a fresh first attempt.",
-  "outcome": "Matched agent patches and focused Git history prove that concise guidance prevents repeated defects.",
+  "mission": "Convert three recurring persistence mistakes into minimal routed guidance and test its effect on a fresh first attempt.",
+  "outcome": "Matched agent patches and focused Git history prove defect reduction or a valid ceiling no-regression result.",
   "entities": [
     "correction event",
     "safe-start rule",
@@ -19,14 +19,16 @@
     "two-event support per rule",
     "minimal and nonduplicated guidance",
     "isolated patch grading",
+    "ceiling-aware no-regression when the baseline is already correct",
     "matched fresh-agent conditions",
+    "automatic command capture",
     "npm run verify:exercise checks protected inputs, implementation quality, and required submission evidence."
   ],
   "agentWorkflow": [
     "Capture the unguided first patch.",
     "Commit only routed repository guidance.",
     "Capture a fresh guided first patch under matched conditions.",
-    "Apply the successful patch and verify behavior and history.",
+    "Commit the successful source patch before adding the participant test.",
     "Capture comparable before and after results using the conditions defined in the exercise README."
   ],
   "workingDeliverables": [

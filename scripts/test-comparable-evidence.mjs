@@ -52,13 +52,58 @@ try {
   write(path.join(evidence, "comparison.md"), "# Comparison\nSame conditions were used. Before proof failed; after proof passed. Conclusion: the change improved the result.\n");
   git(temporary, ["add", "."]);
   git(temporary, ["commit", "-m", "evidence"]);
+  const evidenceCommit = git(temporary, ["rev-parse", "HEAD"]);
+  write(path.join(evidence, "commands", "verify.txt"), `Command: npm run evidence:verify\nRepository commit: ${evidenceCommit}\nStarted at: 2026-08-12T09:00:00.000Z\nFinished at: 2026-08-12T09:00:01.000Z\nDuration ms: 1000\n\nSTDOUT\nPASS\n\nSTDERR\n\nexit code: 0\n`);
+  write(path.join(evidence, "commands", "supplemental.txt"), "Additional command output without capture metadata.\n");
+  git(temporary, ["add", "."]);
+  git(temporary, ["commit", "-m", "captured command"]);
 
   assert.deepEqual(verifyComparableEvidence({ repositoryRoot: temporary, exerciseRoot }), []);
+  fs.appendFileSync(path.join(evidence, "commands", "verify.txt"), "manual note\n");
+  assert.ok(verifyComparableEvidence({ repositoryRoot: temporary, exerciseRoot }).some((failure) => failure.includes("must end with exit code: 0")));
+  git(temporary, ["reset", "--hard"]);
   write(path.join(evidence, "before.patch"), afterPatch);
   assert.ok(verifyComparableEvidence({ repositoryRoot: temporary, exerciseRoot }).some((failure) => failure.includes("before.patch must exactly match")));
   write(path.join(evidence, "before.patch"), beforePatch);
   fs.appendFileSync(path.join(evidence, "after.patch"), "tamper\n");
   assert.ok(verifyComparableEvidence({ repositoryRoot: temporary, exerciseRoot }).some((failure) => failure.includes("SHA-256")));
+
+  git(temporary, ["reset", "--hard"]);
+  git(temporary, ["checkout", "--detach", start]);
+  write(path.join(exerciseRoot, "intervention.txt"), "participant-created setup\n");
+  git(temporary, ["add", "."]);
+  git(temporary, ["commit", "-m", "intervention"]);
+  const runBaseCommit = git(temporary, ["rev-parse", "HEAD"]);
+  write(path.join(exerciseRoot, "app.txt"), "after intervention\n");
+  const runBasePatch = execFileSync("git", ["diff", "--binary", "--full-index"], { cwd: temporary });
+  git(temporary, ["add", "."]);
+  git(temporary, ["commit", "-m", "implementation after intervention"]);
+  const runBaseImplementation = git(temporary, ["rev-parse", "HEAD"]);
+  write(path.join(evidence, "before.patch"), beforePatch);
+  write(path.join(evidence, "after.patch"), runBasePatch);
+  write(path.join(evidence, "before.md"), `${common}Run base commit: ${start}\nImplementation commit: ${beforeImplementation}\nPatch SHA-256: ${hash(path.join(evidence, "before.patch"))}\n`);
+  write(path.join(evidence, "after.md"), `${common}Run base commit: ${runBaseCommit}\nImplementation commit: ${runBaseImplementation}\nPatch SHA-256: ${hash(path.join(evidence, "after.patch"))}\n`);
+  write(path.join(evidence, "comparison.md"), "# Comparison\nSame conditions were used. Before proof failed; after proof passed from a participant-created run base. Conclusion: the intervention improved the process.\n");
+  git(temporary, ["add", "."]);
+  git(temporary, ["commit", "-m", "run base evidence"]);
+  assert.deepEqual(verifyComparableEvidence({ repositoryRoot: temporary, exerciseRoot, allowedAfterRunBaseFiles: ["intervention.txt"] }), []);
+  assert.ok(verifyComparableEvidence({ repositoryRoot: temporary, exerciseRoot }).some((failure) => failure.includes("no allowed intervention files")));
+
+  git(temporary, ["reset", "--hard"]);
+  git(temporary, ["checkout", "--detach", start]);
+  write(path.join(exerciseRoot, "app.txt"), "before attempt\n");
+  git(temporary, ["add", "."]);
+  git(temporary, ["commit", "-m", "ceiling after implementation"]);
+  const ceilingImplementation = git(temporary, ["rev-parse", "HEAD"]);
+  write(path.join(evidence, "before.patch"), beforePatch);
+  write(path.join(evidence, "after.patch"), beforePatch);
+  write(path.join(evidence, "before.md"), `${common}Implementation commit: ${beforeImplementation}\nPatch SHA-256: ${hash(path.join(evidence, "before.patch"))}\n`);
+  write(path.join(evidence, "after.md"), `${common}Implementation commit: ${ceilingImplementation}\nPatch SHA-256: ${hash(path.join(evidence, "after.patch"))}\n`);
+  write(path.join(evidence, "comparison.md"), "# Comparison\nSame conditions were used. Before proof and after proof both passed. Conclusion: this is a ceiling no-regression result.\n");
+  git(temporary, ["add", "."]);
+  git(temporary, ["commit", "-m", "ceiling evidence"]);
+  assert.ok(verifyComparableEvidence({ repositoryRoot: temporary, exerciseRoot }).some((failure) => failure.includes("must not be identical")));
+  assert.deepEqual(verifyComparableEvidence({ repositoryRoot: temporary, exerciseRoot, allowIdenticalPatches: true }), []);
   console.log("Comparable evidence verifier self-test passed");
 } finally {
   fs.rmSync(temporary, { recursive: true, force: true });

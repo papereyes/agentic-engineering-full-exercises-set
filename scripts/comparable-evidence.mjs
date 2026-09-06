@@ -100,7 +100,7 @@ function findIntegrityManifests(directory, results = []) {
   return results;
 }
 
-function verifyProtectedHistory({ repositoryRoot, exerciseRoot, startingCommit, failures }) {
+function verifyProtectedHistory({ repositoryRoot, exerciseRoot, startingCommit, implementationCommits, failures }) {
   for (const manifestPath of findIntegrityManifests(exerciseRoot)) {
     const manifestRelative = repositoryRelative(repositoryRoot, manifestPath);
     let trustedSource;
@@ -129,7 +129,67 @@ function verifyProtectedHistory({ repositoryRoot, exerciseRoot, startingCommit, 
         failures.push(`protected input is not available at Starting commit: ${protectedRelative}`);
       }
     }
+
+    for (const revision of implementationCommits) {
+      try {
+        const recordedManifest = git(repositoryRoot, ["show", `${revision}:${manifestRelative}`]);
+        if (recordedManifest.replaceAll("\r\n", "\n").trim() !== trustedSource.replaceAll("\r\n", "\n").trim()) {
+          failures.push(`protected-input manifest changed in recorded implementation ${revision}: ${manifestRelative}`);
+          continue;
+        }
+      } catch {
+        failures.push(`protected-input manifest is missing from recorded implementation ${revision}: ${manifestRelative}`);
+        continue;
+      }
+      for (const relative of Object.keys(trusted.protectedFiles ?? {})) {
+        const absolute = path.resolve(path.dirname(manifestPath), relative);
+        const protectedRelative = repositoryRelative(repositoryRoot, absolute);
+        try {
+          const expected = execFileSync("git", ["show", `${startingCommit}:${protectedRelative}`], { cwd: repositoryRoot });
+          const recorded = execFileSync("git", ["show", `${revision}:${protectedRelative}`], { cwd: repositoryRoot });
+          if (!expected.equals(recorded)) failures.push(`protected input changed in recorded implementation ${revision}: ${protectedRelative}`);
+        } catch {
+          failures.push(`protected input is missing from recorded implementation ${revision}: ${protectedRelative}`);
+        }
+      }
+    }
   }
+}
+
+function verifyRunBaseScope({ repositoryRoot, exerciseRoot, startingCommit, runBaseCommit, label, allowedAfterRunBaseFiles, failures }) {
+  if (label === "before" && runBaseCommit !== startingCommit) {
+    failures.push("before.md Run base commit must equal Starting commit");
+    return;
+  }
+  if (label !== "after" || runBaseCommit === startingCommit) return;
+  try {
+    if (git(repositoryRoot, ["rev-parse", `${runBaseCommit}^`]) !== startingCommit) failures.push("after.md Run base commit must directly follow Starting commit");
+    const prefix = repositoryRelative(repositoryRoot, exerciseRoot);
+    const allowed = new Set(allowedAfterRunBaseFiles.map((relative) => `${prefix}/${relative}`));
+    const changed = git(repositoryRoot, ["diff", "--name-only", startingCommit, runBaseCommit]).split(/\r?\n/).filter(Boolean);
+    if (!changed.length) failures.push("after.md Run base commit must contain the documented participant intervention");
+    if (!allowed.size) failures.push("after.md uses a different Run base commit but this exercise has no allowed intervention files");
+    for (const file of changed) if (!allowed.has(file)) failures.push(`after.md Run base commit changes unauthorized file ${file}`);
+  } catch {
+    failures.push("after.md Run base commit must be a direct descendant containing only the allowed participant intervention");
+  }
+}
+
+export function verifyEvidenceOnlyHistory({ repositoryRoot, exerciseRoot, fromCommit }) {
+  const failures = [];
+  try {
+    const prefix = `${repositoryRelative(repositoryRoot, exerciseRoot)}/evidence/`;
+    const lines = git(repositoryRoot, ["rev-list", "--reverse", "--parents", `${fromCommit}..HEAD`]).split(/\r?\n/).filter(Boolean);
+    for (const line of lines) {
+      const [commit, ...parents] = line.split(" ");
+      if (parents.length !== 1) failures.push(`commit ${commit} after implementation must not be a merge commit`);
+      const changed = git(repositoryRoot, ["diff-tree", "--no-commit-id", "--name-only", "-r", commit]).split(/\r?\n/).filter(Boolean);
+      for (const file of changed) if (!file.startsWith(prefix)) failures.push(`commit ${commit} after implementation changes non-evidence file ${file}`);
+    }
+  } catch {
+    failures.push("unable to verify evidence-only commits after implementation");
+  }
+  return failures;
 }
 
 function validateRun({ label, record, patchFile, failures }) {
@@ -140,7 +200,32 @@ function validateRun({ label, record, patchFile, failures }) {
   if (record.fields.get("Retries") !== "0") failures.push(`${label}.md must record Retries: 0`);
 }
 
-export function verifyComparableEvidence({ repositoryRoot, exerciseRoot }) {
+function verifyCommandTranscripts({ repositoryRoot, evidenceRoot, failures }) {
+  const commandRoot = path.join(evidenceRoot, "commands");
+  if (!fs.existsSync(commandRoot)) return;
+  for (const entry of fs.readdirSync(commandRoot, { withFileTypes: true })) {
+    if (!entry.isFile() || path.extname(entry.name) !== ".txt") continue;
+    const label = `commands/${entry.name}`;
+    const source = fs.readFileSync(path.join(commandRoot, entry.name), "utf8").replaceAll("\r\n", "\n");
+    if (!["Command:", "Repository commit:", "Started at:", "Finished at:", "Duration ms:"].some((marker) => source.includes(marker))) continue;
+    const field = (name) => source.match(new RegExp(`^${name}: (.+)$`, "m"))?.[1]?.trim() ?? "";
+    if (field("Command") !== "npm run evidence:verify") failures.push(`${label} must capture exactly npm run evidence:verify`);
+    const revision = field("Repository commit");
+    if (!/^[a-f0-9]{40}$/.test(revision)) failures.push(`${label} needs a full Repository commit SHA`);
+    else {
+      try { git(repositoryRoot, ["merge-base", "--is-ancestor", revision, "HEAD"]); }
+      catch { failures.push(`${label} Repository commit must be an ancestor of HEAD`); }
+    }
+    const startedAt = Date.parse(field("Started at"));
+    const finishedAt = Date.parse(field("Finished at"));
+    const duration = Number(field("Duration ms"));
+    if (!Number.isFinite(startedAt) || !Number.isFinite(finishedAt) || finishedAt < startedAt) failures.push(`${label} needs ordered ISO timestamps`);
+    if (!Number.isInteger(duration) || duration < 0 || (Number.isFinite(startedAt) && Number.isFinite(finishedAt) && duration !== finishedAt - startedAt)) failures.push(`${label} Duration ms must match its timestamps`);
+    if (!/(?:^|\n)exit code: 0\n?$/.test(source)) failures.push(`${label} must end with exit code: 0`);
+  }
+}
+
+export function verifyComparableEvidence({ repositoryRoot, exerciseRoot, allowIdenticalPatches = false, skipPatchHistory = false, allowedAfterRunBaseFiles = [] }) {
   const failures = [];
   const evidenceRoot = path.join(exerciseRoot, "evidence");
   const beforeFile = path.join(evidenceRoot, "before.md");
@@ -153,6 +238,7 @@ export function verifyComparableEvidence({ repositoryRoot, exerciseRoot }) {
 
   validateRun({ label: "before", record: before, patchFile: beforePatch, failures });
   validateRun({ label: "after", record: after, patchFile: afterPatch, failures });
+  verifyCommandTranscripts({ repositoryRoot, evidenceRoot, failures });
 
   for (const field of ["Starting commit", "Agent and model", "Tools and permissions", "Time limit"]) {
     const beforeValue = before.fields.get(field);
@@ -165,14 +251,27 @@ export function verifyComparableEvidence({ repositoryRoot, exerciseRoot }) {
   else {
     try { git(repositoryRoot, ["cat-file", "-e", `${startingCommit}^{commit}`]); }
     catch { failures.push("Starting commit is not available in Git history"); }
-    checkPatchAtCommit({ repositoryRoot, startingCommit, patchFile: beforePatch, label: "before", failures });
-    checkPatchAtCommit({ repositoryRoot, startingCommit, patchFile: afterPatch, label: "after", failures });
-    verifyCommittedRun({ repositoryRoot, startingCommit, implementationCommit: before.fields.get("Implementation commit") ?? "", patchFile: beforePatch, label: "before", failures });
-    verifyCommittedRun({ repositoryRoot, startingCommit, implementationCommit: after.fields.get("Implementation commit") ?? "", patchFile: afterPatch, label: "after", failures });
-    verifyProtectedHistory({ repositoryRoot, exerciseRoot, startingCommit, failures });
+    if (!skipPatchHistory) {
+      for (const [label, record, patchFile] of [["before", before, beforePatch], ["after", after, afterPatch]]) {
+        const runBaseCommit = record.fields.get("Run base commit") ?? startingCommit;
+        if (!/^[a-f0-9]{40}$/.test(runBaseCommit)) {
+          failures.push(`${label}.md Run base commit must be a full 40-character Git SHA`);
+          continue;
+        }
+        try { git(repositoryRoot, ["merge-base", "--is-ancestor", startingCommit, runBaseCommit]); }
+        catch { failures.push(`${label}.md Run base commit must descend from Starting commit`); }
+        verifyRunBaseScope({ repositoryRoot, exerciseRoot, startingCommit, runBaseCommit, label, allowedAfterRunBaseFiles, failures });
+        checkPatchAtCommit({ repositoryRoot, startingCommit: runBaseCommit, patchFile, label, failures });
+        verifyCommittedRun({ repositoryRoot, startingCommit: runBaseCommit, implementationCommit: record.fields.get("Implementation commit") ?? "", patchFile, label, failures });
+      }
+    }
+    const implementationCommits = [before, after]
+      .map((record) => record.fields.get("Implementation commit") ?? "")
+      .filter((revision) => /^[a-f0-9]{40}$/.test(revision));
+    verifyProtectedHistory({ repositoryRoot, exerciseRoot, startingCommit, implementationCommits, failures });
   }
 
-  if (fs.existsSync(beforePatch) && fs.existsSync(afterPatch) && fs.readFileSync(beforePatch).equals(fs.readFileSync(afterPatch))) failures.push("before.patch and after.patch must not be identical");
+  if (!allowIdenticalPatches && fs.existsSync(beforePatch) && fs.existsSync(afterPatch) && fs.readFileSync(beforePatch).equals(fs.readFileSync(afterPatch))) failures.push("before.patch and after.patch must not be identical");
 
   const implementationCommit = after.fields.get("Implementation commit") ?? "";
   if (/^[a-f0-9]{40}$/.test(implementationCommit)) {
@@ -192,13 +291,21 @@ export function verifyComparableEvidence({ repositoryRoot, exerciseRoot }) {
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
   const exerciseRoot = path.resolve(process.argv[2] ?? "..");
+  const allowIdenticalPatches = process.argv.includes("--allow-identical-patches");
+  const skipPatchHistory = process.argv.includes("--skip-patch-history");
+  const allowedAfterRunBaseFiles = process.argv
+    .filter((argument) => argument.startsWith("--after-run-base-file="))
+    .map((argument) => argument.slice("--after-run-base-file=".length));
   const repositoryRoot = git(exerciseRoot, ["rev-parse", "--show-toplevel"]);
-  const failures = verifyComparableEvidence({ repositoryRoot, exerciseRoot });
+  const failures = verifyComparableEvidence({ repositoryRoot, exerciseRoot, allowIdenticalPatches, skipPatchHistory, allowedAfterRunBaseFiles });
   if (failures.length) {
     console.error(`Comparable evidence verification failed:\n${failures.map((failure) => `- ${failure}`).join("\n")}`);
     process.exit(1);
   }
-  console.log("PASS before and after runs use matching conditions and valid Git patches");
-  console.log("PASS both patches match their recorded implementation commits");
+  console.log(skipPatchHistory
+    ? "PASS before and after runs use matching conditions and hashed snapshot patches"
+    : "PASS before and after runs use matching conditions and valid Git patches");
+  console.log(skipPatchHistory ? "PASS exercise-specific history verifier owns patch-to-commit validation" : "PASS both patches match their recorded implementation commits");
   console.log("PASS protected manifests and inputs match the starting commit");
+  if (allowIdenticalPatches) console.log("PASS identical first-attempt patches are allowed by this exercise contract");
 }

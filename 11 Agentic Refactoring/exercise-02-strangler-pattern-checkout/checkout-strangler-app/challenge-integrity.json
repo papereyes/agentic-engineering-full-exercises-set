@@ -1,21 +1,24 @@
 {
   "algorithm": "sha256-normalized-lf",
   "protectedFiles": {
+    "../../../scripts/capture-verification.mjs": "857bf77e3359e1e1fe077512e4278045ad90c8b2b4ac1065df23bf1afdfc60e4",
+    "../../../scripts/comparable-evidence.mjs": "c17afd57721834139072a847e03b4fbce467d8e1db9252c5748212966fbca1d0",
     "../../../scripts/run-clean-verification.mjs": "9b17cbb8865a642a7789113c145be88c6bb965bc2d8c024b82202e8ae85bf368",
     "../../../scripts/run-vite-build.mjs": "b7901ed4f770e6537e80f864392c8c1de841b5c97fa8993246c5df7a86d5d415",
     "../../../scripts/verify-protected-inputs.mjs": "d99346d9a84651bcb654d07d1b5d131d39d5f3b703ee9614db4eafc86cb4d96c",
-    "../README.md": "8a17ef6afd6ab9a3e6058213f481d1222928a8b8fcf940187c6f18f2c16f3cc8",
+    "../../../scripts/verify-submission-contract.mjs": "5c34aab86313eeb825b19c6ceabc8afbaf65cce3d1cde325bdea7a9739e23ca4",
+    "../README.md": "0793cfaa79bc3c41f68b55b6567864b7486eb15fadcaa00973ea1a2897794fc2",
     "../docs/checkout-cases.json": "62a4806ef8e79f407daec97f1c8135cc5dd43f2ed73dc94c0b2c8b5405231b3b",
-    "../docs/checkout-contract.md": "d89414b2cc3f781756071c109e9acb062b6e87028d476363674b61d7a8e9ae91",
+    "../docs/checkout-contract.md": "1335376aba385c378f011f97981c0507bbbea892c4e65d36f8a29a878d73db1b",
     "../docs/checkout-legacy-map.md": "e178a8ffdbef89161bdb7d1f784d3794c575b9c1f99385ec14f21893972b2484",
-    "lab-contract.json": "2680f3fc545440a8918dc2c87bc409bcaf29c4b99eec805dd20763a90da22bd2",
-    "package.json": "2bf324ced2182940b6d90c68c5f257ba1d6d6bb30666c8822380ed9508641cc8",
-    "scripts/run-checkout-tests.mjs": "77eb81ccd0029af32185ce941e708a1edf680a62b5ef34481966c363fe27b953",
-    "scripts/strangler-verification.mjs": "53b5579f2ff705536400ccf97cf934ab570a8b798efc4082cdb3b935cf93dacd",
+    "lab-contract.json": "59dd3abfc4d19d5e781ad41e4212ac4efb0fa2ed69e1b57300ae4e8872bda8fc",
+    "package.json": "d5ae72320c7caea7cedc0ad0e0a71df3206124ee0841b225af3dbfce39f079dd",
+    "scripts/run-checkout-tests.mjs": "eafe70970367932c6c0cc9d33178502a351f867e978d5e057c8c61adc18a940a",
+    "scripts/strangler-verification.mjs": "e4743c3a836fbfd10b3aa19104a052226c91a7f2079d6a8f7f80a59cf515445f",
     "scripts/test-strangler-verifier.mjs": "d3f1c7585df1701b756f46021bb95fb66bb1759704062b973864b971fea0b1e9",
-    "scripts/verify-strangler-submission.mjs": "18b568b4a71a0dcedf726100d7f6e4c4f3ed0630b5741d2f1789ee2b6a4de4f3",
+    "scripts/verify-strangler-submission.mjs": "5fe572fbfdd1d31b0f8c5e1ba1b21fc211049631a3cc676a2e9011d6f319f85b",
     "src/checkout/legacyCheckout.mjs": "b42a2471c5b2624388a2bee2bb1cc765d14bd0244f2737b0406d03f82b06725e",
-    "src/labContract.ts": "5f8d48c2a116ad7a69c1c71e217ed024e72909d728a526220698ebbdff395109",
-    "submission-contract.json": "7c5d82239be01c124c7dc3d7576319c05ef993ba6d73683deccc03914536cdfe"
+    "src/labContract.ts": "0be6f66b7021038b94d6421cde8e964cde21bedc9181ada2f5897503830b7935",
+    "submission-contract.json": "e0cd8df4394f7796c9461db44e751795a52a5420b5d5655404010dc9136e87b2"
   }
 }

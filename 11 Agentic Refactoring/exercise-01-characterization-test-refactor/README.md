@@ -8,11 +8,13 @@ The function allows support overrides, accepts negative late-payment counts, and
 
 Compare an unconstrained agent refactor with a characterization-first workflow and prove every output remains identical.
 
+The comparison measures the development process. A correct unconstrained attempt may preserve the same outputs, but it will not have the pre-committed oracle, test-first history, or scope proof required by the controlled workflow.
+
 The duration for this challenge is 45 min or less.
 
 ## Project
 
-[rules-refactor-app](./rules-refactor-app) contains the legacy function and protected oracle. [Golden cases](./docs/renewal-golden-cases.json) are observed behavior and must not be edited.
+[rules-refactor-app](./rules-refactor-app) contains the legacy function and protected oracle. [Golden cases](./docs/renewal-golden-cases.json) are observed behavior and must not be edited. Inputs are plain data records with fixed properties; getter, proxy, and property-read side effects are outside this contract.
 
 ## How To Go About It
 
@@ -28,7 +30,9 @@ The duration for this challenge is 45 min or less.
 
 6. Preserve the export, inputs, result fields, exact reason strings, validation gaps, and decision order. Capture `after-output.json` from the refactored code and compare it byte-for-byte with the baseline.
 
-7. Save `evidence/after.md`, `evidence/after.patch`, behavior decisions, refactor steps, command proof, and comparison. Raise the PR from the second branch.
+7. Save `evidence/after.md`, `evidence/after.patch`, behavior decisions, refactor steps, command proof, and comparison. Use the characterization commit as the after run's base so `after.patch` contains only the agent refactor. Raise the PR from the second branch.
+
+The two agents may produce the same correct source patch. In that ceiling case, the controlled run still proves the characterization commit, authoritative oracle, focused history, and scope discipline that were absent from the unconstrained run.
 
 ## Evidence
 
@@ -37,10 +41,10 @@ Submit:
 - The characterization-first and refactor commits.
 - `evidence/before.md`, `evidence/before.patch`, `evidence/after.md`, and `evidence/after.patch`.
 - Before and after outputs, `behavior-decisions.md`, `refactor-steps.md`, and `evidence/comparison.md`.
-- Captured command output and output from `npm run verify:exercise`.
+- Automatically captured command output and output from `npm run verify:exercise`.
 - A focused pull request containing only this exercise.
 
-Run `npm run verify:exercise` before raising the PR. It checks protected inputs, application quality, test-first history, public-only characterization, exact behavior parity, refactor scope, and required proof.
+From `rules-refactor-app`, run `npm run evidence:capture -- --output ../evidence/commands/refactor-verify.txt -- npm run evidence:verify`. This records the command, commit, timestamps, output, and exit code without requiring its own output file. Then run `npm run verify:exercise` before raising the PR. It checks protected inputs, matched run evidence, application quality, test-first history, public-only characterization, exact behavior parity, refactor scope, and required proof.
 
 For the required before and after files, follow the [evidence instructions and template](./docs/evidence-template.md) and the repository [submission standard](../../docs/SUBMISSION_STANDARD.md).
 
@@ -48,7 +52,7 @@ For the required before and after files, follow the [evidence instructions and t
 
 The challenge is complete when:
 
-- Both agent attempts use matching conditions and genuine first-attempt patches.
+- Both agent attempts use matching conditions and genuine first-attempt patches; identical correct patches are allowed.
 - Characterization tests and baseline output are committed before production edits and call only the public function.
 - Every protected field, value, reason string, validation gap, and decision result is identical before and after.
 - The refactor commit changes only `legacyEligibility.mjs`; suspected bugs are documented, not fixed.

@@ -19,15 +19,18 @@
   "verificationGates": [
     "trace-backed failure clusters",
     "48 matched raw runs",
+    "unique session and measurement provenance",
     "held-out critical quality",
+    "request-wording leakage prevention",
     "variance and cost thresholds",
+    "newline-safe baseline identity and automatic command capture",
     "npm run verify:exercise checks protected inputs, implementation quality, and required submission evidence."
   ],
   "agentWorkflow": [
     "Benchmark the unchanged workflow.",
     "Cluster repeated causes before editing.",
     "Commit only general workflow instructions.",
-    "Rerun all lanes and adopt from deterministic evidence.",
+    "Generate patches from the recorded commits, rerun every lane, and adopt from deterministic evidence.",
     "Capture comparable before and after results using the conditions defined in the exercise README."
   ],
   "workingDeliverables": [

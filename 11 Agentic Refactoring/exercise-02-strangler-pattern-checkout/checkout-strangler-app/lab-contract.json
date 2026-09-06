@@ -18,7 +18,9 @@
   "verificationGates": [
     "legacy-to-card result comparison",
     "protected route matrix",
+    "primitive and ambiguous authorization failures never fall back",
     "flag-off rollback",
+    "matched run metadata with ceiling-aware identical-patch support and automatic command capture",
     "focused source history",
     "npm run verify:exercise checks protected inputs, implementation quality, and required submission evidence."
   ],

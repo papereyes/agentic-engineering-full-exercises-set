@@ -1,10 +1,11 @@
 {
   "algorithm": "sha256-normalized-lf",
   "protectedFiles": {
-    "../../../scripts/comparable-evidence.mjs": "bc3026719f3802f793825905c31fd8e9ed626353bd7fa9c08bb7881969da7731",
+    "../../../scripts/comparable-evidence.mjs": "c17afd57721834139072a847e03b4fbce467d8e1db9252c5748212966fbca1d0",
     "../../../scripts/run-clean-verification.mjs": "9b17cbb8865a642a7789113c145be88c6bb965bc2d8c024b82202e8ae85bf368",
     "../../../scripts/run-vite-build.mjs": "b7901ed4f770e6537e80f864392c8c1de841b5c97fa8993246c5df7a86d5d415",
     "../../../scripts/verify-protected-inputs.mjs": "d99346d9a84651bcb654d07d1b5d131d39d5f3b703ee9614db4eafc86cb4d96c",
+    "../../../scripts/verify-submission-contract.mjs": "5c34aab86313eeb825b19c6ceabc8afbaf65cce3d1cde325bdea7a9739e23ca4",
     "../README.md": "f7de1c2eccd9b01d06f0089d4f771190b73e20f0f95458c7d60b22a38975b70b",
     "../docs/evidence-contract.md": "bc9b5e92e84f9d71bdc8c6ae5a6ceede10c8dd818b7e8d9fd7167cb98911ce3c",
     "../docs/gate-cli-contract.md": "84796e9efde7061f0bd2a45effb7503ea9ad13ead8c32428a41e11e5578721a4",

@@ -37,10 +37,10 @@ Submit:
 - The selector, refactored adapter, and learner regression tests.
 - `evidence/before.md`, `evidence/before.patch`, `evidence/after.md`, and `evidence/after.patch`.
 - The pre-change context plan, final context ledger, decision, and `evidence/comparison.md`.
-- Captured command output and output from `npm run verify:exercise`.
+- Automatically captured command output and output from `npm run verify:exercise`.
 - A focused pull request containing only this exercise.
 
-Run `npm run verify:exercise` before raising the PR. It checks protected inputs, application quality, selector behavior, exact byte accounting, plan-before-code history, context decisions, and required before-and-after proof.
+From `token-budget-app`, run `npm run evidence:capture -- --output ../evidence/commands/context-tests.txt -- npm run evidence:verify`. This records the context test command, commit, timestamps, output, and exit code without manual editing. Then run `npm run verify:exercise` before raising the PR. It checks protected inputs, application quality, selector behavior, exact byte accounting, plan-before-code history, context decisions, and required before-and-after proof.
 
 For the required before and after files, follow the [evidence instructions and template](./docs/evidence-template.md) and the repository [submission standard](../../docs/SUBMISSION_STANDARD.md).
 

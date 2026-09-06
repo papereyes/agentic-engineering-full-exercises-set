@@ -16,11 +16,12 @@ for (const [file, terms] of [
 ]) for (const term of terms) if (!text(file).toLowerCase().includes(term.toLowerCase())) failures.push(`${file} is missing ${term}`);
 let history = {};
 try { history = JSON.parse(text("history.json")); } catch { failures.push("history.json must be valid JSON"); }
-if (!/^[a-f0-9]{40}$/.test(history.sourceSha ?? "")) failures.push("sourceSha must be a full commit SHA");
-else failures.push(...verifyStranglerHistory({ repositoryRoot, exerciseRoot, sourceSha: history.sourceSha }));
+for (const field of ["characterizationSha", "sourceSha"]) if (!/^[a-f0-9]{40}$/.test(history[field] ?? "")) failures.push(`${field} must be a full commit SHA`);
+if (history.characterizationSha && history.sourceSha) failures.push(...verifyStranglerHistory({ repositoryRoot, exerciseRoot, characterizationSha: history.characterizationSha, sourceSha: history.sourceSha }));
 if (failures.length) {
   console.error(`Strangler submission verification failed:\n${[...new Set(failures)].map((failure) => `- ${failure}`).join("\n")}`);
   process.exit(1);
 }
+console.log(`Characterization SHA: ${history.characterizationSha}`);
 console.log(`Source SHA: ${history.sourceSha}`);
 console.log("PASS route, comparison, rollback, and focused-history evidence");

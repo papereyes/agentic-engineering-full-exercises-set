@@ -17,6 +17,6 @@ A request contains `orderId`, `paymentType`, `subtotalCents`, `taxRateBps`, and 
 
 The card slice calls `authorize` once with `orderId`, `amountCents`, and `paymentToken`. Approved and declined responses must match the legacy public result.
 
-If the new slice throws with `authorizationCreated: false`, the router may call legacy once. If the value is true, missing, or ambiguous, legacy must not run; return the error's public `result` when valid, otherwise return `PAYMENT_STATE_UNKNOWN` with the calculated total.
+If the new slice throws with `authorizationCreated: false`, the router must call legacy exactly once. If the value is true, missing, ambiguous, malformed, or not an object, legacy must not run; return the error's public `result` when valid, otherwise return `PAYMENT_STATE_UNKNOWN` with the calculated total.
 
 The legacy implementation remains available as the immediate rollback path.

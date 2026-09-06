@@ -9,8 +9,8 @@ export const labContract = {
   outcome: "A one-file workflow change generalizes to held-out tasks without critical regressions or excessive context cost.",
   entities: ["FailureTrace", "WorkflowInstruction", "ReplayResponse", "DeterministicGrade"],
   seededDefects: ["Baseline guidance does not establish scope or authority.", "Partial checks can support completion.", "Broad context is loaded before decisions are known."],
-  verificationGates: ["Trace-backed failure clusters.", "48 matched raw runs.", "Held-out critical quality.", "Variance and cost thresholds."],
-  agentWorkflow: ["Benchmark the unchanged workflow.", "Cluster repeated causes before editing.", "Commit only general workflow instructions.", "Rerun all lanes and adopt from deterministic evidence."],
+  verificationGates: ["Trace-backed failure clusters.", "48 matched raw runs with session provenance.", "Held-out critical quality.", "Request-wording leakage prevention.", "Variance and cost thresholds.", "Newline-safe baseline identity and automatic command capture."],
+  agentWorkflow: ["Benchmark the unchanged workflow.", "Cluster repeated causes before editing.", "Commit only general workflow instructions.", "Generate patches from the recorded commits, rerun every lane, and adopt from deterministic evidence."],
   workingDeliverables: ["Candidate workflow.", "Raw hashed baseline and candidate runs.", "Generated benchmark.", "Failure analysis, adoption decision, and Git proof."],
   masterySignals: ["Uses all runs rather than selecting winners.", "Keeps grading independent from agent claims.", "Improves both train and held-out quality.", "Rejects quality gains that violate critical or cost gates."],
   backlog: [

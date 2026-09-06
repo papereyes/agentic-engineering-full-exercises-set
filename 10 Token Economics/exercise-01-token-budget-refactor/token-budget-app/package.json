@@ -13,6 +13,8 @@
     "test:adapter": "node ./scripts/run-adapter-acceptance.mjs && node ./tests/session-adapter.test.mjs",
     "test:lanes": "node ./scripts/replay-context-lanes.mjs",
     "context:verify": "node ./scripts/verify-context-submission.mjs",
+    "evidence:verify": "npm run test:context",
+    "evidence:capture": "node ../../../scripts/capture-verification.mjs",
     "test:submission": "npm run test:context && npm run test:adapter && npm run test:lanes && npm run context:verify && node ../../../scripts/verify-submission-contract.mjs ./submission-contract.json",
     "lint": "node ./scripts/lint-check.mjs",
     "format": "node ./scripts/format-check.mjs",

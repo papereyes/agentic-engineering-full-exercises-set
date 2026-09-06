@@ -4,6 +4,7 @@
     "../../../scripts/run-clean-verification.mjs": "9b17cbb8865a642a7789113c145be88c6bb965bc2d8c024b82202e8ae85bf368",
     "../../../scripts/run-vite-build.mjs": "b7901ed4f770e6537e80f864392c8c1de841b5c97fa8993246c5df7a86d5d415",
     "../../../scripts/verify-protected-inputs.mjs": "d99346d9a84651bcb654d07d1b5d131d39d5f3b703ee9614db4eafc86cb4d96c",
+    "../../../scripts/verify-submission-contract.mjs": "5c34aab86313eeb825b19c6ceabc8afbaf65cce3d1cde325bdea7a9739e23ca4",
     "../README.md": "4856a36e33c5c43779b8d189b46eb4187b0b9f0f22bb1ec41236251e10e9dd2b",
     "../docs/evidence-template.md": "5f49737c2f07cc20179997a69977808be5f0b30fea7cf3d5bd7fae7519356af5",
     "../docs/guardrail-contract.md": "422e2c736cf03bdfa0ab9d3ca797bfb0ca6370f136839633620c3c99bc482a67",

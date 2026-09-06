@@ -1,5 +1,6 @@
 import path from "node:path";
 import { execFileSync } from "node:child_process";
+import { verifyEvidenceOnlyHistory } from "../../../../scripts/comparable-evidence.mjs";
 
 function git(root, args) { return execFileSync("git", args, { cwd: root, encoding: "utf8" }).trim(); }
 
@@ -13,7 +14,7 @@ export function validateSnapshots(before, after, expected) {
 export function verifyRulesHistory({ repositoryRoot, exerciseRoot, characterizationSha, refactorSha }) {
   const failures = [];
   try {
-    git(repositoryRoot, ["merge-base", "--is-ancestor", characterizationSha, refactorSha]);
+    if (git(repositoryRoot, ["rev-parse", `${refactorSha}^`]) !== characterizationSha) failures.push("refactorSha must directly follow characterizationSha");
     git(repositoryRoot, ["merge-base", "--is-ancestor", refactorSha, "HEAD"]);
     const prefix = path.relative(repositoryRoot, exerciseRoot).split(path.sep).join("/");
     const characterizationFiles = [
@@ -28,8 +29,7 @@ export function verifyRulesHistory({ repositoryRoot, exerciseRoot, characterizat
     ].sort();
     const actualRefactor = git(repositoryRoot, ["diff-tree", "--no-commit-id", "--name-only", "-r", refactorSha]).split(/\r?\n/).filter(Boolean).sort();
     if (JSON.stringify(actualRefactor) !== JSON.stringify(refactorFiles)) failures.push("refactorSha must contain only DecisionPolicy and WorkflowService");
-    const later = git(repositoryRoot, ["diff", "--name-only", refactorSha, "HEAD"]).split(/\r?\n/).filter(Boolean);
-    for (const file of later) if (!file.startsWith(`${prefix}/evidence/`)) failures.push(`commit after refactorSha changes non-evidence file ${file}`);
+    failures.push(...verifyEvidenceOnlyHistory({ repositoryRoot, exerciseRoot, fromCommit: refactorSha }));
   } catch { failures.push("characterizationSha must precede a focused ancestor refactorSha"); }
   return failures;
 }

@@ -1,0 +1,123 @@
+Date: 2026-09-08
+Command: npm run verify:exercise
+
+> case-dashboard-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+
+> case-dashboard-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+
+> case-dashboard-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+
+> case-dashboard-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+
+Verified 25 protected challenge inputs.
+
+> case-dashboard-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+
+lint-check passed
+
+> case-dashboard-app@0.1.0 test
+> node ./scripts/agent-check.mjs
+
+agent-check passed for TDD Skill Network Boundary Rescue
+
+> case-dashboard-app@0.1.0 format
+> node ./scripts/format-check.mjs
+
+format-check passed
+
+> case-dashboard-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+
+> case-dashboard-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 29 modules transformed.
+rendering chunks...
+computing gzip size...
+../../../../exercise-vite-build-BlqiqU/dist/index.html                   0.42 kB │ gzip:  0.29 kB
+../../../../exercise-vite-build-BlqiqU/dist/assets/index-xLq6ppC8.css    0.84 kB │ gzip:  0.46 kB
+../../../../exercise-vite-build-BlqiqU/dist/assets/index-ClzYf4pm.js   194.81 kB │ gzip: 61.34 kB
+✓ built in 1.25s
+
+> case-dashboard-app@0.1.0 verify:implementation
+> npm run test:acceptance && npm run test:network
+
+> case-dashboard-app@0.1.0 test:acceptance
+> vitest run src/App.acceptance.test.tsx --pool=forks --maxWorkers=1
+
+ RUN  v3.2.7 /tmp/agentic-exercise-04-02-after/04 Test Automation/exercise-02-tdd-skill-network-boundary-rescue/case-dashboard-app
+
+ ✓ src/App.acceptance.test.tsx (3 tests) 719ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  12:14:31
+   Duration  2.06s (transform 95ms, setup 330ms, collect 119ms, tests 719ms, environment 580ms, prepare 107ms)
+
+> case-dashboard-app@0.1.0 test:network
+> node ./scripts/run-network-stability.mjs
+
+Network stability seed: 104
+
+ RUN  v3.2.7 /tmp/agentic-exercise-04-02-after/04 Test Automation/exercise-02-tdd-skill-network-boundary-rescue/case-dashboard-app
+      Running tests with seed "104"
+
+ ✓ src/App.acceptance.test.tsx (3 tests) 423ms
+ ✓ src/App.weak.test.tsx (1 test) 159ms
+ ✓ src/App.network.test.tsx (6 tests) 492ms
+ ✓ src/utils/scoring.test.ts (2 tests) 7ms
+
+ Test Files  4 passed (4)
+      Tests  12 passed (12)
+   Start at  12:14:34
+   Duration  4.97s (transform 120ms, setup 907ms, collect 193ms, tests 1.08s, environment 1.98s, prepare 265ms)
+
+Network stability seed: 108
+
+ RUN  v3.2.7 /tmp/agentic-exercise-04-02-after/04 Test Automation/exercise-02-tdd-skill-network-boundary-rescue/case-dashboard-app
+      Running tests with seed "108"
+
+ ✓ src/utils/scoring.test.ts (2 tests) 6ms
+ ✓ src/App.weak.test.tsx (1 test) 147ms
+ ✓ src/App.network.test.tsx (6 tests) 469ms
+ ✓ src/App.acceptance.test.tsx (3 tests) 436ms
+
+ Test Files  4 passed (4)
+      Tests  12 passed (12)
+   Start at  12:14:40
+   Duration  4.52s (transform 88ms, setup 785ms, collect 179ms, tests 1.06s, environment 1.77s, prepare 245ms)
+
+Network stability seed: 220
+
+ RUN  v3.2.7 /tmp/agentic-exercise-04-02-after/04 Test Automation/exercise-02-tdd-skill-network-boundary-rescue/case-dashboard-app
+      Running tests with seed "220"
+
+ ✓ src/App.acceptance.test.tsx (3 tests) 411ms
+ ✓ src/App.weak.test.tsx (1 test) 163ms
+ ✓ src/App.network.test.tsx (6 tests) 516ms
+ ✓ src/utils/scoring.test.ts (2 tests) 6ms
+
+ Test Files  4 passed (4)
+      Tests  12 passed (12)
+   Start at  12:14:45
+   Duration  4.75s (transform 80ms, setup 838ms, collect 159ms, tests 1.10s, environment 1.91s, prepare 263ms)
+
+Network stability passed for seeds: 104, 108, 220
+
+> case-dashboard-app@0.1.0 verify:submission
+> npm run test:tdd
+
+> case-dashboard-app@0.1.0 test:tdd
+> node ./scripts/verify-tdd-submission.mjs
+
+TDD submission verification passed: 6 participant tests, strict MSW isolation, comparable first attempts, three ordered cycles, six states, and shuffled stability evidence.
+PASS verify:exercise left tracked files, the Git index, and untracked or ignored paths unchanged
+
+Exit code: 0

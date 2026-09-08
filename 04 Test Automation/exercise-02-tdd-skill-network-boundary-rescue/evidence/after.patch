@@ -1,6 +1,6 @@
 diff --git a/04 Test Automation/exercise-02-tdd-skill-network-boundary-rescue/case-dashboard-app/src/App.network.test.tsx b/04 Test Automation/exercise-02-tdd-skill-network-boundary-rescue/case-dashboard-app/src/App.network.test.tsx
 new file mode 100644
-index 0000000..c8798ec
+index 0000000000000000000000000000000000000000..c8798ec1cd4772dace370ebfcd972f75ab53f101
 --- /dev/null
 +++ b/04 Test Automation/exercise-02-tdd-skill-network-boundary-rescue/case-dashboard-app/src/App.network.test.tsx	
 @@ -0,0 +1,82 @@
@@ -87,7 +87,7 @@ index 0000000..c8798ec
 +  });
 +});
 diff --git a/04 Test Automation/exercise-02-tdd-skill-network-boundary-rescue/case-dashboard-app/src/App.tsx b/04 Test Automation/exercise-02-tdd-skill-network-boundary-rescue/case-dashboard-app/src/App.tsx
-index a9205b1..d899f23 100644
+index a9205b1a362251086c1859543d791baf0ef6b23b..d899f230448f1a255e4bee4e1fa7e4427f37f294 100644
 --- a/04 Test Automation/exercise-02-tdd-skill-network-boundary-rescue/case-dashboard-app/src/App.tsx	
 +++ b/04 Test Automation/exercise-02-tdd-skill-network-boundary-rescue/case-dashboard-app/src/App.tsx	
 @@ -39,10 +39,10 @@ export default function App() {
@@ -105,7 +105,7 @@ index a9205b1..d899f23 100644
          <ul className="case-list" aria-label="Cases">
            {filteredCases.map((item) => (
 diff --git a/04 Test Automation/exercise-02-tdd-skill-network-boundary-rescue/case-dashboard-app/src/test/setup.ts b/04 Test Automation/exercise-02-tdd-skill-network-boundary-rescue/case-dashboard-app/src/test/setup.ts
-index e0c7a7b..568adce 100644
+index e0c7a7b86f938c3d19f8a88c0a16c5d23d7fdccf..568adce06bfaea20b8a6808da682b47694d5c37d 100644
 --- a/04 Test Automation/exercise-02-tdd-skill-network-boundary-rescue/case-dashboard-app/src/test/setup.ts	
 +++ b/04 Test Automation/exercise-02-tdd-skill-network-boundary-rescue/case-dashboard-app/src/test/setup.ts	
 @@ -1,8 +1,11 @@

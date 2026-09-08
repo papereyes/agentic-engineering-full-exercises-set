@@ -1,0 +1,737 @@
+{
+  "schema_version": 1,
+  "skill_name": "change-review",
+  "description_sha256": "5602079fb8faf9cb4292c3f3403ecf6b08c216418aba9720bac8817f01ee34d6",
+  "environment": {
+    "provider": "OpenAI",
+    "agent": "Codex CLI 0.153.4",
+    "model": "gpt-5.6-sol (low reasoning)",
+    "runtime": "codex exec --ephemeral target-only router",
+    "settings": {
+      "temperature": "runtime default"
+    },
+    "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac"
+  },
+  "cases": [
+    {
+      "id": "train-review-auth",
+      "prompt": "Before approving this authentication pull request, inspect the supplied diff for authorization bypasses and report findings with file and line evidence.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.258Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Reviews a pull-request diff for authorization bugs with code-location findings.",
+          "response_sha256": "23349f4e43510e1f5f84df9c94f1bc0953a582fec8bd22b959f4731ba8bc18a3",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.259Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Requests security and approval-risk review of an existing diff.",
+          "response_sha256": "c870f25fdb2bfe42fc1f9e63a1e23d66ca70b19a301bf3fdba9b30ec036a2ebc",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.260Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Directly matches code review for bypasses with file-and-line evidence.",
+          "response_sha256": "911295d089a48d4a0fc67f9078c2ce91e601bd2733757b30c14f11cdcf0d6202",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "train-review-race",
+      "prompt": "Examine the attached concurrency branch for lost updates or race conditions and tell me whether the change is safe to merge.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.261Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Reviews an existing branch for concurrency bugs and merge risk.",
+          "response_sha256": "bf23bb83e0e88c0abc3208485d25543f712751ddb987bd8234dd372044695f7c",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.262Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Requests race-condition findings and a safe-to-merge assessment.",
+          "response_sha256": "eebe519315e2e8eb139478297287a867d2ce1af0499f64cbe9e3e87117c0ddc9",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.263Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Directly matches correctness review of a branch.",
+          "response_sha256": "8caada5995110f162447c4985cc2cf1b4cc7d9ba631d032a13af457b9b3a6b09",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "train-review-accessibility",
+      "prompt": "Review the UI patch for keyboard and screen-reader regressions introduced by these changes, with each finding tied to the code.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.264Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Reviews a UI patch for accessibility regressions tied to code.",
+          "response_sha256": "8d9f6fc4fe9c92af3cede0e8d3df2c79dac714470911cdf5562fd8626b46255c",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.265Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Requests keyboard and screen-reader findings introduced by changes.",
+          "response_sha256": "e38e0c11f8d195b923594e6d4b6766cef059cd569e02d23dce543a75e73f917f",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.266Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Directly matches accessibility review of an existing patch.",
+          "response_sha256": "467af701abed433b4f69c88f083aaa650b6d79434c8394ae386925a38e35044e",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "train-review-data",
+      "prompt": "Audit this database migration pull request for data-loss paths, unsafe rollback behavior, and missing transactional protection before merge.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.267Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Reviews a migration pull request for data-loss and rollback risks.",
+          "response_sha256": "a5046c2b8b76dc1c96fea2e313ee83e8a6032ea421209afa323f3844bd17fa5a",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.268Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Requests correctness and merge-risk findings for an existing PR.",
+          "response_sha256": "a9978e18412442eba886b428e7c2d8a83d6aa1d6df499f7779efa71e0105e1e5",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.269Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Directly matches code review for transactional and data-safety defects.",
+          "response_sha256": "ce4f1329c1c3a6964903b884082ca90d6f2de6b9ca375048fafd17f376abda54",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "train-review-api",
+      "prompt": "Check the supplied API change set for backward-compatibility defects and identify any merge blockers with exact code locations.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.270Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Reviews an API change set for compatibility defects and merge blockers.",
+          "response_sha256": "78f4f82b63b532daf9f76ae3a9e6e79191a6a19d4b5ec9e552bf43664bd23d26",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.271Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Requests actionable findings at exact code locations.",
+          "response_sha256": "0cdbda85080bd227b8c5874f72302123f274bd322cd10f908bf7d2b3a11fdaad",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.272Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Directly matches compatibility review of existing changes.",
+          "response_sha256": "3d6f53a5bd19854d3cb648d6b87e903db8dbbd15f3dbfacf1f95e73b189ce117",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "train-review-tests",
+      "prompt": "Inspect this payment retry diff and find behavior changes that are not protected by the added tests before I approve the pull request.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.273Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Reviews a payment diff for behavioral regressions and test gaps.",
+          "response_sha256": "e5de62cde8d89f2ec3a99c42ecad9a5654c4c22079095929ae881052d3168c14",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.274Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Requests approval-oriented review of changes and added tests.",
+          "response_sha256": "22f0cfc2dde75406c7a8c42a0307621c72e21cba0b1075e3d2a99a6bf87b2d1a",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.275Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Directly matches diff review for missing test protection.",
+          "response_sha256": "6a693543830e94420b51055ba6a45f335018deda538027c956f6b61a3cf96345",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "train-release",
+      "prompt": "Create customer-facing release notes for the changes already merged since version 2.4 and clearly flag any missing verification evidence.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.276Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "Release-note creation is explicitly excluded.",
+          "response_sha256": "7e76d508f276ed2809178f17e78a081bae39a444f553c1f08ca6bb11ffe037a7",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.277Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "The request is for customer-facing release notes, not code review.",
+          "response_sha256": "73648fdce6b8223b86c6dddcfcc04d934cc533d87f8a68ab528971a23e870e85",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.278Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "This matches the excluded release-notes workflow.",
+          "response_sha256": "17552b69f78187a9a41c7757157a1ffbf9d1975b966a284c822dfd98f8a7adf9",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "train-incident",
+      "prompt": "Turn yesterday's outage timeline, customer impact, remediation notes, and follow-up owners into a concise operational incident summary.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.279Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "Incident-report summarization is explicitly excluded.",
+          "response_sha256": "8a5227b20b5e9d32d3fa03082853e644c969e2cb32f70cc5756d596e0ce1f27c",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.280Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "The request concerns an outage summary rather than an existing code change.",
+          "response_sha256": "87b831ad5255e83de0202c0a1dc487029af7dba6d4997f226ddd6741331bb4e3",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.281Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "This matches the excluded incident-report workflow.",
+          "response_sha256": "88c843559102f7de68c2512b9f38f97072e38dc278d7267b3250bfde3d1d5f72",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "train-implementation",
+      "prompt": "Apply the reviewer comments to this branch, update the authorization code, and add the regression tests needed to make the pull request pass.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.282Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "Implementing reviewer comments and tests is explicitly excluded.",
+          "response_sha256": "40faa73dbd783e1ba2aa35ad3c3ec1926ec5e53f7c3aad606b7578a0aff925b9",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.283Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "The request asks to modify code rather than review existing changes.",
+          "response_sha256": "6384769fa11f1949b0d33b347aa73ccaba57a7bbf5a2a42ef03821306c7b6545",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.284Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "This is an implementation workflow, not change review.",
+          "response_sha256": "2dd70b6b0fe2d5838dbfa5b94fd2eba1731efa61448fbd2027f25c1bc4b780da",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "train-debugging",
+      "prompt": "The checkout test fails intermittently in CI. Reproduce the failure, identify its cause, and implement a reliable fix in the application.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.285Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "Debugging and implementing a fix are explicitly excluded.",
+          "response_sha256": "61cea8c70aafe287cc5acdcbb7862e2ebb6811ab40f8baefb577b711d0601d46",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.286Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "The request asks to reproduce and fix a failure, not review a change.",
+          "response_sha256": "f116ab736e79fb988de978c2449a711c60bfe52e9f456ce6fa3abba7093c93de",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.287Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "This matches the excluded debugging workflow.",
+          "response_sha256": "42cc7eaa33934712ce4ba687b449f916f964d0dd2eb588dc1e5dc9fb6a905b85",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "train-pr-summary",
+      "prompt": "Write a clear pull-request title and description that summarize the completed caching changes, test coverage, rollout plan, and screenshots.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.288Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "Pull-request writing and ordinary summaries are explicitly excluded.",
+          "response_sha256": "fe082332cd9cabc0eb9a2d83affe92047bbb1a2ac24c5dcdf50f194f70a78a0d",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.289Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "The request asks for a PR title and description, not findings.",
+          "response_sha256": "c72f8672c8e7ef74032170853c512e937abea3eff534f5ad40450d7bea00dc35",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.290Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "This matches the excluded pull-request-writing workflow.",
+          "response_sha256": "df3f5a28e2311432d0b2e0b4a7f6b56a90b8b55b72439fe9a543ef96accc6eff",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "train-review-advice",
+      "prompt": "Explain how our team can run more useful code reviews and suggest a practical checklist for authors and reviewers to follow.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.291Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "General code-review advice is explicitly excluded.",
+          "response_sha256": "7b2d44ac657575f079081137b735142a583d07cfed25e74c1832b61d90eb328c",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.292Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "No existing diff, branch, commit, patch, or PR is being reviewed.",
+          "response_sha256": "ea67bdef513b3705a6205e70ca01f7a9e41e1d8b080b3a18a92b4fd6c79e6296",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.293Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "The request is for process guidance and a checklist, not change findings.",
+          "response_sha256": "d9dc5ab32c121f16bb1516a7e2393c3b5bdc1d64f3a403a60a521bb785330ba0",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "held-review-paraphrase",
+      "prompt": "Tell me whether the attached branch is safe to land and point me to every behavioral problem that should block approval.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.294Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Requests approval-risk and behavioral findings for an attached branch.",
+          "response_sha256": "612b55a75d96315030cd2b358cca8f0b46ebb8a31d43e0996c5f8955dd147eca",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.295Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Asks whether an existing branch is safe to merge.",
+          "response_sha256": "7067d2944ee23b2062f3a61c26eee28ef9284068316c81999ceb9900483136bb",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.296Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Directly matches branch review for merge-blocking problems.",
+          "response_sha256": "357d5ae01479c192a5de4fbc6f67819d1c70c506d8de9921a9b704ae33d81fe8",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "held-review-dependency",
+      "prompt": "Inspect this dependency-upgrade commit for supply-chain, runtime compatibility, and lockfile risks before it is accepted.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.297Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Reviews a dependency-upgrade commit for security and compatibility risks.",
+          "response_sha256": "3f4c74c679c8240f313e607acbd12c8ddd6d15dd31f1e2a2b8531f8528ce1904",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.298Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Requests acceptance-risk findings for an existing commit.",
+          "response_sha256": "cf295e19715da943cc121706eb758e4cec19fbcbed167c973afd5c2922f50439",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.299Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Directly matches commit review for supply-chain and lockfile defects.",
+          "response_sha256": "a2d6323416c2573382ecb1b91044b3e0592e20c0ea5ca1599bd296fe17e7389b",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "held-review-performance",
+      "prompt": "Examine the query pagination patch for new N+1 calls, unbounded work, or correctness regressions and cite the affected lines.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.300Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Reviews a patch for performance and correctness regressions with line evidence.",
+          "response_sha256": "bdfc6cc28393d95e911285aa28114bf9db5a294dc1bfb8de3bf8fd237d8060ff",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.301Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Requests actionable findings about N+1 calls and unbounded work.",
+          "response_sha256": "7dc8942e450be626bec76e3c80bffcb3d8dccc72d447b31aa37436a271bb781b",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.302Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Directly matches code-location review of an existing patch.",
+          "response_sha256": "813e00d3a6b5cb7d8d57869048144d471dd7856ef3d1d50933f19c42f075167c",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "held-review-react",
+      "prompt": "Check these React changes for stale state, keyboard failures, and request races, then return only actionable findings tied to the diff.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.303Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Reviews existing React changes for correctness, accessibility, and race defects.",
+          "response_sha256": "5ee4415595f8122f33400f2d773592196ea63cc2edb64f614650e527ddda3ad7",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.304Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Requests only actionable findings tied to the diff.",
+          "response_sha256": "03884ffd7b5e4fc5ce15753ec2f7777b993638fc0383dd775e88141069b1965f",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.305Z",
+          "selected_skills": [
+            "change-review"
+          ],
+          "triggered": true,
+          "raw_response": "Directly matches change review across multiple supported risk categories.",
+          "response_sha256": "82eff26745c2c09fc4d0c5a473bc3976d27775046dff7665a13f0544f2065345",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "held-release-paraphrase",
+      "prompt": "Prepare the customer update for work shipped since last Thursday, separating visible improvements from internal engineering changes.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.306Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "Preparing a customer update for shipped work is release-note creation.",
+          "response_sha256": "c4c76b68d918aafd3f51a10e8a44b3f72862d0f431276a23be5a10c2a883910d",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.307Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "The request is a customer-facing release summary, which is excluded.",
+          "response_sha256": "079b570acdcec56a85cff642a9ff3a9d8cff14205d1df9835d093873d6e0f1f1",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.308Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "No code-level review findings are requested.",
+          "response_sha256": "ce97a8c619d32ca1dda458040b1d6c00f3bd13f3e40268c52118c6c52bf7d276",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "held-design-review",
+      "prompt": "Review this proposed event-driven architecture document and identify unclear ownership, scaling assumptions, and unanswered design questions.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.309Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "Design-document review is explicitly excluded.",
+          "response_sha256": "474163e7e36f9004f2253a0db9932d3a48ff3897deb74c540ed7e7edc86ff8fc",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.310Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "The subject is a proposed architecture document, not an existing code change.",
+          "response_sha256": "c588ab8d4e936fd58516babb5ea4c73adc09fce9ec40daac162c7f1eae4506e4",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.311Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "This matches the excluded design-review workflow.",
+          "response_sha256": "f24184a3426cbe36e06f71d63005d4078d91b04c450ff9998be37e5148abd246",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "held-diff-summary",
+      "prompt": "Give leadership a non-technical summary of this already approved diff, focusing on business impact rather than code-level findings.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.312Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "An ordinary non-technical diff summary is explicitly excluded.",
+          "response_sha256": "8bbc2ca6c56c681c5f634e192f3bbc7861afdb1f7a172d3a37272eabd277bdaa",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.313Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "The request seeks business-impact summarization rather than code findings.",
+          "response_sha256": "5148db8c53cbb3a6343b7b21bec602715907f64a3450e7a4536bc747f9081778",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.314Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "The already approved diff is not being assessed for defects or risk.",
+          "response_sha256": "89b568c6fe0d9419c2dc82833cebc807f4611448d8c242f130af255f36ba803f",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    },
+    {
+      "id": "held-compound",
+      "prompt": "Review the remediation patch for merge blockers and then use the outage timeline to write the final incident report in the same workflow.",
+      "decisions": [
+        {
+          "run": 1,
+          "timestamp": "2026-09-08T10:25:36.315Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "The request combines code review with an independent incident-report workflow.",
+          "response_sha256": "bbf1ff7bfe6fcf49693d1fd6c3eb464a38e890bfeed4ffe7ffe25da6dbbf635b",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 2,
+          "timestamp": "2026-09-08T10:25:36.316Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "Combined review and incident reporting is explicitly excluded.",
+          "response_sha256": "238de53e037c33f25bdb5b87e8a5f5abf701f7cb2085640a27cb442cd0eefb91",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        },
+        {
+          "run": 3,
+          "timestamp": "2026-09-08T10:25:36.317Z",
+          "selected_skills": [],
+          "triggered": false,
+          "raw_response": "The compound workflow falls outside the skill boundary.",
+          "response_sha256": "ff3dfefa3396940306ab93a2266752f82ca22e8bd61d99ea7fc053c700c18bdc",
+          "observation": "Observed in the unedited JSON response from the target-only Codex routing session."
+        }
+      ]
+    }
+  ]
+}

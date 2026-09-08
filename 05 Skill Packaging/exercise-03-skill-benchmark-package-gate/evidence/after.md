@@ -1,6 +1,8 @@
 # Candidate Benchmark
 
 - Starting commit: 52090edddf032d026ece16ef90feb627bf8e67ac
+- Implementation commit: 4404cb0d426843d9d5ef963d8514d8be6a2a88f3
+- Patch SHA-256: 33b2ee9db17710a7d6ba57431ebf14155a610f0a1e4ec9bc7815fa7cb7ffb61a
 - Agent: Codex CLI 0.153.4
 - Model: gpt-5.6-sol (low reasoning)
 - Runtime: `codex exec --ephemeral`

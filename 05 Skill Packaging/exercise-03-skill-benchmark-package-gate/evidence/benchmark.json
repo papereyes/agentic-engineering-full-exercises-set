@@ -1,0 +1,2238 @@
+{
+  "schema_version": 2,
+  "metadata": {
+    "skill_name": "incident-summary",
+    "candidate_skill_sha256": "215530830a0d6e2404d8f69843e78bd8f720ac96ff935447be18a28369eaa3f2",
+    "starter_skill_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
+    "evals_run": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "configurations": [
+      "without_skill",
+      "starter_skill",
+      "with_skill"
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "checkout-retry-recovery-boundary",
+      "split": "train",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 27.439,
+        "tokens": 31163
+      },
+      "expectations": [
+        {
+          "id": "a-timeline-source",
+          "text": "Detection, mitigation, and recovery cite their event sources.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
+        },
+        {
+          "id": "a-recovery-boundary",
+          "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-A5]; Output matched forbidden pattern: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
+        },
+        {
+          "id": "a-impact-source",
+          "text": "The exact failed-attempt impact is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-A2]"
+        },
+        {
+          "id": "a-followup-state",
+          "text": "The alerting follow-up remains proposed and not started.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
+        },
+        {
+          "id": "a-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "checkout-retry-recovery-boundary",
+      "split": "train",
+      "configuration": "without_skill",
+      "run_number": 2,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 26.798,
+        "tokens": 31262
+      },
+      "expectations": [
+        {
+          "id": "a-timeline-source",
+          "text": "Detection, mitigation, and recovery cite their event sources.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
+        },
+        {
+          "id": "a-recovery-boundary",
+          "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-A5]; Output matched forbidden pattern: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
+        },
+        {
+          "id": "a-impact-source",
+          "text": "The exact failed-attempt impact is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-A2]"
+        },
+        {
+          "id": "a-followup-state",
+          "text": "The alerting follow-up remains proposed and not started.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
+        },
+        {
+          "id": "a-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "checkout-retry-recovery-boundary",
+      "split": "train",
+      "configuration": "without_skill",
+      "run_number": 3,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 25.911,
+        "tokens": 37555
+      },
+      "expectations": [
+        {
+          "id": "a-timeline-source",
+          "text": "Detection, mitigation, and recovery cite their event sources.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
+        },
+        {
+          "id": "a-recovery-boundary",
+          "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-A5]; Output matched forbidden pattern: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
+        },
+        {
+          "id": "a-impact-source",
+          "text": "The exact failed-attempt impact is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-A2]"
+        },
+        {
+          "id": "a-followup-state",
+          "text": "The alerting follow-up remains proposed and not started.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
+        },
+        {
+          "id": "a-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "checkout-retry-recovery-boundary",
+      "split": "train",
+      "configuration": "starter_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 31.797,
+        "tokens": 31349
+      },
+      "expectations": [
+        {
+          "id": "a-timeline-source",
+          "text": "Detection, mitigation, and recovery cite their event sources.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
+        },
+        {
+          "id": "a-recovery-boundary",
+          "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-A5]; Forbidden pattern was absent: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
+        },
+        {
+          "id": "a-impact-source",
+          "text": "The exact failed-attempt impact is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-A2]"
+        },
+        {
+          "id": "a-followup-state",
+          "text": "The alerting follow-up remains proposed and not started.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
+        },
+        {
+          "id": "a-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Cause and uncertainty, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "checkout-retry-recovery-boundary",
+      "split": "train",
+      "configuration": "starter_skill",
+      "run_number": 2,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 28.076,
+        "tokens": 31176
+      },
+      "expectations": [
+        {
+          "id": "a-timeline-source",
+          "text": "Detection, mitigation, and recovery cite their event sources.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
+        },
+        {
+          "id": "a-recovery-boundary",
+          "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-A5]; Output matched forbidden pattern: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
+        },
+        {
+          "id": "a-impact-source",
+          "text": "The exact failed-attempt impact is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-A2]"
+        },
+        {
+          "id": "a-followup-state",
+          "text": "The alerting follow-up remains proposed and not started.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
+        },
+        {
+          "id": "a-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "checkout-retry-recovery-boundary",
+      "split": "train",
+      "configuration": "starter_skill",
+      "run_number": 3,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 35.194,
+        "tokens": 31517
+      },
+      "expectations": [
+        {
+          "id": "a-timeline-source",
+          "text": "Detection, mitigation, and recovery cite their event sources.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
+        },
+        {
+          "id": "a-recovery-boundary",
+          "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-A5]; Output matched forbidden pattern: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
+        },
+        {
+          "id": "a-impact-source",
+          "text": "The exact failed-attempt impact is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-A2]"
+        },
+        {
+          "id": "a-followup-state",
+          "text": "The alerting follow-up remains proposed and not started.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
+        },
+        {
+          "id": "a-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Cause and uncertainty, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "checkout-retry-recovery-boundary",
+      "split": "train",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1,
+        "critical_pass_rate": 1,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 28.965,
+        "tokens": 38001
+      },
+      "expectations": [
+        {
+          "id": "a-timeline-source",
+          "text": "Detection, mitigation, and recovery cite their event sources.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: [EVT-A1], [EVT-A3], [EVT-A5]"
+        },
+        {
+          "id": "a-recovery-boundary",
+          "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: 09:24, [EVT-A5]; Forbidden pattern was absent: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
+        },
+        {
+          "id": "a-impact-source",
+          "text": "The exact failed-attempt impact is cited.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: 318, [IMP-A2]"
+        },
+        {
+          "id": "a-followup-state",
+          "text": "The alerting follow-up remains proposed and not started.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: [FUP-A1]; Found boundary language: proposed, not started, open"
+        },
+        {
+          "id": "a-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "checkout-retry-recovery-boundary",
+      "split": "train",
+      "configuration": "with_skill",
+      "run_number": 2,
+      "result": {
+        "pass_rate": 1,
+        "critical_pass_rate": 1,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 28.395,
+        "tokens": 37910
+      },
+      "expectations": [
+        {
+          "id": "a-timeline-source",
+          "text": "Detection, mitigation, and recovery cite their event sources.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: [EVT-A1], [EVT-A3], [EVT-A5]"
+        },
+        {
+          "id": "a-recovery-boundary",
+          "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: 09:24, [EVT-A5]; Forbidden pattern was absent: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
+        },
+        {
+          "id": "a-impact-source",
+          "text": "The exact failed-attempt impact is cited.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: 318, [IMP-A2]"
+        },
+        {
+          "id": "a-followup-state",
+          "text": "The alerting follow-up remains proposed and not started.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: [FUP-A1]; Found boundary language: proposed, not started, open"
+        },
+        {
+          "id": "a-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "checkout-retry-recovery-boundary",
+      "split": "train",
+      "configuration": "with_skill",
+      "run_number": 3,
+      "result": {
+        "pass_rate": 1,
+        "critical_pass_rate": 1,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 28.421,
+        "tokens": 31742
+      },
+      "expectations": [
+        {
+          "id": "a-timeline-source",
+          "text": "Detection, mitigation, and recovery cite their event sources.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: [EVT-A1], [EVT-A3], [EVT-A5]"
+        },
+        {
+          "id": "a-recovery-boundary",
+          "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: 09:24, [EVT-A5]; Forbidden pattern was absent: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
+        },
+        {
+          "id": "a-impact-source",
+          "text": "The exact failed-attempt impact is cited.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: 318, [IMP-A2]"
+        },
+        {
+          "id": "a-followup-state",
+          "text": "The alerting follow-up remains proposed and not started.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: [FUP-A1]; Found boundary language: proposed, not started, open"
+        },
+        {
+          "id": "a-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "export-cause-conflict",
+      "split": "train",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 19.617,
+        "tokens": 31050
+      },
+      "expectations": [
+        {
+          "id": "b-impact-source",
+          "text": "The exact customer impact cites its source.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-B2]"
+        },
+        {
+          "id": "b-uncertainty",
+          "text": "Both cause hypotheses are cited and remain unresolved.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [NOTE-B3a], [NOTE-B3b]; Found boundary language: unresolved, conflict"
+        },
+        {
+          "id": "b-remediation",
+          "text": "The deployed worker-pool remediation is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [REM-B4]"
+        },
+        {
+          "id": "b-followup-state",
+          "text": "The cause review remains open.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-B5]; Found boundary language: open"
+        },
+        {
+          "id": "b-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "export-cause-conflict",
+      "split": "train",
+      "configuration": "without_skill",
+      "run_number": 2,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 19.343,
+        "tokens": 31040
+      },
+      "expectations": [
+        {
+          "id": "b-impact-source",
+          "text": "The exact customer impact cites its source.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: 41, [IMP-B2]"
+        },
+        {
+          "id": "b-uncertainty",
+          "text": "Both cause hypotheses are cited and remain unresolved.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [NOTE-B3a], [NOTE-B3b]; Found boundary language: unresolved, conflict"
+        },
+        {
+          "id": "b-remediation",
+          "text": "The deployed worker-pool remediation is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [REM-B4]"
+        },
+        {
+          "id": "b-followup-state",
+          "text": "The cause review remains open.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-B5]; Found boundary language: open"
+        },
+        {
+          "id": "b-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "export-cause-conflict",
+      "split": "train",
+      "configuration": "without_skill",
+      "run_number": 3,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 18.968,
+        "tokens": 31032
+      },
+      "expectations": [
+        {
+          "id": "b-impact-source",
+          "text": "The exact customer impact cites its source.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: 41, [IMP-B2]"
+        },
+        {
+          "id": "b-uncertainty",
+          "text": "Both cause hypotheses are cited and remain unresolved.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [NOTE-B3a], [NOTE-B3b]; Found boundary language: unresolved, conflict"
+        },
+        {
+          "id": "b-remediation",
+          "text": "The deployed worker-pool remediation is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [REM-B4]"
+        },
+        {
+          "id": "b-followup-state",
+          "text": "The cause review remains open.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-B5]; Found boundary language: open"
+        },
+        {
+          "id": "b-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "export-cause-conflict",
+      "split": "train",
+      "configuration": "starter_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 22.181,
+        "tokens": 37496
+      },
+      "expectations": [
+        {
+          "id": "b-impact-source",
+          "text": "The exact customer impact cites its source.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-B2]"
+        },
+        {
+          "id": "b-uncertainty",
+          "text": "Both cause hypotheses are cited and remain unresolved.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [NOTE-B3a], [NOTE-B3b]; Found boundary language: not confirmed, conflict"
+        },
+        {
+          "id": "b-remediation",
+          "text": "The deployed worker-pool remediation is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [REM-B4]"
+        },
+        {
+          "id": "b-followup-state",
+          "text": "The cause review remains open.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-B5]; Found boundary language: open"
+        },
+        {
+          "id": "b-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "export-cause-conflict",
+      "split": "train",
+      "configuration": "starter_skill",
+      "run_number": 2,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 22.745,
+        "tokens": 31359
+      },
+      "expectations": [
+        {
+          "id": "b-impact-source",
+          "text": "The exact customer impact cites its source.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-B2]"
+        },
+        {
+          "id": "b-uncertainty",
+          "text": "Both cause hypotheses are cited and remain unresolved.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [NOTE-B3a], [NOTE-B3b]; Found boundary language: not confirmed, conflict"
+        },
+        {
+          "id": "b-remediation",
+          "text": "The deployed worker-pool remediation is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [REM-B4]"
+        },
+        {
+          "id": "b-followup-state",
+          "text": "The cause review remains open.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-B5]; Found boundary language: open"
+        },
+        {
+          "id": "b-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "export-cause-conflict",
+      "split": "train",
+      "configuration": "starter_skill",
+      "run_number": 3,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 26.211,
+        "tokens": 37525
+      },
+      "expectations": [
+        {
+          "id": "b-impact-source",
+          "text": "The exact customer impact cites its source.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-B2]"
+        },
+        {
+          "id": "b-uncertainty",
+          "text": "Both cause hypotheses are cited and remain unresolved.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [NOTE-B3a], [NOTE-B3b]; Found boundary language: not confirmed, conflict"
+        },
+        {
+          "id": "b-remediation",
+          "text": "The deployed worker-pool remediation is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [REM-B4]"
+        },
+        {
+          "id": "b-followup-state",
+          "text": "The cause review remains open.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-B5]; Found boundary language: open"
+        },
+        {
+          "id": "b-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "export-cause-conflict",
+      "split": "train",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1,
+        "critical_pass_rate": 1,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 30.544,
+        "tokens": 31492
+      },
+      "expectations": [
+        {
+          "id": "b-impact-source",
+          "text": "The exact customer impact cites its source.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: 41, [IMP-B2]"
+        },
+        {
+          "id": "b-uncertainty",
+          "text": "Both cause hypotheses are cited and remain unresolved.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: [NOTE-B3a], [NOTE-B3b]; Found boundary language: unresolved, uncertain, conflict"
+        },
+        {
+          "id": "b-remediation",
+          "text": "The deployed worker-pool remediation is cited.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: worker pool, [REM-B4]"
+        },
+        {
+          "id": "b-followup-state",
+          "text": "The cause review remains open.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: [ACT-B5]; Found boundary language: open"
+        },
+        {
+          "id": "b-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "export-cause-conflict",
+      "split": "train",
+      "configuration": "with_skill",
+      "run_number": 2,
+      "result": {
+        "pass_rate": 1,
+        "critical_pass_rate": 1,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 26.68,
+        "tokens": 37817
+      },
+      "expectations": [
+        {
+          "id": "b-impact-source",
+          "text": "The exact customer impact cites its source.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: 41, [IMP-B2]"
+        },
+        {
+          "id": "b-uncertainty",
+          "text": "Both cause hypotheses are cited and remain unresolved.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: [NOTE-B3a], [NOTE-B3b]; Found boundary language: uncertain, conflict"
+        },
+        {
+          "id": "b-remediation",
+          "text": "The deployed worker-pool remediation is cited.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: worker pool, [REM-B4]"
+        },
+        {
+          "id": "b-followup-state",
+          "text": "The cause review remains open.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: [ACT-B5]; Found boundary language: open"
+        },
+        {
+          "id": "b-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "export-cause-conflict",
+      "split": "train",
+      "configuration": "with_skill",
+      "run_number": 3,
+      "result": {
+        "pass_rate": 1,
+        "critical_pass_rate": 1,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 26.38,
+        "tokens": 31626
+      },
+      "expectations": [
+        {
+          "id": "b-impact-source",
+          "text": "The exact customer impact cites its source.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: 41, [IMP-B2]"
+        },
+        {
+          "id": "b-uncertainty",
+          "text": "Both cause hypotheses are cited and remain unresolved.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: [NOTE-B3a], [NOTE-B3b]; Found boundary language: uncertain, conflict"
+        },
+        {
+          "id": "b-remediation",
+          "text": "The deployed worker-pool remediation is cited.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: worker pool, [REM-B4]"
+        },
+        {
+          "id": "b-followup-state",
+          "text": "The cause review remains open.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: [ACT-B5]; Found boundary language: open"
+        },
+        {
+          "id": "b-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "cache-hypothesis-separation",
+      "split": "held-out",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 37.192,
+        "tokens": 31548
+      },
+      "expectations": [
+        {
+          "id": "c-facts",
+          "text": "Verified cache saturation is separated from the deployment hypothesis.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, unconfirmed, may have"
+        },
+        {
+          "id": "c-timeline",
+          "text": "Detection and recovery cite the correct events.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-C1], [EVT-C6]"
+        },
+        {
+          "id": "c-impact",
+          "text": "The delayed-request impact is cited without converting it to customers.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
+        },
+        {
+          "id": "c-action",
+          "text": "The reproduction action remains open with its owner.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-C2]; Found boundary language: open"
+        },
+        {
+          "id": "c-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "cache-hypothesis-separation",
+      "split": "held-out",
+      "configuration": "without_skill",
+      "run_number": 2,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 43.328,
+        "tokens": 47216
+      },
+      "expectations": [
+        {
+          "id": "c-facts",
+          "text": "Verified cache saturation is separated from the deployment hypothesis.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, unconfirmed, may have"
+        },
+        {
+          "id": "c-timeline",
+          "text": "Detection and recovery cite the correct events.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-C1], [EVT-C6]"
+        },
+        {
+          "id": "c-impact",
+          "text": "The delayed-request impact is cited without converting it to customers.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
+        },
+        {
+          "id": "c-action",
+          "text": "The reproduction action remains open with its owner.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-C2]; Found boundary language: open"
+        },
+        {
+          "id": "c-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "cache-hypothesis-separation",
+      "split": "held-out",
+      "configuration": "without_skill",
+      "run_number": 3,
+      "result": {
+        "pass_rate": 1,
+        "critical_pass_rate": 1,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 36.948,
+        "tokens": 59187
+      },
+      "expectations": [
+        {
+          "id": "c-facts",
+          "text": "Verified cache saturation is separated from the deployment hypothesis.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, unconfirmed, may have"
+        },
+        {
+          "id": "c-timeline",
+          "text": "Detection and recovery cite the correct events.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: [EVT-C1], [EVT-C6], 03:14, 03:49"
+        },
+        {
+          "id": "c-impact",
+          "text": "The delayed-request impact is cited without converting it to customers.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: 12,400, requests, [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
+        },
+        {
+          "id": "c-action",
+          "text": "The reproduction action remains open with its owner.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: [ACT-C2], Platform; Found boundary language: open"
+        },
+        {
+          "id": "c-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "cache-hypothesis-separation",
+      "split": "held-out",
+      "configuration": "starter_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 32.574,
+        "tokens": 31720
+      },
+      "expectations": [
+        {
+          "id": "c-facts",
+          "text": "Verified cache saturation is separated from the deployment hypothesis.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, may have"
+        },
+        {
+          "id": "c-timeline",
+          "text": "Detection and recovery cite the correct events.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-C1], [EVT-C6]"
+        },
+        {
+          "id": "c-impact",
+          "text": "The delayed-request impact is cited without converting it to customers.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
+        },
+        {
+          "id": "c-action",
+          "text": "The reproduction action remains open with its owner.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-C2]; Found boundary language: open"
+        },
+        {
+          "id": "c-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Cause and uncertainty"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "cache-hypothesis-separation",
+      "split": "held-out",
+      "configuration": "starter_skill",
+      "run_number": 2,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 36.49,
+        "tokens": 37959
+      },
+      "expectations": [
+        {
+          "id": "c-facts",
+          "text": "Verified cache saturation is separated from the deployment hypothesis.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, may have"
+        },
+        {
+          "id": "c-timeline",
+          "text": "Detection and recovery cite the correct events.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-C1], [EVT-C6]"
+        },
+        {
+          "id": "c-impact",
+          "text": "The delayed-request impact is cited without converting it to customers.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
+        },
+        {
+          "id": "c-action",
+          "text": "The reproduction action remains open with its owner.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-C2]; Found boundary language: open"
+        },
+        {
+          "id": "c-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "cache-hypothesis-separation",
+      "split": "held-out",
+      "configuration": "starter_skill",
+      "run_number": 3,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 36.545,
+        "tokens": 31758
+      },
+      "expectations": [
+        {
+          "id": "c-facts",
+          "text": "Verified cache saturation is separated from the deployment hypothesis.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, may have"
+        },
+        {
+          "id": "c-timeline",
+          "text": "Detection and recovery cite the correct events.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-C1], [EVT-C6]"
+        },
+        {
+          "id": "c-impact",
+          "text": "The delayed-request impact is cited without converting it to customers.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
+        },
+        {
+          "id": "c-action",
+          "text": "The reproduction action remains open with its owner.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-C2]; Found boundary language: open"
+        },
+        {
+          "id": "c-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Cause and uncertainty"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "cache-hypothesis-separation",
+      "split": "held-out",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1,
+        "critical_pass_rate": 1,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 27.589,
+        "tokens": 31398
+      },
+      "expectations": [
+        {
+          "id": "c-facts",
+          "text": "Verified cache saturation is separated from the deployment hypothesis.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, may have"
+        },
+        {
+          "id": "c-timeline",
+          "text": "Detection and recovery cite the correct events.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: [EVT-C1], [EVT-C6], 03:14, 03:49"
+        },
+        {
+          "id": "c-impact",
+          "text": "The delayed-request impact is cited without converting it to customers.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: 12,400, requests, [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
+        },
+        {
+          "id": "c-action",
+          "text": "The reproduction action remains open with its owner.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: [ACT-C2], Platform; Found boundary language: open"
+        },
+        {
+          "id": "c-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "cache-hypothesis-separation",
+      "split": "held-out",
+      "configuration": "with_skill",
+      "run_number": 2,
+      "result": {
+        "pass_rate": 1,
+        "critical_pass_rate": 1,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 28.692,
+        "tokens": 31736
+      },
+      "expectations": [
+        {
+          "id": "c-facts",
+          "text": "Verified cache saturation is separated from the deployment hypothesis.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, may have"
+        },
+        {
+          "id": "c-timeline",
+          "text": "Detection and recovery cite the correct events.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: [EVT-C1], [EVT-C6], 03:14, 03:49"
+        },
+        {
+          "id": "c-impact",
+          "text": "The delayed-request impact is cited without converting it to customers.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: 12,400, requests, [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
+        },
+        {
+          "id": "c-action",
+          "text": "The reproduction action remains open with its owner.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: [ACT-C2], Platform; Found boundary language: open"
+        },
+        {
+          "id": "c-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "cache-hypothesis-separation",
+      "split": "held-out",
+      "configuration": "with_skill",
+      "run_number": 3,
+      "result": {
+        "pass_rate": 1,
+        "critical_pass_rate": 1,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 27.67,
+        "tokens": 37919
+      },
+      "expectations": [
+        {
+          "id": "c-facts",
+          "text": "Verified cache saturation is separated from the deployment hypothesis.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, may have"
+        },
+        {
+          "id": "c-timeline",
+          "text": "Detection and recovery cite the correct events.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: [EVT-C1], [EVT-C6], 03:14, 03:49"
+        },
+        {
+          "id": "c-impact",
+          "text": "The delayed-request impact is cited without converting it to customers.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: 12,400, requests, [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
+        },
+        {
+          "id": "c-action",
+          "text": "The reproduction action remains open with its owner.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: [ACT-C2], Platform; Found boundary language: open"
+        },
+        {
+          "id": "c-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "dashboard-duration-conflict",
+      "split": "held-out",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 18.912,
+        "tokens": 37280
+      },
+      "expectations": [
+        {
+          "id": "d-conflict",
+          "text": "Both duration sources are cited and the conflict remains unresolved.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-D1], [LOG-D4]; Found boundary language: unresolved"
+        },
+        {
+          "id": "d-impact",
+          "text": "The affected group is cited without an invented customer count.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-D3]; Forbidden pattern was absent: \\b\\d+\\s+(?:customers|tenants)\\b"
+        },
+        {
+          "id": "d-remediation",
+          "text": "The cache invalidation remediation is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: cache invalidation, [REM-D5]"
+        },
+        {
+          "id": "d-owner",
+          "text": "The timing-reconciliation action remains open with its owner.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-D2]; Found boundary language: open"
+        },
+        {
+          "id": "d-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "dashboard-duration-conflict",
+      "split": "held-out",
+      "configuration": "without_skill",
+      "run_number": 2,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 19.901,
+        "tokens": 37320
+      },
+      "expectations": [
+        {
+          "id": "d-conflict",
+          "text": "Both duration sources are cited and the conflict remains unresolved.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-D1], [LOG-D4]; Found boundary language: unresolved, conflict"
+        },
+        {
+          "id": "d-impact",
+          "text": "The affected group is cited without an invented customer count.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-D3]; Forbidden pattern was absent: \\b\\d+\\s+(?:customers|tenants)\\b"
+        },
+        {
+          "id": "d-remediation",
+          "text": "The cache invalidation remediation is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [REM-D5]"
+        },
+        {
+          "id": "d-owner",
+          "text": "The timing-reconciliation action remains open with its owner.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-D2]; Found boundary language: open"
+        },
+        {
+          "id": "d-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "dashboard-duration-conflict",
+      "split": "held-out",
+      "configuration": "without_skill",
+      "run_number": 3,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 23.172,
+        "tokens": 37276
+      },
+      "expectations": [
+        {
+          "id": "d-conflict",
+          "text": "Both duration sources are cited and the conflict remains unresolved.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [EVT-D1], [LOG-D4]; Found boundary language: unresolved, conflict"
+        },
+        {
+          "id": "d-impact",
+          "text": "The affected group is cited without an invented customer count.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-D3]; Forbidden pattern was absent: \\b\\d+\\s+(?:customers|tenants)\\b"
+        },
+        {
+          "id": "d-remediation",
+          "text": "The cache invalidation remediation is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [REM-D5]"
+        },
+        {
+          "id": "d-owner",
+          "text": "The timing-reconciliation action remains open with its owner.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-D2]; Found boundary language: open"
+        },
+        {
+          "id": "d-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "dashboard-duration-conflict",
+      "split": "held-out",
+      "configuration": "starter_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 22.503,
+        "tokens": 31289
+      },
+      "expectations": [
+        {
+          "id": "d-conflict",
+          "text": "Both duration sources are cited and the conflict remains unresolved.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: 18 minutes, [EVT-D1], [LOG-D4]; Found boundary language: unresolved"
+        },
+        {
+          "id": "d-impact",
+          "text": "The affected group is cited without an invented customer count.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-D3]; Forbidden pattern was absent: \\b\\d+\\s+(?:customers|tenants)\\b"
+        },
+        {
+          "id": "d-remediation",
+          "text": "The cache invalidation remediation is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [REM-D5]"
+        },
+        {
+          "id": "d-owner",
+          "text": "The timing-reconciliation action remains open with its owner.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-D2]; Found boundary language: open"
+        },
+        {
+          "id": "d-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "dashboard-duration-conflict",
+      "split": "held-out",
+      "configuration": "starter_skill",
+      "run_number": 2,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 21.284,
+        "tokens": 31328
+      },
+      "expectations": [
+        {
+          "id": "d-conflict",
+          "text": "Both duration sources are cited and the conflict remains unresolved.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: 18 minutes, [EVT-D1], [LOG-D4]; Found boundary language: unresolved"
+        },
+        {
+          "id": "d-impact",
+          "text": "The affected group is cited without an invented customer count.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-D3]; Forbidden pattern was absent: \\b\\d+\\s+(?:customers|tenants)\\b"
+        },
+        {
+          "id": "d-remediation",
+          "text": "The cache invalidation remediation is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: cache invalidation, [REM-D5]"
+        },
+        {
+          "id": "d-owner",
+          "text": "The timing-reconciliation action remains open with its owner.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-D2]; Found boundary language: open"
+        },
+        {
+          "id": "d-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "dashboard-duration-conflict",
+      "split": "held-out",
+      "configuration": "starter_skill",
+      "run_number": 3,
+      "result": {
+        "pass_rate": 0,
+        "critical_pass_rate": 0,
+        "passed": 0,
+        "failed": 5,
+        "total": 5,
+        "time_seconds": 19.874,
+        "tokens": 31293
+      },
+      "expectations": [
+        {
+          "id": "d-conflict",
+          "text": "Both duration sources are cited and the conflict remains unresolved.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: 18 minutes, [EVT-D1], [LOG-D4]; Found boundary language: unresolved"
+        },
+        {
+          "id": "d-impact",
+          "text": "The affected group is cited without an invented customer count.",
+          "critical": true,
+          "passed": false,
+          "evidence": "Missing required values: [IMP-D3]; Forbidden pattern was absent: \\b\\d+\\s+(?:customers|tenants)\\b"
+        },
+        {
+          "id": "d-remediation",
+          "text": "The cache invalidation remediation is cited.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: cache invalidation, [REM-D5]"
+        },
+        {
+          "id": "d-owner",
+          "text": "The timing-reconciliation action remains open with its owner.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: [ACT-D2]; Found boundary language: open"
+        },
+        {
+          "id": "d-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": false,
+          "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "dashboard-duration-conflict",
+      "split": "held-out",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1,
+        "critical_pass_rate": 1,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 26.238,
+        "tokens": 37815
+      },
+      "expectations": [
+        {
+          "id": "d-conflict",
+          "text": "Both duration sources are cited and the conflict remains unresolved.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: 18 minutes, 23 minutes, [EVT-D1], [LOG-D4]; Found boundary language: unresolved"
+        },
+        {
+          "id": "d-impact",
+          "text": "The affected group is cited without an invented customer count.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: EU tenants, [IMP-D3]; Forbidden pattern was absent: \\b\\d+\\s+(?:customers|tenants)\\b"
+        },
+        {
+          "id": "d-remediation",
+          "text": "The cache invalidation remediation is cited.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: cache invalidation, [REM-D5]"
+        },
+        {
+          "id": "d-owner",
+          "text": "The timing-reconciliation action remains open with its owner.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: [ACT-D2], Data Experience; Found boundary language: open"
+        },
+        {
+          "id": "d-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "dashboard-duration-conflict",
+      "split": "held-out",
+      "configuration": "with_skill",
+      "run_number": 2,
+      "result": {
+        "pass_rate": 1,
+        "critical_pass_rate": 1,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 26.39,
+        "tokens": 37802
+      },
+      "expectations": [
+        {
+          "id": "d-conflict",
+          "text": "Both duration sources are cited and the conflict remains unresolved.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: 18 minutes, 23 minutes, [EVT-D1], [LOG-D4]; Found boundary language: unresolved"
+        },
+        {
+          "id": "d-impact",
+          "text": "The affected group is cited without an invented customer count.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: EU tenants, [IMP-D3]; Forbidden pattern was absent: \\b\\d+\\s+(?:customers|tenants)\\b"
+        },
+        {
+          "id": "d-remediation",
+          "text": "The cache invalidation remediation is cited.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: cache invalidation, [REM-D5]"
+        },
+        {
+          "id": "d-owner",
+          "text": "The timing-reconciliation action remains open with its owner.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: [ACT-D2], Data Experience; Found boundary language: open"
+        },
+        {
+          "id": "d-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "dashboard-duration-conflict",
+      "split": "held-out",
+      "configuration": "with_skill",
+      "run_number": 3,
+      "result": {
+        "pass_rate": 1,
+        "critical_pass_rate": 1,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 24.664,
+        "tokens": 31592
+      },
+      "expectations": [
+        {
+          "id": "d-conflict",
+          "text": "Both duration sources are cited and the conflict remains unresolved.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: 18 minutes, 23 minutes, [EVT-D1], [LOG-D4]; Found boundary language: unresolved"
+        },
+        {
+          "id": "d-impact",
+          "text": "The affected group is cited without an invented customer count.",
+          "critical": true,
+          "passed": true,
+          "evidence": "Found required values: EU tenants, [IMP-D3]; Forbidden pattern was absent: \\b\\d+\\s+(?:customers|tenants)\\b"
+        },
+        {
+          "id": "d-remediation",
+          "text": "The cache invalidation remediation is cited.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: cache invalidation, [REM-D5]"
+        },
+        {
+          "id": "d-owner",
+          "text": "The timing-reconciliation action remains open with its owner.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: [ACT-D2], Data Experience; Found boundary language: open"
+        },
+        {
+          "id": "d-output-contract",
+          "text": "The report uses every required incident-summary section.",
+          "critical": false,
+          "passed": true,
+          "evidence": "Found required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+        }
+      ]
+    }
+  ],
+  "run_summary": {
+    "without_skill": {
+      "train": {
+        "runs": 6,
+        "pass_rate": {
+          "mean": 0,
+          "stddev": 0,
+          "min": 0,
+          "max": 0
+        },
+        "critical_pass_rate": {
+          "mean": 0,
+          "stddev": 0,
+          "min": 0,
+          "max": 0
+        },
+        "tokens": {
+          "mean": 32183.666666666668,
+          "stddev": 2403.537716690869,
+          "min": 31032,
+          "max": 37555
+        },
+        "time_seconds": {
+          "mean": 23.012666666666664,
+          "stddev": 3.7344755395578044,
+          "min": 18.968,
+          "max": 27.439
+        }
+      },
+      "held_out": {
+        "runs": 6,
+        "pass_rate": {
+          "mean": 0.16666666666666666,
+          "stddev": 0.372677996249965,
+          "min": 0,
+          "max": 1
+        },
+        "critical_pass_rate": {
+          "mean": 0.16666666666666666,
+          "stddev": 0.372677996249965,
+          "min": 0,
+          "max": 1
+        },
+        "tokens": {
+          "mean": 41637.833333333336,
+          "stddev": 9106.352332605826,
+          "min": 31548,
+          "max": 59187
+        },
+        "time_seconds": {
+          "mean": 29.908833333333337,
+          "stddev": 9.566786406045079,
+          "min": 18.912,
+          "max": 43.328
+        }
+      },
+      "overall": {
+        "runs": 12,
+        "pass_rate": {
+          "mean": 0.08333333333333333,
+          "stddev": 0.2763853991962833,
+          "min": 0,
+          "max": 1
+        },
+        "critical_pass_rate": {
+          "mean": 0.08333333333333333,
+          "stddev": 0.2763853991962833,
+          "min": 0,
+          "max": 1
+        },
+        "tokens": {
+          "mean": 36910.75,
+          "stddev": 8166.801088604603,
+          "min": 31032,
+          "max": 59187
+        },
+        "time_seconds": {
+          "mean": 26.460750000000004,
+          "stddev": 8.038913702785555,
+          "min": 18.912,
+          "max": 43.328
+        }
+      }
+    },
+    "starter_skill": {
+      "train": {
+        "runs": 6,
+        "pass_rate": {
+          "mean": 0,
+          "stddev": 0,
+          "min": 0,
+          "max": 0
+        },
+        "critical_pass_rate": {
+          "mean": 0,
+          "stddev": 0,
+          "min": 0,
+          "max": 0
+        },
+        "tokens": {
+          "mean": 33403.666666666664,
+          "stddev": 2905.6527474715363,
+          "min": 31176,
+          "max": 37525
+        },
+        "time_seconds": {
+          "mean": 27.700666666666667,
+          "stddev": 4.660388491197799,
+          "min": 22.181,
+          "max": 35.194
+        }
+      },
+      "held_out": {
+        "runs": 6,
+        "pass_rate": {
+          "mean": 0,
+          "stddev": 0,
+          "min": 0,
+          "max": 0
+        },
+        "critical_pass_rate": {
+          "mean": 0,
+          "stddev": 0,
+          "min": 0,
+          "max": 0
+        },
+        "tokens": {
+          "mean": 32557.833333333332,
+          "stddev": 2423.3768049745972,
+          "min": 31289,
+          "max": 37959
+        },
+        "time_seconds": {
+          "mean": 28.211666666666662,
+          "stddev": 7.154291548123795,
+          "min": 19.874,
+          "max": 36.545
+        }
+      },
+      "overall": {
+        "runs": 12,
+        "pass_rate": {
+          "mean": 0,
+          "stddev": 0,
+          "min": 0,
+          "max": 0
+        },
+        "critical_pass_rate": {
+          "mean": 0,
+          "stddev": 0,
+          "min": 0,
+          "max": 0
+        },
+        "tokens": {
+          "mean": 32980.75,
+          "stddev": 2708.62419335598,
+          "min": 31176,
+          "max": 37959
+        },
+        "time_seconds": {
+          "mean": 27.95616666666667,
+          "stddev": 6.042916057022655,
+          "min": 19.874,
+          "max": 36.545
+        }
+      }
+    },
+    "with_skill": {
+      "train": {
+        "runs": 6,
+        "pass_rate": {
+          "mean": 1,
+          "stddev": 0,
+          "min": 1,
+          "max": 1
+        },
+        "critical_pass_rate": {
+          "mean": 1,
+          "stddev": 0,
+          "min": 1,
+          "max": 1
+        },
+        "tokens": {
+          "mean": 34764.666666666664,
+          "stddev": 3145.9445675698453,
+          "min": 31492,
+          "max": 38001
+        },
+        "time_seconds": {
+          "mean": 28.230833333333333,
+          "stddev": 1.401399469181512,
+          "min": 26.38,
+          "max": 30.544
+        }
+      },
+      "held_out": {
+        "runs": 6,
+        "pass_rate": {
+          "mean": 1,
+          "stddev": 0,
+          "min": 1,
+          "max": 1
+        },
+        "critical_pass_rate": {
+          "mean": 1,
+          "stddev": 0,
+          "min": 1,
+          "max": 1
+        },
+        "tokens": {
+          "mean": 34710.333333333336,
+          "stddev": 3136.7476078823356,
+          "min": 31398,
+          "max": 37919
+        },
+        "time_seconds": {
+          "mean": 26.873833333333334,
+          "stddev": 1.289238588814688,
+          "min": 24.664,
+          "max": 28.692
+        }
+      },
+      "overall": {
+        "runs": 12,
+        "pass_rate": {
+          "mean": 1,
+          "stddev": 0,
+          "min": 1,
+          "max": 1
+        },
+        "critical_pass_rate": {
+          "mean": 1,
+          "stddev": 0,
+          "min": 1,
+          "max": 1
+        },
+        "tokens": {
+          "mean": 34737.5,
+          "stddev": 3141.4669211479318,
+          "min": 31398,
+          "max": 38001
+        },
+        "time_seconds": {
+          "mean": 27.552333333333333,
+          "stddev": 1.5077766928678646,
+          "min": 24.664,
+          "max": 30.544
+        }
+      }
+    }
+  },
+  "gate": {
+    "passed": true,
+    "mode": "quality-improvement",
+    "comparison_baseline": "without_skill",
+    "common_passed": true,
+    "comparison_passed": true,
+    "checks": [
+      {
+        "id": "train-quality",
+        "passed": true,
+        "actual": 1,
+        "required": ">= 0.875"
+      },
+      {
+        "id": "held-out-quality",
+        "passed": true,
+        "actual": 1,
+        "required": ">= 0.875"
+      },
+      {
+        "id": "held-out-critical",
+        "passed": true,
+        "actual": 1,
+        "required": "= 1.0"
+      },
+      {
+        "id": "improve-over-no-skill",
+        "passed": true,
+        "actual": 0.8333333333333334,
+        "required": ">= 0.10"
+      },
+      {
+        "id": "improve-over-starter",
+        "passed": true,
+        "actual": 1,
+        "required": ">= 0.10"
+      },
+      {
+        "id": "held-out-variance",
+        "passed": true,
+        "actual": 0,
+        "required": "<= 0.16"
+      },
+      {
+        "id": "token-cost",
+        "passed": true,
+        "actual": 0.9411214889971079,
+        "required": "<= 1.50x no-skill"
+      },
+      {
+        "id": "elapsed-cost",
+        "passed": true,
+        "actual": 1.0412529249296913,
+        "required": "<= 2.00x no-skill"
+      }
+    ]
+  }
+}

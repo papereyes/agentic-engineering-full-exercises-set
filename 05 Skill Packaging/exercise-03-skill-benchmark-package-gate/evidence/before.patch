@@ -1,0 +1,3233 @@
+.../eval-1/starter_skill/run-1/grading.json        | 45 ++++++++++++++++++
+ .../run-1/outputs/incident-summary.md              | 25 ++++++++++
+ .../eval-1/starter_skill/run-1/timing.json         | 20 ++++++++
+ .../eval-1/starter_skill/run-2/grading.json        | 45 ++++++++++++++++++
+ .../run-2/outputs/incident-summary.md              | 28 +++++++++++
+ .../eval-1/starter_skill/run-2/timing.json         | 20 ++++++++
+ .../eval-1/starter_skill/run-3/grading.json        | 45 ++++++++++++++++++
+ .../run-3/outputs/incident-summary.md              | 30 ++++++++++++
+ .../eval-1/starter_skill/run-3/timing.json         | 20 ++++++++
+ .../eval-1/without_skill/run-1/grading.json        | 45 ++++++++++++++++++
+ .../run-1/outputs/incident-summary.md              | 33 +++++++++++++
+ .../eval-1/without_skill/run-1/timing.json         | 20 ++++++++
+ .../eval-1/without_skill/run-2/grading.json        | 45 ++++++++++++++++++
+ .../run-2/outputs/incident-summary.md              | 29 ++++++++++++
+ .../eval-1/without_skill/run-2/timing.json         | 20 ++++++++
+ .../eval-1/without_skill/run-3/grading.json        | 45 ++++++++++++++++++
+ .../run-3/outputs/incident-summary.md              | 30 ++++++++++++
+ .../eval-1/without_skill/run-3/timing.json         | 20 ++++++++
+ .../eval-2/starter_skill/run-1/grading.json        | 45 ++++++++++++++++++
+ .../run-1/outputs/incident-summary.md              | 15 ++++++
+ .../eval-2/starter_skill/run-1/timing.json         | 20 ++++++++
+ .../eval-2/starter_skill/run-2/grading.json        | 45 ++++++++++++++++++
+ .../run-2/outputs/incident-summary.md              | 11 +++++
+ .../eval-2/starter_skill/run-2/timing.json         | 20 ++++++++
+ .../eval-2/starter_skill/run-3/grading.json        | 45 ++++++++++++++++++
+ .../run-3/outputs/incident-summary.md              | 11 +++++
+ .../eval-2/starter_skill/run-3/timing.json         | 20 ++++++++
+ .../eval-2/without_skill/run-1/grading.json        | 45 ++++++++++++++++++
+ .../run-1/outputs/incident-summary.md              |  7 +++
+ .../eval-2/without_skill/run-1/timing.json         | 20 ++++++++
+ .../eval-2/without_skill/run-2/grading.json        | 45 ++++++++++++++++++
+ .../run-2/outputs/incident-summary.md              |  9 ++++
+ .../eval-2/without_skill/run-2/timing.json         | 20 ++++++++
+ .../eval-2/without_skill/run-3/grading.json        | 45 ++++++++++++++++++
+ .../run-3/outputs/incident-summary.md              |  9 ++++
+ .../eval-2/without_skill/run-3/timing.json         | 20 ++++++++
+ .../eval-3/starter_skill/run-1/grading.json        | 45 ++++++++++++++++++
+ .../run-1/outputs/incident-summary.md              | 43 +++++++++++++++++
+ .../eval-3/starter_skill/run-1/timing.json         | 20 ++++++++
+ .../eval-3/starter_skill/run-2/grading.json        | 45 ++++++++++++++++++
+ .../run-2/outputs/incident-summary.md              | 44 +++++++++++++++++
+ .../eval-3/starter_skill/run-2/timing.json         | 20 ++++++++
+ .../eval-3/starter_skill/run-3/grading.json        | 45 ++++++++++++++++++
+ .../run-3/outputs/incident-summary.md              | 55 ++++++++++++++++++++++
+ .../eval-3/starter_skill/run-3/timing.json         | 20 ++++++++
+ .../eval-3/without_skill/run-1/grading.json        | 45 ++++++++++++++++++
+ .../run-1/outputs/incident-summary.md              | 50 ++++++++++++++++++++
+ .../eval-3/without_skill/run-1/timing.json         | 20 ++++++++
+ .../eval-3/without_skill/run-2/grading.json        | 45 ++++++++++++++++++
+ .../run-2/outputs/incident-summary.md              | 55 ++++++++++++++++++++++
+ .../eval-3/without_skill/run-2/timing.json         | 20 ++++++++
+ .../eval-3/without_skill/run-3/grading.json        | 45 ++++++++++++++++++
+ .../run-3/outputs/incident-summary.md              | 30 ++++++++++++
+ .../eval-3/without_skill/run-3/timing.json         | 20 ++++++++
+ .../eval-4/starter_skill/run-1/grading.json        | 45 ++++++++++++++++++
+ .../run-1/outputs/incident-summary.md              | 11 +++++
+ .../eval-4/starter_skill/run-1/timing.json         | 20 ++++++++
+ .../eval-4/starter_skill/run-2/grading.json        | 45 ++++++++++++++++++
+ .../run-2/outputs/incident-summary.md              | 11 +++++
+ .../eval-4/starter_skill/run-2/timing.json         | 20 ++++++++
+ .../eval-4/starter_skill/run-3/grading.json        | 45 ++++++++++++++++++
+ .../run-3/outputs/incident-summary.md              | 11 +++++
+ .../eval-4/starter_skill/run-3/timing.json         | 20 ++++++++
+ .../eval-4/without_skill/run-1/grading.json        | 45 ++++++++++++++++++
+ .../run-1/outputs/incident-summary.md              | 10 ++++
+ .../eval-4/without_skill/run-1/timing.json         | 20 ++++++++
+ .../eval-4/without_skill/run-2/grading.json        | 45 ++++++++++++++++++
+ .../run-2/outputs/incident-summary.md              | 10 ++++
+ .../eval-4/without_skill/run-2/timing.json         | 20 ++++++++
+ .../eval-4/without_skill/run-3/grading.json        | 45 ++++++++++++++++++
+ .../run-3/outputs/incident-summary.md              | 11 +++++
+ .../eval-4/without_skill/run-3/timing.json         | 20 ++++++++
+ .../evidence/before-skill.md                       | 10 ++++
+ .../evidence/before.md                             | 20 ++++++++
+ 74 files changed, 2168 insertions(+)
+
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-1/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-1/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..28f5076b96560cb93c875d222660f5a9822d21d1
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-1/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "a-timeline-source",
++      "text": "Detection, mitigation, and recovery cite their event sources.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
++    },
++    {
++      "id": "a-recovery-boundary",
++      "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-A5]; Forbidden pattern was absent: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
++    },
++    {
++      "id": "a-impact-source",
++      "text": "The exact failed-attempt impact is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-A2]"
++    },
++    {
++      "id": "a-followup-state",
++      "text": "The alerting follow-up remains proposed and not started.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
++    },
++    {
++      "id": "a-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Cause and uncertainty, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-1/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-1/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..efa8129c54efb09082db7cbcae285b261e3d5768
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-1/outputs/incident-summary.md	
+@@ -0,0 +1,25 @@
++# Incident Summary: Checkout Retry Saturation
++
++## Impact
++
++318 checkout attempts failed. The number of unique customers affected was not measured.
++
++## Timeline
++
++- **09:02** — Checkout-error alert opened after the five-minute threshold was crossed.
++- **09:11** — Payment retries were disabled as mitigation. Error volume decreased, but health probes continued to fail.
++- **09:18** — Deployment `pay-184` removed the retry loop.
++- **09:24** — Three consecutive payment and checkout probes passed, confirming recovery.
++
++## Cause
++
++The cause review is incomplete. The current hypothesis is that retry amplification exhausted the worker pool; this has not been confirmed.
++
++## Resolution
++
++Payment retries were disabled to reduce error volume, followed by deployment `pay-184` to remove the retry loop. Recovery was confirmed at 09:24 through three consecutive successful payment and checkout probes.
++
++## Follow-up
++
++- **Proposed, not started:** Add retry saturation alerting.
++- **Owner:** Payments Platform.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-1/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-1/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..b8edff0d5f02012527d9374385d948dc83f54e56
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-1/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 1,
++  "configuration": "starter_skill",
++  "run_number": 1,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
++  "total_tokens": 31349,
++  "duration_ms": 31797,
++  "total_duration_seconds": 31.797
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-2/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-2/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..073e0d1447894faf019a66b4475c7e0ed8dd7606
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-2/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "a-timeline-source",
++      "text": "Detection, mitigation, and recovery cite their event sources.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
++    },
++    {
++      "id": "a-recovery-boundary",
++      "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-A5]; Output matched forbidden pattern: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
++    },
++    {
++      "id": "a-impact-source",
++      "text": "The exact failed-attempt impact is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-A2]"
++    },
++    {
++      "id": "a-followup-state",
++      "text": "The alerting follow-up remains proposed and not started.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
++    },
++    {
++      "id": "a-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-2/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-2/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..cfa33b9006401ae6b2c98c6473511288a27d74d0
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-2/outputs/incident-summary.md	
+@@ -0,0 +1,28 @@
++# Post-Incident Summary: Checkout Retry Saturation
++
++## Impact
++
++318 checkout attempts failed. Unique customer impact was not measured.
++
++## Timeline
++
++- **09:02** — Checkout-error alert opened after its five-minute threshold was crossed.
++- **09:11** — Payment retries were disabled. Error volume decreased, but health probes continued to fail.
++- **09:18** — Deployment `pay-184` removed the retry loop.
++- **09:24** — Three consecutive payment and checkout probes passed, confirming recovery.
++
++## Cause
++
++The cause review is incomplete. The current hypothesis is that retry amplification exhausted the worker pool; this has not been confirmed.
++
++## Mitigation and Resolution
++
++Disabling payment retries reduced error volume but did not restore service health. Recovery was confirmed after deployment `pay-184` removed the retry loop.
++
++The earlier status note reporting recovery at 09:11 is superseded; confirmed recovery occurred at 09:24.
++
++## Follow-Up
++
++- Add retry-saturation alerting.
++  - **Owner:** Payments Platform
++  - **Status:** Proposed; not started
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-2/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-2/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..fa0240b100ce1a1e7fc865fce502594bfa1002be
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-2/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 1,
++  "configuration": "starter_skill",
++  "run_number": 2,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
++  "total_tokens": 31176,
++  "duration_ms": 28076,
++  "total_duration_seconds": 28.076
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-3/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-3/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..476de87da83759da415a183653c41fd06719ae04
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-3/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "a-timeline-source",
++      "text": "Detection, mitigation, and recovery cite their event sources.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
++    },
++    {
++      "id": "a-recovery-boundary",
++      "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-A5]; Output matched forbidden pattern: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
++    },
++    {
++      "id": "a-impact-source",
++      "text": "The exact failed-attempt impact is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-A2]"
++    },
++    {
++      "id": "a-followup-state",
++      "text": "The alerting follow-up remains proposed and not started.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
++    },
++    {
++      "id": "a-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Cause and uncertainty, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-3/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-3/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..6aaf8af3b4fd8a2064b21ac208231f81812c5a96
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-3/outputs/incident-summary.md	
+@@ -0,0 +1,30 @@
++# Post-Incident Summary: Checkout Retry Saturation
++
++## Impact
++
++- 318 checkout attempts failed.
++- Unique customer impact was not measured.  
++  *(Evidence: IMP-A2)*
++
++## Timeline
++
++- **09:02** — Checkout-error alert opened after the five-minute threshold was crossed. *(EVT-A1)*
++- **09:11** — Payment retries were disabled as mitigation. Error volume fell, but health probes continued to fail. *(EVT-A3)*
++- **09:18** — Deployment `pay-184` removed the retry loop. *(REM-A4)*
++- **09:24** — Three consecutive payment and checkout probes passed, confirming recovery. *(EVT-A5)*
++
++## Cause
++
++The cause review remains incomplete. The current hypothesis is that retry amplification exhausted the worker pool, but this has not been confirmed. *(HYP-A6)*
++
++## Resolution
++
++Disabling payment retries reduced error volume but did not restore service health. Deployment `pay-184` subsequently removed the retry loop, and recovery was confirmed at 09:24 through three consecutive successful probes.
++
++The superseded status note identifying 09:11 as the recovery time is inconsistent with the probe evidence and should not be treated as authoritative. *(DRAFT-A7, EVT-A3, EVT-A5)*
++
++## Follow-up
++
++- **Proposed, not started:** Add retry-saturation alerting.
++- **Owner:** Payments Platform.  
++  *(FUP-A1)*
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-3/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-3/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..d409010d2731ec21dd7260392c5783ad10642e65
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-3/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 1,
++  "configuration": "starter_skill",
++  "run_number": 3,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
++  "total_tokens": 31517,
++  "duration_ms": 35194,
++  "total_duration_seconds": 35.194
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-1/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-1/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..073e0d1447894faf019a66b4475c7e0ed8dd7606
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-1/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "a-timeline-source",
++      "text": "Detection, mitigation, and recovery cite their event sources.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
++    },
++    {
++      "id": "a-recovery-boundary",
++      "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-A5]; Output matched forbidden pattern: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
++    },
++    {
++      "id": "a-impact-source",
++      "text": "The exact failed-attempt impact is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-A2]"
++    },
++    {
++      "id": "a-followup-state",
++      "text": "The alerting follow-up remains proposed and not started.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
++    },
++    {
++      "id": "a-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-1/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-1/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..27c395bb55a66bb85febf0a9fa7e7a3cd80c4df2
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-1/outputs/incident-summary.md	
+@@ -0,0 +1,33 @@
++# Engineering Post-Incident Summary: Checkout Retry Saturation
++
++## Summary
++
++A checkout-error alert opened at 09:02 after its five-minute threshold was crossed. Payment retries were disabled at 09:11, reducing error volume, but health probes continued to fail. Deployment `pay-184` removed the retry loop at 09:18. Recovery was confirmed at 09:24 after three consecutive payment and checkout probes passed.
++
++## Impact
++
++- 318 checkout attempts failed.
++- Unique customer impact was not measured.
++
++## Timeline
++
++- **09:02** — Checkout-error alert opened.
++- **09:11** — Payment retries disabled; error volume fell, but health probes still failed.
++- **09:18** — Deployment `pay-184` removed the retry loop.
++- **09:24** — Three consecutive payment and checkout probes passed, confirming recovery.
++
++The interval from alert opening to confirmed recovery was 22 minutes.
++
++## Cause
++
++The cause review remains incomplete. The current hypothesis is that retry amplification exhausted the worker pool; this has not been confirmed.
++
++## Follow-up
++
++- Add retry-saturation alerting.
++  - **Owner:** Payments Platform
++  - **Status:** Proposed; not started
++
++## Evidence note
++
++The superseded status note claiming recovery at 09:11 is inconsistent with the health-probe evidence. The confirmed recovery time is 09:24.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-1/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-1/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..2c5fb948f1a56bef19aae3dc3650fc96a7fe8a28
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-1/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 1,
++  "configuration": "without_skill",
++  "run_number": 1,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": null,
++  "total_tokens": 31163,
++  "duration_ms": 27439,
++  "total_duration_seconds": 27.439
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-2/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-2/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..073e0d1447894faf019a66b4475c7e0ed8dd7606
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-2/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "a-timeline-source",
++      "text": "Detection, mitigation, and recovery cite their event sources.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
++    },
++    {
++      "id": "a-recovery-boundary",
++      "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-A5]; Output matched forbidden pattern: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
++    },
++    {
++      "id": "a-impact-source",
++      "text": "The exact failed-attempt impact is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-A2]"
++    },
++    {
++      "id": "a-followup-state",
++      "text": "The alerting follow-up remains proposed and not started.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
++    },
++    {
++      "id": "a-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-2/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-2/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..c04a0e683971d94b518643c70c197c6f4c874fe8
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-2/outputs/incident-summary.md	
+@@ -0,0 +1,29 @@
++# Engineering Post-Incident Summary: Checkout Retry Saturation
++
++## Summary
++
++A checkout-error alert opened at 09:02 after the five-minute threshold was crossed. Payment retries were disabled at 09:11, reducing error volume, but health probes continued to fail. Deployment `pay-184` removed the retry loop at 09:18. Recovery was confirmed at 09:24 after three consecutive payment and checkout probes passed.
++
++## Impact
++
++- 318 checkout attempts failed.
++- Unique customers affected were not measured.
++
++## Cause
++
++The cause review is incomplete. Retry amplification exhausting the worker pool is a hypothesis, not a confirmed root cause.
++
++## Timeline
++
++- **09:02:** Checkout-error alert opened.
++- **09:11:** Payment retries disabled; error volume fell, but health probes still failed.
++- **09:18:** Deployment `pay-184` removed the retry loop.
++- **09:24:** Three consecutive payment and checkout probes passed, confirming recovery.
++
++## Follow-up
++
++- Add retry-saturation alerting.
++  - Owner: Payments Platform
++  - Status: Proposed; not started
++
++The superseded status note reporting recovery at 09:11 is not supported by the recovery evidence; confirmed recovery occurred at 09:24.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-2/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-2/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..45f9b9413735026db81771f30bf587c4883ba794
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-2/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 1,
++  "configuration": "without_skill",
++  "run_number": 2,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": null,
++  "total_tokens": 31262,
++  "duration_ms": 26798,
++  "total_duration_seconds": 26.798
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-3/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-3/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..073e0d1447894faf019a66b4475c7e0ed8dd7606
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-3/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "a-timeline-source",
++      "text": "Detection, mitigation, and recovery cite their event sources.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
++    },
++    {
++      "id": "a-recovery-boundary",
++      "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-A5]; Output matched forbidden pattern: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
++    },
++    {
++      "id": "a-impact-source",
++      "text": "The exact failed-attempt impact is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-A2]"
++    },
++    {
++      "id": "a-followup-state",
++      "text": "The alerting follow-up remains proposed and not started.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
++    },
++    {
++      "id": "a-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-3/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-3/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..834a2a12149499292eec599f383c4a4a67f4b6c4
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-3/outputs/incident-summary.md	
+@@ -0,0 +1,30 @@
++# Engineering Post-Incident Summary: Checkout Retry Saturation
++
++## Impact
++
++318 checkout attempts failed. Unique customer impact was not measured. (IMP-A2)
++
++## Timeline
++
++- **09:02:** Checkout-error alert opened after the five-minute threshold was crossed. (EVT-A1)
++- **09:11:** Payment retries were disabled. Error volume fell, but health probes continued failing. (EVT-A3)
++- **09:18:** Deployment `pay-184` removed the retry loop. (REM-A4)
++- **09:24:** Three consecutive payment and checkout probes passed, confirming recovery. (EVT-A5)
++
++## Cause
++
++Cause review remains incomplete. The current hypothesis is that retry amplification exhausted the worker pool; this has not been confirmed. (HYP-A6)
++
++## Mitigation and Remediation
++
++Payment retries were disabled at 09:11, reducing error volume. Deployment `pay-184` subsequently removed the retry loop at 09:18. Recovery was confirmed at 09:24. (EVT-A3, REM-A4, EVT-A5)
++
++## Follow-up
++
++Proposed, not started: add retry-saturation alerting.
++
++- Owner: Payments Platform (FUP-A1)
++
++## Evidence Note
++
++The superseded draft stated that recovery occurred at 09:11. That claim is not supported because health probes were still failing then; the confirmed recovery time is **09:24**. (DRAFT-A7, EVT-A3, EVT-A5)
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-3/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-3/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..2bcc1bc784cffa82602a7d01921164931590eefb
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-3/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 1,
++  "configuration": "without_skill",
++  "run_number": 3,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": null,
++  "total_tokens": 37555,
++  "duration_ms": 25911,
++  "total_duration_seconds": 25.911
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-1/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-1/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..c6ee0e68ac357fee4aa0849eb30349d62228d2f5
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-1/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "b-impact-source",
++      "text": "The exact customer impact cites its source.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-B2]"
++    },
++    {
++      "id": "b-uncertainty",
++      "text": "Both cause hypotheses are cited and remain unresolved.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [NOTE-B3a], [NOTE-B3b]; Found boundary language: not confirmed, conflict"
++    },
++    {
++      "id": "b-remediation",
++      "text": "The deployed worker-pool remediation is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [REM-B4]"
++    },
++    {
++      "id": "b-followup-state",
++      "text": "The cause review remains open.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-B5]; Found boundary language: open"
++    },
++    {
++      "id": "b-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-1/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-1/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..47903f1981adfcb8e1123c66b7ccd5b1bcbea79b
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-1/outputs/incident-summary.md	
+@@ -0,0 +1,15 @@
++# Leadership Incident Brief: Export Queue Delay
++
++**Impact:** 41 customers experienced export delays exceeding 20 minutes. No export data was lost.
++
++**Timeline:**
++
++- 14:05 — Export-latency alert opened.
++- 14:38 — Worker pool increased from 8 to 16.
++- 14:46 — Queue returned to normal depth.
++
++**Cause:** Not confirmed. Evidence currently supports two conflicting possibilities: a long-running database lock or worker starvation following a concurrency change. The sampled lock log is incomplete, so neither explanation has been validated.
++
++**Resolution:** Increasing worker capacity restored normal queue depth.
++
++**Follow-up:** Reliability owns reconciling the database and worker evidence before assigning root cause. This action remains open.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-1/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-1/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..a562a43632406865e4b4590f69b7f592e2092d45
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-1/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 2,
++  "configuration": "starter_skill",
++  "run_number": 1,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
++  "total_tokens": 37496,
++  "duration_ms": 22181,
++  "total_duration_seconds": 22.181
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-2/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-2/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..c6ee0e68ac357fee4aa0849eb30349d62228d2f5
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-2/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "b-impact-source",
++      "text": "The exact customer impact cites its source.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-B2]"
++    },
++    {
++      "id": "b-uncertainty",
++      "text": "Both cause hypotheses are cited and remain unresolved.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [NOTE-B3a], [NOTE-B3b]; Found boundary language: not confirmed, conflict"
++    },
++    {
++      "id": "b-remediation",
++      "text": "The deployed worker-pool remediation is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [REM-B4]"
++    },
++    {
++      "id": "b-followup-state",
++      "text": "The cause review remains open.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-B5]; Found boundary language: open"
++    },
++    {
++      "id": "b-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-2/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-2/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..3268fd1a6eccba1e56f126d9da7177976e7bc8b6
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-2/outputs/incident-summary.md	
+@@ -0,0 +1,11 @@
++## Leadership Incident Brief: Export Queue Delay
++
++**Impact:** 41 customers experienced export delays exceeding 20 minutes. No export data was lost.
++
++**Timeline:** The alert opened at 14:05. At 14:38, the worker pool was increased from 8 to 16. Queue depth returned to normal by 14:46.
++
++**Cause:** Not confirmed. The database team suspects a long-running lock, but its sampled lock log is incomplete. The worker team suspects starvation following a concurrency change. These theories conflict, and current evidence does not resolve which—if either—caused the incident.
++
++**Resolution:** Increasing worker capacity restored normal queue depth.
++
++**Follow-up:** Reliability owns reconciling the database and worker evidence before assigning root cause. This action remains open.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-2/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-2/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..50c854ca34b916d0bd5aa56e5ec6886e48027a5c
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-2/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 2,
++  "configuration": "starter_skill",
++  "run_number": 2,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
++  "total_tokens": 31359,
++  "duration_ms": 22745,
++  "total_duration_seconds": 22.745
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-3/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-3/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..c6ee0e68ac357fee4aa0849eb30349d62228d2f5
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-3/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "b-impact-source",
++      "text": "The exact customer impact cites its source.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-B2]"
++    },
++    {
++      "id": "b-uncertainty",
++      "text": "Both cause hypotheses are cited and remain unresolved.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [NOTE-B3a], [NOTE-B3b]; Found boundary language: not confirmed, conflict"
++    },
++    {
++      "id": "b-remediation",
++      "text": "The deployed worker-pool remediation is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [REM-B4]"
++    },
++    {
++      "id": "b-followup-state",
++      "text": "The cause review remains open.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-B5]; Found boundary language: open"
++    },
++    {
++      "id": "b-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-3/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-3/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..b838a5817366c6140135779976473b1e768a0c02
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-3/outputs/incident-summary.md	
+@@ -0,0 +1,11 @@
++# Leadership Incident Brief: Export Queue Delay
++
++**Impact:** 41 customers experienced export delays exceeding 20 minutes. No export data was lost.
++
++**Timeline:** The alert opened at 14:05. At 14:38, the worker pool was increased from 8 to 16. Queue depth returned to normal by 14:46.
++
++**Cause:** Not confirmed. The database team suspects a long-running lock, but the sampled lock log is incomplete. The worker team suspects starvation following a concurrency change. These explanations conflict, and current evidence does not resolve which—if either—was causal.
++
++**Resolution:** Increasing worker capacity restored normal queue depth.
++
++**Follow-up:** Reliability owns reconciling the database and worker evidence before assigning root cause. This action remains open.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-3/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-3/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..57ff4e277cecb40275044679470678f67729e914
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/starter_skill/run-3/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 2,
++  "configuration": "starter_skill",
++  "run_number": 3,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
++  "total_tokens": 37525,
++  "duration_ms": 26211,
++  "total_duration_seconds": 26.211
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-1/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-1/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..4290bc0cc99d6192f63544b3e841be62658b5ce3
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-1/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "b-impact-source",
++      "text": "The exact customer impact cites its source.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-B2]"
++    },
++    {
++      "id": "b-uncertainty",
++      "text": "Both cause hypotheses are cited and remain unresolved.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [NOTE-B3a], [NOTE-B3b]; Found boundary language: unresolved, conflict"
++    },
++    {
++      "id": "b-remediation",
++      "text": "The deployed worker-pool remediation is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [REM-B4]"
++    },
++    {
++      "id": "b-followup-state",
++      "text": "The cause review remains open.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-B5]; Found boundary language: open"
++    },
++    {
++      "id": "b-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-1/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-1/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..ed7273539c886ef474fe2b3b21ec2c0265f451c5
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-1/outputs/incident-summary.md	
+@@ -0,0 +1,7 @@
++### Leadership Incident Brief — Export Queue Delay
++
++- **Impact:** 41 customers experienced export delays exceeding 20 minutes. No export data was lost.
++- **Timeline:** Alert opened at 14:05. The worker pool was increased from 8 to 16 at 14:38; queue depth returned to normal by 14:46.
++- **Status:** Service recovered.
++- **Root cause:** Unresolved. Evidence is incomplete and two hypotheses conflict: a long-running database lock versus worker starvation following a concurrency change.
++- **Next action:** Reliability will reconcile database and worker evidence before assigning root cause.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-1/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-1/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..9485e14219570880ba672eaa66ba98630777fd64
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-1/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 2,
++  "configuration": "without_skill",
++  "run_number": 1,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": null,
++  "total_tokens": 31050,
++  "duration_ms": 19617,
++  "total_duration_seconds": 19.617
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-2/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-2/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..25531eb58dc94b3263f46a0fea73c45351dff063
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-2/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "b-impact-source",
++      "text": "The exact customer impact cites its source.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: 41, [IMP-B2]"
++    },
++    {
++      "id": "b-uncertainty",
++      "text": "Both cause hypotheses are cited and remain unresolved.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [NOTE-B3a], [NOTE-B3b]; Found boundary language: unresolved, conflict"
++    },
++    {
++      "id": "b-remediation",
++      "text": "The deployed worker-pool remediation is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [REM-B4]"
++    },
++    {
++      "id": "b-followup-state",
++      "text": "The cause review remains open.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-B5]; Found boundary language: open"
++    },
++    {
++      "id": "b-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-2/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-2/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..7b65d382cc95a2b0d65599a815757e97411d686e
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-2/outputs/incident-summary.md	
+@@ -0,0 +1,9 @@
++### Leadership Incident Brief: Export Queue Delay
++
++At 14:05, an export-latency alert identified delayed processing. Forty-one customers experienced export delays exceeding 20 minutes; no export data was lost.
++
++At 14:38, the worker pool was increased from 8 to 16. Queue depth returned to normal by 14:46.
++
++Root cause remains unresolved. The database team suspects a long-running lock, but lock-log evidence is incomplete. The worker team suspects starvation following a concurrency change. These explanations conflict, and neither is confirmed.
++
++Reliability owns the open action to reconcile the database and worker evidence before assigning root cause.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-2/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-2/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..e09766c04203e0dc4ee56d0294253a046d4451d9
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-2/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 2,
++  "configuration": "without_skill",
++  "run_number": 2,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": null,
++  "total_tokens": 31040,
++  "duration_ms": 19343,
++  "total_duration_seconds": 19.343
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-3/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-3/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..25531eb58dc94b3263f46a0fea73c45351dff063
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-3/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "b-impact-source",
++      "text": "The exact customer impact cites its source.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: 41, [IMP-B2]"
++    },
++    {
++      "id": "b-uncertainty",
++      "text": "Both cause hypotheses are cited and remain unresolved.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [NOTE-B3a], [NOTE-B3b]; Found boundary language: unresolved, conflict"
++    },
++    {
++      "id": "b-remediation",
++      "text": "The deployed worker-pool remediation is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [REM-B4]"
++    },
++    {
++      "id": "b-followup-state",
++      "text": "The cause review remains open.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-B5]; Found boundary language: open"
++    },
++    {
++      "id": "b-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-3/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-3/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..47c77113982d6db8541e5420f468c4a05e4de678
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-3/outputs/incident-summary.md	
+@@ -0,0 +1,9 @@
++### Leadership incident brief: Export queue delay
++
++At 14:05, an export-latency alert triggered. Forty-one customers experienced export delays exceeding 20 minutes; no export data was lost.
++
++At 14:38, the worker pool was increased from 8 to 16. Queue depth returned to normal by 14:46.
++
++Root cause remains unresolved. The database team suspects a long-running lock, but lock-log evidence is incomplete. The worker team suspects starvation following a concurrency change. These theories conflict, and neither is confirmed.
++
++Reliability owns the open action to reconcile the evidence before assigning root cause. Alert closure and full customer recovery timing were not provided.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-3/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-3/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..a92b8e8a980be967c2aa788c58e5e25a96118ec2
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-2/without_skill/run-3/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 2,
++  "configuration": "without_skill",
++  "run_number": 3,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": null,
++  "total_tokens": 31032,
++  "duration_ms": 18968,
++  "total_duration_seconds": 18.968
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-1/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-1/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..f926faaf0c87181c5ac53e88687c21e3667f44c8
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-1/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "c-facts",
++      "text": "Verified cache saturation is separated from the deployment hypothesis.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, may have"
++    },
++    {
++      "id": "c-timeline",
++      "text": "Detection and recovery cite the correct events.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-C1], [EVT-C6]"
++    },
++    {
++      "id": "c-impact",
++      "text": "The delayed-request impact is cited without converting it to customers.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
++    },
++    {
++      "id": "c-action",
++      "text": "The reproduction action remains open with its owner.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-C2]; Found boundary language: open"
++    },
++    {
++      "id": "c-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Cause and uncertainty"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-1/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-1/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..cdd75ca651c4624019c5a9dac8753b0b0d66fc7a
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-1/outputs/incident-summary.md	
+@@ -0,0 +1,43 @@
++# Post-Incident Report: Cache Saturation
++
++## Summary
++
++At 03:14, production monitoring detected elevated catalog-request latency alongside verified cache saturation above 96%. The cache pool was expanded and hot keys were evicted at 03:41. Recovery was confirmed at 03:49 after read and write probes passed for five consecutive minutes.
++
++The confirmed incident window was approximately 35 minutes, from the first valid alert to confirmed recovery.
++
++## Impact
++
++- 12,400 catalog requests exceeded the two-second latency objective.
++- The number of affected customers was not measured.
++- The available notes do not establish whether requests failed or only experienced elevated latency.
++
++## Timeline
++
++| Time | Event |
++|---|---|
++| 03:09 | A warning occurred as part of a monitor test; it was not a valid incident signal. |
++| 03:14 | The first valid elevated-latency signal fired. |
++| During incident | Production metrics confirmed cache saturation above 96%. |
++| 03:41 | Responders expanded the cache pool and evicted hot keys. |
++| 03:49 | Recovery was confirmed after read and write probes passed for five consecutive minutes. |
++
++## Cause
++
++The immediate condition associated with the incident was cache saturation above 96%.
++
++The underlying cause has not been confirmed. Deployment `catalog-771` may have increased key fan-out, but this remains a hypothesis because request-level traces were unavailable. Current evidence is insufficient to attribute the incident to that deployment.
++
++## Resolution
++
++Responders expanded the cache pool and evicted hot keys. Subsequent read and write probes passed for five consecutive minutes, confirming service recovery.
++
++The available evidence does not distinguish which remediation action contributed most to recovery.
++
++## Follow-up Actions
++
++| Action | Owner | Status |
++|---|---|---|
++| Reproduce key fan-out under load and compare the results with deployment `catalog-771`. | Platform | Open |
++
++The investigation should preserve the distinction between correlation and causation until the suspected fan-out behavior is reproduced or supported by additional evidence.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-1/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-1/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..20e8122492cbbed753596a2890d07bc9c97f34dc
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-1/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 3,
++  "configuration": "starter_skill",
++  "run_number": 1,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
++  "total_tokens": 31720,
++  "duration_ms": 32574,
++  "total_duration_seconds": 32.574
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-2/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-2/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..0ca8382df69daec9063cbaf7317bd2b1650444ad
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-2/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "c-facts",
++      "text": "Verified cache saturation is separated from the deployment hypothesis.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, may have"
++    },
++    {
++      "id": "c-timeline",
++      "text": "Detection and recovery cite the correct events.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-C1], [EVT-C6]"
++    },
++    {
++      "id": "c-impact",
++      "text": "The delayed-request impact is cited without converting it to customers.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
++    },
++    {
++      "id": "c-action",
++      "text": "The reproduction action remains open with its owner.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-C2]; Found boundary language: open"
++    },
++    {
++      "id": "c-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-2/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-2/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..ebbf82ab70fb8eff3a2cd40e231d96b3bf95843e
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-2/outputs/incident-summary.md	
+@@ -0,0 +1,44 @@
++# Post-Incident Report: Cache Saturation
++
++## Summary
++
++Production cache utilization exceeded 96%, coinciding with elevated catalog-request latency. The first valid alert fired at 03:14. The cache pool was expanded and hot keys were evicted at 03:41; recovery was confirmed at 03:49 after read and write probes passed continuously for five minutes.
++
++## Impact
++
++- 12,400 catalog requests exceeded the two-second latency objective.
++- The number of affected customers was not measured.
++- Available notes do not establish whether requests failed or only experienced elevated latency.
++- The exact start of customer impact is unknown; 03:14 marks the first valid signal, not necessarily the onset.
++
++## Timeline
++
++| Time | Event |
++|---|---|
++| 03:09 | Warning generated as part of a monitor test; not an incident signal. |
++| 03:14 | First valid elevated-latency signal fired. |
++| During incident | Production metrics verified cache saturation above 96%. |
++| 03:41 | Cache pool expanded and hot keys evicted. |
++| 03:49 | Recovery confirmed after read and write probes passed for five consecutive minutes. |
++
++From the first valid signal to confirmed recovery, the observed incident window was 35 minutes.
++
++## Cause
++
++The root cause has not been confirmed.
++
++Deployment `catalog-771` may have increased cache-key fan-out, but this remains a hypothesis. Request-level traces were unavailable, so the deployment cannot yet be causally linked to the saturation. The evidence currently supports cache saturation as the condition associated with the latency degradation, not its underlying cause.
++
++## Mitigation and Recovery
++
++Engineers expanded the cache pool and evicted hot keys at 03:41. Subsequent probe results indicate that service recovered: both read and write probes passed for five consecutive minutes, with recovery confirmed at 03:49.
++
++The available evidence does not distinguish which mitigation action—or combination of actions—produced the recovery.
++
++## Follow-up
++
++| Action | Owner | Status |
++|---|---|---|
++| Reproduce cache-key fan-out under load and compare the results with deployment `catalog-771`. | Platform | Open |
++
++The investigation should retain alternative explanations until testing establishes whether `catalog-771` materially changed key fan-out. Improving request-level trace availability would also make similar incidents easier to attribute and quantify.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-2/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-2/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..75156af9c9bba896b3eac041c150f111bd490007
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-2/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 3,
++  "configuration": "starter_skill",
++  "run_number": 2,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
++  "total_tokens": 37959,
++  "duration_ms": 36490,
++  "total_duration_seconds": 36.49
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-3/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-3/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..f926faaf0c87181c5ac53e88687c21e3667f44c8
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-3/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "c-facts",
++      "text": "Verified cache saturation is separated from the deployment hypothesis.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, may have"
++    },
++    {
++      "id": "c-timeline",
++      "text": "Detection and recovery cite the correct events.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-C1], [EVT-C6]"
++    },
++    {
++      "id": "c-impact",
++      "text": "The delayed-request impact is cited without converting it to customers.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
++    },
++    {
++      "id": "c-action",
++      "text": "The reproduction action remains open with its owner.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-C2]; Found boundary language: open"
++    },
++    {
++      "id": "c-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Cause and uncertainty"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-3/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-3/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..c463bcd69afff78e3b40f377ee17d2537b42d89a
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-3/outputs/incident-summary.md	
+@@ -0,0 +1,55 @@
++# Post-Incident Report: Cache Saturation
++
++## Summary
++
++Production cache saturation coincided with elevated catalog-request latency. The cache pool was expanded and hot keys were evicted, after which read and write probes passed for five consecutive minutes.
++
++The underlying cause has not been confirmed. Deployment `catalog-771` may have increased key fan-out, but request-level traces were unavailable to validate this hypothesis.
++
++## Impact
++
++- 12,400 catalog requests exceeded the two-second latency objective.
++- The number of affected customers was not measured.
++- No additional customer or system impact was established from the available notes.
++
++## Timeline
++
++| Time | Event |
++|---|---|
++| 03:09 | A warning was generated as part of a monitor test; this was not a valid incident signal. |
++| 03:14 | The first valid elevated-latency signal fired. |
++| During incident | Production metrics confirmed cache saturation above 96%. |
++| 03:41 | Responders expanded the cache pool and evicted hot keys. |
++| 03:49 | Recovery was confirmed after read and write probes passed for five consecutive minutes. |
++
++The observed interval from the first valid alert to confirmed recovery was 35 minutes. This does not necessarily represent the exact customer-impact window.
++
++## Cause and Contributing Factors
++
++The root cause remains undetermined.
++
++Deployment `catalog-771` is a suspected contributor because it may have increased cache-key fan-out. This has not been verified due to the absence of request-level traces. The available evidence establishes cache saturation and elevated latency, but does not establish what caused the saturation.
++
++## Resolution
++
++The incident was mitigated by:
++
++- Expanding the cache pool.
++- Evicting hot keys.
++
++Recovery was confirmed at 03:49 through five consecutive minutes of successful read and write probes.
++
++## Follow-up Actions
++
++| Action | Owner | Status |
++|---|---|---|
++| Reproduce key fan-out under load and compare the results with deployment `catalog-771`. | Platform | Open |
++
++## Review Gaps
++
++Further investigation should clarify:
++
++- Whether `catalog-771` materially changed key fan-out.
++- Why request-level traces were unavailable.
++- The number of customers affected.
++- Whether cache-capacity or saturation alerts provide sufficient time for mitigation.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-3/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-3/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..2851b4f56f53d689a9625548bbcbaa2fac127495
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/starter_skill/run-3/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 3,
++  "configuration": "starter_skill",
++  "run_number": 3,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
++  "total_tokens": 31758,
++  "duration_ms": 36545,
++  "total_duration_seconds": 36.545
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-1/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-1/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fdc60f9160605fb03d14e1f91c08a896ecfab66
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-1/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "c-facts",
++      "text": "Verified cache saturation is separated from the deployment hypothesis.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, unconfirmed, may have"
++    },
++    {
++      "id": "c-timeline",
++      "text": "Detection and recovery cite the correct events.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-C1], [EVT-C6]"
++    },
++    {
++      "id": "c-impact",
++      "text": "The delayed-request impact is cited without converting it to customers.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
++    },
++    {
++      "id": "c-action",
++      "text": "The reproduction action remains open with its owner.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-C2]; Found boundary language: open"
++    },
++    {
++      "id": "c-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-1/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-1/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..470e62930dc059f650306358effc06e4d9bcb23a
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-1/outputs/incident-summary.md	
+@@ -0,0 +1,50 @@
++# Post-Incident Report: Cache Saturation
++
++## Summary
++
++Production cache saturation exceeded 96%, coinciding with elevated catalog-request latency. The first valid alert fired at 03:14. At 03:41, the cache pool was expanded and hot keys were evicted. Recovery was confirmed at 03:49 after read and write probes passed for five consecutive minutes.
++
++Deployment `catalog-771` may have increased key fan-out, but this is unconfirmed because request-level traces were unavailable.
++
++## Customer impact
++
++- 12,400 catalog requests exceeded the two-second latency objective.
++- The number of affected customers was not measured.
++- No evidence was provided about request failures, data loss, or incorrect responses.
++
++## Timeline
++
++| Time | Event |
++|---|---|
++| 03:09 | A warning fired as part of a monitor test; it was not a valid incident signal. |
++| 03:14 | First valid elevated-latency signal fired. |
++| 03:41 | Cache pool expanded and hot keys evicted. |
++| 03:49 | Recovery confirmed after read and write probes passed for five consecutive minutes. |
++
++All times are as recorded; the source does not specify a timezone.
++
++## Detection and duration
++
++The incident was detected through the elevated-latency monitor at 03:14. Mitigation occurred 27 minutes later, and recovery was confirmed 35 minutes after the first valid signal.
++
++These durations use alert time as the starting point; the actual onset time is unknown.
++
++## Technical findings
++
++Production metrics verify cache saturation above 96%. The available evidence establishes a correlation between saturation and elevated latency, but does not fully establish the underlying cause.
++
++The leading hypothesis is that deployment `catalog-771` increased cache-key fan-out. Request-level traces were unavailable, so the deployment’s role and the mechanism of saturation remain unverified.
++
++## Mitigation and recovery
++
++Engineers expanded the cache pool and evicted hot keys at 03:41. Read and write probes subsequently passed for five consecutive minutes, confirming recovery at 03:49.
++
++The evidence supports these actions as effective mitigation, but does not establish which action—or combination of actions—resolved the condition.
++
++## Follow-up action
++
++| Action | Owner | Status |
++|---|---|---|
++| Reproduce key fan-out under load and compare the results with deployment `catalog-771`. | Platform | Open |
++
++The investigation should also capture request-level traces during reproduction so the key-fan-out hypothesis can be confirmed or rejected. No owner or status has yet been recorded for that additional recommendation.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-1/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-1/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..f4b3e1ec617460237af1d9e1970ce5f6e612c5b8
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-1/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 3,
++  "configuration": "without_skill",
++  "run_number": 1,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": null,
++  "total_tokens": 31548,
++  "duration_ms": 37192,
++  "total_duration_seconds": 37.192
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-2/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-2/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..420985155561f4bbc7f4675aa8531b1cb7bc74b0
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-2/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "c-facts",
++      "text": "Verified cache saturation is separated from the deployment hypothesis.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, unconfirmed, may have"
++    },
++    {
++      "id": "c-timeline",
++      "text": "Detection and recovery cite the correct events.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-C1], [EVT-C6]"
++    },
++    {
++      "id": "c-impact",
++      "text": "The delayed-request impact is cited without converting it to customers.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
++    },
++    {
++      "id": "c-action",
++      "text": "The reproduction action remains open with its owner.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-C2]; Found boundary language: open"
++    },
++    {
++      "id": "c-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-2/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-2/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..94bc3f0ba1e7af3d7a79b4409c8716e8dd6c8398
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-2/outputs/incident-summary.md	
+@@ -0,0 +1,55 @@
++# Post-Incident Report: Cache Saturation
++
++## Summary
++
++A production cache saturation event caused elevated catalog-request latency. Cache utilization above 96% was verified, and 12,400 catalog requests exceeded the two-second latency objective.
++
++The first valid alert fired at 03:14. At 03:41, responders expanded the cache pool and evicted hot keys. Recovery was confirmed at 03:49 after read and write probes passed continuously for five minutes.
++
++The underlying cause has not been established. Deployment `catalog-771` may have increased key fan-out, but request-level traces were unavailable, so this remains a hypothesis.
++
++## Impact
++
++- 12,400 catalog requests exceeded the two-second latency objective.
++- The number of affected customers was not measured.
++- No other customer or system impact is established by the incident record.
++
++## Timeline
++
++*Times are as recorded; the date and time zone were not provided.*
++
++| Time | Event |
++|---|---|
++| 03:09 | A warning occurred as part of a monitor test; it was not a valid incident signal. |
++| 03:14 | The first valid elevated-latency signal fired. |
++| During incident | Production metrics verified cache saturation above 96%. |
++| 03:41 | The cache pool was expanded and hot keys were evicted. |
++| 03:49 | Recovery was confirmed after read and write probes passed for five consecutive minutes. |
++
++The elapsed time from the first valid signal to confirmed recovery was approximately 35 minutes. Remediation began or completed 27 minutes after that signal; the record does not distinguish which.
++
++## Cause and contributing factors
++
++**Confirmed condition:** Production cache saturation exceeded 96%.
++
++**Unconfirmed hypothesis:** Deployment `catalog-771` may have increased key fan-out and contributed to saturation.
++
++A causal link cannot currently be established because request-level traces were unavailable. The available evidence also does not show whether cache expansion, hot-key eviction, or their combined effect produced the recovery.
++
++## Response and recovery
++
++Responders:
++
++- Expanded the cache pool.
++- Evicted hot keys.
++- Monitored read and write probes until both passed for five consecutive minutes.
++
++These actions were followed by confirmed recovery, although the evidence does not isolate the effect of either action.
++
++## Follow-up action
++
++| Action | Owner | Status |
++|---|---|---|
++| Reproduce key fan-out under load and compare the results with deployment `catalog-771`. | Platform | Open |
++
++The investigation should preserve the distinction between correlation and causation and document whether the deployment reproduces the observed saturation. Improving request-level trace availability should also be considered, but this is a recommendation rather than an action recorded in the source incident notes.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-2/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-2/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..a55e7faddbfdc5d93b8ed05cea9b24975d3db67f
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-2/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 3,
++  "configuration": "without_skill",
++  "run_number": 2,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": null,
++  "total_tokens": 47216,
++  "duration_ms": 43328,
++  "total_duration_seconds": 43.328
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-3/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-3/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..55d4f595a24c0e08f0d2f92c935f3e98e8269a6b
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-3/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "c-facts",
++      "text": "Verified cache saturation is separated from the deployment hypothesis.",
++      "critical": true,
++      "passed": true,
++      "evidence": "Found required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, unconfirmed, may have"
++    },
++    {
++      "id": "c-timeline",
++      "text": "Detection and recovery cite the correct events.",
++      "critical": true,
++      "passed": true,
++      "evidence": "Found required values: [EVT-C1], [EVT-C6], 03:14, 03:49"
++    },
++    {
++      "id": "c-impact",
++      "text": "The delayed-request impact is cited without converting it to customers.",
++      "critical": false,
++      "passed": true,
++      "evidence": "Found required values: 12,400, requests, [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
++    },
++    {
++      "id": "c-action",
++      "text": "The reproduction action remains open with its owner.",
++      "critical": false,
++      "passed": true,
++      "evidence": "Found required values: [ACT-C2], Platform; Found boundary language: open"
++    },
++    {
++      "id": "c-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": true,
++      "evidence": "Found required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 5,
++    "failed": 0,
++    "total": 5,
++    "pass_rate": 1
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-3/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-3/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..a64ad58a9fffda6a8110656393ad5252375144ea
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-3/outputs/incident-summary.md	
+@@ -0,0 +1,30 @@
++# Post-Incident Report: Cache Saturation
++
++## Timeline
++
++- **03:09** — A warning was generated as part of a monitor test; it was not a valid production signal. [EVT-C1]
++- **03:14** — The first valid elevated-latency signal fired. [EVT-C1]
++- **03:41** — The cache pool was expanded and hot keys were evicted. [REM-C5]
++- **03:49** — Recovery was confirmed after read and write probes passed for five consecutive minutes. [EVT-C6]
++
++## Impact
++
++- **12,400 catalog requests** exceeded the two-second latency objective. [IMP-C4]
++- The number of affected customers was not measured, so customer impact cannot be quantified from the available evidence. [IMP-C4]
++
++## Cause and uncertainty
++
++Production metrics confirm that cache saturation exceeded 96%. [OBS-C2]
++
++Deployment `catalog-771` may have increased key fan-out, but this remains an unconfirmed hypothesis. Request-level traces were unavailable, so the deployment cannot currently be identified as the root cause. [HYP-C3]
++
++## Resolution
++
++At 03:41, responders expanded the cache pool and evicted hot keys. [REM-C5] Recovery was confirmed at 03:49 by five consecutive minutes of successful read and write probes. [EVT-C6]
++
++The evidence establishes that recovery followed the cache intervention, but does not by itself prove the underlying cause.
++
++## Follow-up actions
++
++- **Open — Platform:** Reproduce key fan-out under load and compare the results with deployment `catalog-771`. [ACT-C2]
++- Use the reproduction results to confirm or reject the deployment hypothesis before assigning root cause.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-3/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-3/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..05ea06ffaf2a466a3cd5fe1a5fa4bc260764a708
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-3/without_skill/run-3/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 3,
++  "configuration": "without_skill",
++  "run_number": 3,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": null,
++  "total_tokens": 59187,
++  "duration_ms": 36948,
++  "total_duration_seconds": 36.948
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-1/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-1/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..da3bd015241e349911aae2a2cd2777baf571d6db
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-1/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "d-conflict",
++      "text": "Both duration sources are cited and the conflict remains unresolved.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: 18 minutes, [EVT-D1], [LOG-D4]; Found boundary language: unresolved"
++    },
++    {
++      "id": "d-impact",
++      "text": "The affected group is cited without an invented customer count.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-D3]; Forbidden pattern was absent: \\b\\d+\\s+(?:customers|tenants)\\b"
++    },
++    {
++      "id": "d-remediation",
++      "text": "The cache invalidation remediation is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [REM-D5]"
++    },
++    {
++      "id": "d-owner",
++      "text": "The timing-reconciliation action remains open with its owner.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-D2]; Found boundary language: open"
++    },
++    {
++      "id": "d-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-1/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-1/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..ee1fb6012aace14a640f52c937b5710540917646
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-1/outputs/incident-summary.md	
+@@ -0,0 +1,11 @@
++## Incident D: Stale analytics dashboards
++
++**Impact:** Some EU tenants received stale dashboard data. No verified tenant or customer count is available.
++
++**Timeline:** The public status page reports an 18-minute degradation, while service logs show elevated stale-read errors for 23 minutes. The five-minute discrepancy remains unresolved; no authoritative duration has been established.
++
++**Cause:** Delayed invalidation messages are a possible explanation, but this is unconfirmed because queue traces were not retained.
++
++**Resolution:** A cache invalidation change restored fresh reads. Validation covered both EU and US read paths.
++
++**Follow-up:** Data Experience owns an open action to reconcile the status-page and service-log timings and document the authoritative incident duration.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-1/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-1/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..71cde031175ddaf1f1a92f5a7b76be8a58cf8daf
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-1/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 4,
++  "configuration": "starter_skill",
++  "run_number": 1,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
++  "total_tokens": 31289,
++  "duration_ms": 22503,
++  "total_duration_seconds": 22.503
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-2/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-2/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..b45449d7bdeda173e4774a841468cdb68e602bff
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-2/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "d-conflict",
++      "text": "Both duration sources are cited and the conflict remains unresolved.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: 18 minutes, [EVT-D1], [LOG-D4]; Found boundary language: unresolved"
++    },
++    {
++      "id": "d-impact",
++      "text": "The affected group is cited without an invented customer count.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-D3]; Forbidden pattern was absent: \\b\\d+\\s+(?:customers|tenants)\\b"
++    },
++    {
++      "id": "d-remediation",
++      "text": "The cache invalidation remediation is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: cache invalidation, [REM-D5]"
++    },
++    {
++      "id": "d-owner",
++      "text": "The timing-reconciliation action remains open with its owner.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-D2]; Found boundary language: open"
++    },
++    {
++      "id": "d-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-2/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-2/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..bfbf8ecdcdf41b7cceb1de464d0806a96808558a
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-2/outputs/incident-summary.md	
+@@ -0,0 +1,11 @@
++## Incident D: Stale analytics dashboards
++
++**Impact:** Some EU tenants received stale dashboard data. No verified tenant or customer count is available.
++
++**Timeline:** The public status page reports an 18-minute degradation, while service logs show elevated stale-read errors for 23 minutes. The five-minute discrepancy remains unresolved; no authoritative duration has been established.
++
++**Cause:** Delayed cache-invalidation messages are a possible explanation, but this is unconfirmed because queue traces were not retained.
++
++**Resolution:** A cache-invalidation change restored fresh reads. Validation covered both EU and US read paths.
++
++**Follow-up:** Data Experience owns an open action to reconcile the status-page and service-log timings and document the authoritative incident duration.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-2/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-2/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..6263a4b58a2d084802e701f2c13e47acee699388
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-2/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 4,
++  "configuration": "starter_skill",
++  "run_number": 2,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
++  "total_tokens": 31328,
++  "duration_ms": 21284,
++  "total_duration_seconds": 21.284
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-3/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-3/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..b45449d7bdeda173e4774a841468cdb68e602bff
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-3/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "d-conflict",
++      "text": "Both duration sources are cited and the conflict remains unresolved.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: 18 minutes, [EVT-D1], [LOG-D4]; Found boundary language: unresolved"
++    },
++    {
++      "id": "d-impact",
++      "text": "The affected group is cited without an invented customer count.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-D3]; Forbidden pattern was absent: \\b\\d+\\s+(?:customers|tenants)\\b"
++    },
++    {
++      "id": "d-remediation",
++      "text": "The cache invalidation remediation is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: cache invalidation, [REM-D5]"
++    },
++    {
++      "id": "d-owner",
++      "text": "The timing-reconciliation action remains open with its owner.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-D2]; Found boundary language: open"
++    },
++    {
++      "id": "d-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-3/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-3/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..f42c376231571e9a45bf920d7a8bb3eecb76e6b4
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-3/outputs/incident-summary.md	
+@@ -0,0 +1,11 @@
++## Incident D: Stale Analytics Dashboards
++
++**Impact:** Some EU tenants received stale dashboard data. No verified tenant or customer count is available.
++
++**Timeline:** The public status page reports an 18-minute degradation, while service logs show elevated stale-read errors for 23 minutes. The five-minute discrepancy remains unresolved; no authoritative duration has been established.
++
++**Cause:** Delayed cache-invalidation messages are a possible explanation, but the cause is unconfirmed because queue traces were not retained.
++
++**Resolution:** A cache-invalidation change restored fresh reads. Validation covered both EU and US read paths.
++
++**Follow-up:** Data Experience owns an open action to reconcile the status-page and service-log timings and document the authoritative incident duration.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-3/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-3/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..5c99af07b79ae0d7daed69540e396823be8c1417
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/starter_skill/run-3/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 4,
++  "configuration": "starter_skill",
++  "run_number": 3,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
++  "total_tokens": 31293,
++  "duration_ms": 19874,
++  "total_duration_seconds": 19.874
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-1/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-1/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..f196f2c07809b63b9bd3df0d43cf08750e818183
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-1/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "d-conflict",
++      "text": "Both duration sources are cited and the conflict remains unresolved.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-D1], [LOG-D4]; Found boundary language: unresolved"
++    },
++    {
++      "id": "d-impact",
++      "text": "The affected group is cited without an invented customer count.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-D3]; Forbidden pattern was absent: \\b\\d+\\s+(?:customers|tenants)\\b"
++    },
++    {
++      "id": "d-remediation",
++      "text": "The cache invalidation remediation is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: cache invalidation, [REM-D5]"
++    },
++    {
++      "id": "d-owner",
++      "text": "The timing-reconciliation action remains open with its owner.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-D2]; Found boundary language: open"
++    },
++    {
++      "id": "d-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-1/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-1/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..c75a53dc6988a03405f2b372cdd9ce98c382b7e1
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-1/outputs/incident-summary.md	
+@@ -0,0 +1,10 @@
++### Incident D — Engineering review summary
++
++Some EU tenants received stale analytics dashboards; no verified tenant or customer count is available.
++
++- **Duration:** Public status reported 18 minutes, while service logs showed elevated stale-read errors for 23 minutes. The five-minute discrepancy remains unresolved.
++- **Suspected cause:** Delayed invalidation messages may explain the stale reads, but this is unconfirmed because queue traces were not retained.
++- **Remediation:** A cache-invalidation change restored fresh reads. Validation covered both EU and US read paths.
++- **Open action:** Data Experience must reconcile the status-page and log timings and document the authoritative incident duration.
++
++Do not treat either duration as authoritative or infer an affected-customer count until the open evidence gaps are resolved.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-1/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-1/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..f6b9f0f317bcfb72bd1be26a1ffb0d1231fb538f
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-1/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 4,
++  "configuration": "without_skill",
++  "run_number": 1,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": null,
++  "total_tokens": 37280,
++  "duration_ms": 18912,
++  "total_duration_seconds": 18.912
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-2/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-2/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..4194cf7947f5062d74cb562c998abfae381edd0e
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-2/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "d-conflict",
++      "text": "Both duration sources are cited and the conflict remains unresolved.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-D1], [LOG-D4]; Found boundary language: unresolved, conflict"
++    },
++    {
++      "id": "d-impact",
++      "text": "The affected group is cited without an invented customer count.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-D3]; Forbidden pattern was absent: \\b\\d+\\s+(?:customers|tenants)\\b"
++    },
++    {
++      "id": "d-remediation",
++      "text": "The cache invalidation remediation is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [REM-D5]"
++    },
++    {
++      "id": "d-owner",
++      "text": "The timing-reconciliation action remains open with its owner.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-D2]; Found boundary language: open"
++    },
++    {
++      "id": "d-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-2/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-2/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..6159a82913f90ed8b6b4b826c3929cc96e8a0a46
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-2/outputs/incident-summary.md	
+@@ -0,0 +1,10 @@
++### Engineering review summary
++
++Incident D caused stale analytics dashboards for some EU tenants. The affected tenant/customer count is unverified.
++
++- **Duration conflict:** The public status page reports 18 minutes of degradation, while service logs show elevated stale-read errors for 23 minutes. The five-minute discrepancy remains unresolved; no authoritative duration is established.
++- **Suspected cause:** Delayed invalidation messages may explain the stale reads, but this is unconfirmed because queue traces were not retained.
++- **Remediation:** A cache invalidation change restored fresh reads. Validation covered both EU and US read paths.
++- **Open action:** Data Experience owns reconciling the timing evidence and documenting the authoritative duration.
++
++Source: [incident-d.md](/tmp/exercise-05-03-noskill-workspace/evals/files/incident-d.md)
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-2/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-2/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..dcec3385bd2e97707074918fd7edbb01ba5ee91c
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-2/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 4,
++  "configuration": "without_skill",
++  "run_number": 2,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": null,
++  "total_tokens": 37320,
++  "duration_ms": 19901,
++  "total_duration_seconds": 19.901
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-3/grading.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-3/grading.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..4194cf7947f5062d74cb562c998abfae381edd0e
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-3/grading.json	
+@@ -0,0 +1,45 @@
++{
++  "expectations": [
++    {
++      "id": "d-conflict",
++      "text": "Both duration sources are cited and the conflict remains unresolved.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [EVT-D1], [LOG-D4]; Found boundary language: unresolved, conflict"
++    },
++    {
++      "id": "d-impact",
++      "text": "The affected group is cited without an invented customer count.",
++      "critical": true,
++      "passed": false,
++      "evidence": "Missing required values: [IMP-D3]; Forbidden pattern was absent: \\b\\d+\\s+(?:customers|tenants)\\b"
++    },
++    {
++      "id": "d-remediation",
++      "text": "The cache invalidation remediation is cited.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [REM-D5]"
++    },
++    {
++      "id": "d-owner",
++      "text": "The timing-reconciliation action remains open with its owner.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: [ACT-D2]; Found boundary language: open"
++    },
++    {
++      "id": "d-output-contract",
++      "text": "The report uses every required incident-summary section.",
++      "critical": false,
++      "passed": false,
++      "evidence": "Missing required values: ## Timeline, ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
++    }
++  ],
++  "summary": {
++    "passed": 0,
++    "failed": 5,
++    "total": 5,
++    "pass_rate": 0
++  }
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-3/outputs/incident-summary.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-3/outputs/incident-summary.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..2fb686f96e55f53e2ba9711344c532f17dba1131
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-3/outputs/incident-summary.md	
+@@ -0,0 +1,11 @@
++### Incident D: Stale analytics dashboards
++
++- **Impact:** Some EU tenants received stale dashboards. No verified tenant or customer count exists.
++- **Duration:** Conflicting evidence remains unresolved:
++  - Public status page: **18 minutes**
++  - Service logs: elevated stale-read errors for **23 minutes**
++- **Suspected cause:** Delayed invalidation messages may explain the stale reads, but this is unconfirmed because queue traces were not retained.
++- **Remediation:** A cache invalidation change restored fresh reads. Validation covered EU and US read paths.
++- **Open action:** Data Experience must reconcile the status-page and service-log timelines and document the authoritative duration.
++
++No impact count or definitive root cause should be inferred from the available evidence.
+\ No newline at end of file
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-3/timing.json b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-3/timing.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..15f6c39472b40357cbef9678ff9261995cf17940
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-4/without_skill/run-3/timing.json	
+@@ -0,0 +1,20 @@
++{
++  "eval_id": 4,
++  "configuration": "without_skill",
++  "run_number": 3,
++  "agent": "Codex CLI 0.153.4",
++  "model": "gpt-5.6-sol (low reasoning)",
++  "runtime": "codex exec --ephemeral",
++  "tools": [
++    "shell",
++    "file read"
++  ],
++  "permissions": "read-only",
++  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
++  "time_limit_minutes": 10,
++  "attempt": 1,
++  "skill_tree_sha256": null,
++  "total_tokens": 37276,
++  "duration_ms": 23172,
++  "total_duration_seconds": 23.172
++}
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/evidence/before-skill.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/evidence/before-skill.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..b46f76deee40b4ae9c0eadf12eb818aa5953bff6
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/evidence/before-skill.md	
+@@ -0,0 +1,10 @@
++---
++name: incident-summary
++description: Create a polished incident summary from operational notes for technical or leadership readers. Use for incidents and postmortems; do not use for release notes.
++---
++
++# Incident Summary
++
++Read the supplied material and write a clear timeline, impact, cause, resolution, and follow-up section.
++
++Keep the output concise and professional.
+diff --git a/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/evidence/before.md b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/evidence/before.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..a4546f806d30dd823b76a309b899ffe5345df67c
+--- /dev/null
++++ b/05 Skill Packaging/exercise-03-skill-benchmark-package-gate/evidence/before.md	
+@@ -0,0 +1,20 @@
++# Baseline Benchmark
++
++- Starting commit: 52090edddf032d026ece16ef90feb627bf8e67ac
++- Agent: Codex CLI 0.153.4
++- Model: gpt-5.6-sol (low reasoning)
++- Runtime: `codex exec --ephemeral`
++- Tools: shell and file read
++- Permissions: read-only
++- Time limit: 10 minutes
++- Attempt: 1
++- Runs: 24 (four evals × three runs × `without_skill` and `starter_skill`)
++- Starter skill tree SHA-256: ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551
++
++## Results
++
++The no-skill lane scored 0% training quality and 16.7% held-out quality, with 16.7% held-out critical accuracy and 0.373 held-out pass-rate variance. Mean overall use was 36,911 tokens and 26.5 seconds.
++
++The unchanged starter scored 0% for training, held-out, and critical quality with zero variance. Mean overall use was 32,981 tokens and 28.0 seconds.
++
++Generated grades show that both training lanes omitted source citations and the exact output headings, and failed to preserve recovery, uncertainty, and follow-up state. Every output, measured timing record, token count, and generated grade is stored under `benchmark-workspace/`.
+
+Changes:
+
+05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-1/grading.json
+  @@ -0,0 +1,45 @@
+  +{
+  +  "expectations": [
+  +    {
+  +      "id": "a-timeline-source",
+  +      "text": "Detection, mitigation, and recovery cite their event sources.",
+  +      "critical": true,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
+  +    },
+  +    {
+  +      "id": "a-recovery-boundary",
+  +      "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
+  +      "critical": true,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [EVT-A5]; Forbidden pattern was absent: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
+  +    },
+  +    {
+  +      "id": "a-impact-source",
+  +      "text": "The exact failed-attempt impact is cited.",
+  +      "critical": false,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [IMP-A2]"
+  +    },
+  +    {
+  +      "id": "a-followup-state",
+  +      "text": "The alerting follow-up remains proposed and not started.",
+  +      "critical": false,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
+  +    },
+  +    {
+  +      "id": "a-output-contract",
+  +      "text": "The report uses every required incident-summary section.",
+  +      "critical": false,
+  +      "passed": false,
+  +      "evidence": "Missing required values: ## Cause and uncertainty, ## Follow-up actions"
+  +    }
+  +  ],
+  +  "summary": {
+  +    "passed": 0,
+  +    "failed": 5,
+  +    "total": 5,
+  +    "pass_rate": 0
+  +  }
+  +}
+  +45 -0
+
+05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-1/outputs/incident-summary.md
+  @@ -0,0 +1,25 @@
+  +# Incident Summary: Checkout Retry Saturation
+  +
+  +## Impact
+  +
+  +318 checkout attempts failed. The number of unique customers affected was not measured.
+  +
+  +## Timeline
+  +
+  +- **09:02** — Checkout-error alert opened after the five-minute threshold was crossed.
+  +- **09:11** — Payment retries were disabled as mitigation. Error volume decreased, but health probes continued to fail.
+  +- **09:18** — Deployment `pay-184` removed the retry loop.
+  +- **09:24** — Three consecutive payment and checkout probes passed, confirming recovery.
+  +
+  +## Cause
+  +
+  +The cause review is incomplete. The current hypothesis is that retry amplification exhausted the worker pool; this has not been confirmed.
+  +
+  +## Resolution
+  +
+  +Payment retries were disabled to reduce error volume, followed by deployment `pay-184` to remove the retry loop. Recovery was confirmed at 09:24 through three consecutive successful payment and checkout probes.
+  +
+  +## Follow-up
+  +
+  +- **Proposed, not started:** Add retry saturation alerting.
+  +- **Owner:** Payments Platform.
+  +25 -0
+
+05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-1/timing.json
+  @@ -0,0 +1,20 @@
+  +{
+  +  "eval_id": 1,
+  +  "configuration": "starter_skill",
+  +  "run_number": 1,
+  +  "agent": "Codex CLI 0.153.4",
+  +  "model": "gpt-5.6-sol (low reasoning)",
+  +  "runtime": "codex exec --ephemeral",
+  +  "tools": [
+  +    "shell",
+  +    "file read"
+  +  ],
+  +  "permissions": "read-only",
+  +  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
+  +  "time_limit_minutes": 10,
+  +  "attempt": 1,
+  +  "skill_tree_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
+  +  "total_tokens": 31349,
+  +  "duration_ms": 31797,
+  +  "total_duration_seconds": 31.797
+  +}
+  +20 -0
+
+05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-2/grading.json
+  @@ -0,0 +1,45 @@
+  +{
+  +  "expectations": [
+  +    {
+  +      "id": "a-timeline-source",
+  +      "text": "Detection, mitigation, and recovery cite their event sources.",
+  +      "critical": true,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
+  +    },
+  +    {
+  +      "id": "a-recovery-boundary",
+  +      "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
+  +      "critical": true,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [EVT-A5]; Output matched forbidden pattern: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
+  +    },
+  +    {
+  +      "id": "a-impact-source",
+  +      "text": "The exact failed-attempt impact is cited.",
+  +      "critical": false,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [IMP-A2]"
+  +    },
+  +    {
+  +      "id": "a-followup-state",
+  +      "text": "The alerting follow-up remains proposed and not started.",
+  +      "critical": false,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
+  +    },
+  +    {
+  +      "id": "a-output-contract",
+  +      "text": "The report uses every required incident-summary section.",
+  +      "critical": false,
+  +      "passed": false,
+  +      "evidence": "Missing required values: ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+  +    }
+  +  ],
+  +  "summary": {
+  +    "passed": 0,
+  +    "failed": 5,
+  +    "total": 5,
+  +    "pass_rate": 0
+  +  }
+  +}
+  +45 -0
+
+05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-2/outputs/incident-summary.md
+  @@ -0,0 +1,28 @@
+  +# Post-Incident Summary: Checkout Retry Saturation
+  +
+  +## Impact
+  +
+  +318 checkout attempts failed. Unique customer impact was not measured.
+  +
+  +## Timeline
+  +
+  +- **09:02** — Checkout-error alert opened after its five-minute threshold was crossed.
+  +- **09:11** — Payment retries were disabled. Error volume decreased, but health probes continued to fail.
+  +- **09:18** — Deployment `pay-184` removed the retry loop.
+  +- **09:24** — Three consecutive payment and checkout probes passed, confirming recovery.
+  +
+  +## Cause
+  +
+  +The cause review is incomplete. The current hypothesis is that retry amplification exhausted the worker pool; this has not been confirmed.
+  +
+  +## Mitigation and Resolution
+  +
+  +Disabling payment retries reduced error volume but did not restore service health. Recovery was confirmed after deployment `pay-184` removed the retry loop.
+  +
+  +The earlier status note reporting recovery at 09:11 is superseded; confirmed recovery occurred at 09:24.
+  +
+  +## Follow-Up
+  +
+  +- Add retry-saturation alerting.
+  +  - **Owner:** Payments Platform
+  +  - **Status:** Proposed; not started
+  +28 -0
+
+05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-2/timing.json
+  @@ -0,0 +1,20 @@
+  +{
+  +  "eval_id": 1,
+  +  "configuration": "starter_skill",
+  +  "run_number": 2,
+  +  "agent": "Codex CLI 0.153.4",
+  +  "model": "gpt-5.6-sol (low reasoning)",
+  +  "runtime": "codex exec --ephemeral",
+  +  "tools": [
+  +    "shell",
+  +    "file read"
+  +  ],
+  +  "permissions": "read-only",
+  +  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
+  +  "time_limit_minutes": 10,
+  +  "attempt": 1,
+  +  "skill_tree_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
+  +  "total_tokens": 31176,
+  +  "duration_ms": 28076,
+  +  "total_duration_seconds": 28.076
+  +}
+  +20 -0
+
+05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-3/grading.json
+  @@ -0,0 +1,45 @@
+  +{
+  +  "expectations": [
+  +    {
+  +      "id": "a-timeline-source",
+  +      "text": "Detection, mitigation, and recovery cite their event sources.",
+  +      "critical": true,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
+  +    },
+  +    {
+  +      "id": "a-recovery-boundary",
+  +      "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
+  +      "critical": true,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [EVT-A5]; Output matched forbidden pattern: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
+  +    },
+  +    {
+  +      "id": "a-impact-source",
+  +      "text": "The exact failed-attempt impact is cited.",
+  +      "critical": false,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [IMP-A2]"
+  +    },
+  +    {
+  +      "id": "a-followup-state",
+  +      "text": "The alerting follow-up remains proposed and not started.",
+  +      "critical": false,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
+  +    },
+  +    {
+  +      "id": "a-output-contract",
+  +      "text": "The report uses every required incident-summary section.",
+  +      "critical": false,
+  +      "passed": false,
+  +      "evidence": "Missing required values: ## Cause and uncertainty, ## Follow-up actions"
+  +    }
+  +  ],
+  +  "summary": {
+  +    "passed": 0,
+  +    "failed": 5,
+  +    "total": 5,
+  +    "pass_rate": 0
+  +  }
+  +}
+  +45 -0
+
+05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-3/outputs/incident-summary.md
+  @@ -0,0 +1,30 @@
+  +# Post-Incident Summary: Checkout Retry Saturation
+  +
+  +## Impact
+  +
+  +- 318 checkout attempts failed.
+  +- Unique customer impact was not measured.  
+  +  *(Evidence: IMP-A2)*
+  +
+  +## Timeline
+  +
+  +- **09:02** — Checkout-error alert opened after the five-minute threshold was crossed. *(EVT-A1)*
+  +- **09:11** — Payment retries were disabled as mitigation. Error volume fell, but health probes continued to fail. *(EVT-A3)*
+  +- **09:18** — Deployment `pay-184` removed the retry loop. *(REM-A4)*
+  +- **09:24** — Three consecutive payment and checkout probes passed, confirming recovery. *(EVT-A5)*
+  +
+  +## Cause
+  +
+  +The cause review remains incomplete. The current hypothesis is that retry amplification exhausted the worker pool, but this has not been confirmed. *(HYP-A6)*
+  +
+  +## Resolution
+  +
+  +Disabling payment retries reduced error volume but did not restore service health. Deployment `pay-184` subsequently removed the retry loop, and recovery was confirmed at 09:24 through three consecutive successful probes.
+  +
+  +The superseded status note identifying 09:11 as the recovery time is inconsistent with the probe evidence and should not be treated as authoritative. *(DRAFT-A7, EVT-A3, EVT-A5)*
+  +
+  +## Follow-up
+  +
+  +- **Proposed, not started:** Add retry-saturation alerting.
+  +- **Owner:** Payments Platform.  
+  +  *(FUP-A1)*
+  +30 -0
+
+05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/starter_skill/run-3/timing.json
+  @@ -0,0 +1,20 @@
+  +{
+  +  "eval_id": 1,
+  +  "configuration": "starter_skill",
+  +  "run_number": 3,
+  +  "agent": "Codex CLI 0.153.4",
+  +  "model": "gpt-5.6-sol (low reasoning)",
+  +  "runtime": "codex exec --ephemeral",
+  +  "tools": [
+  +    "shell",
+  +    "file read"
+  +  ],
+  +  "permissions": "read-only",
+  +  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
+  +  "time_limit_minutes": 10,
+  +  "attempt": 1,
+  +  "skill_tree_sha256": "ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551",
+  +  "total_tokens": 31517,
+  +  "duration_ms": 35194,
+  +  "total_duration_seconds": 35.194
+  +}
+  +20 -0
+
+05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-1/grading.json
+  @@ -0,0 +1,45 @@
+  +{
+  +  "expectations": [
+  +    {
+  +      "id": "a-timeline-source",
+  +      "text": "Detection, mitigation, and recovery cite their event sources.",
+  +      "critical": true,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
+  +    },
+  +    {
+  +      "id": "a-recovery-boundary",
+  +      "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
+  +      "critical": true,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [EVT-A5]; Output matched forbidden pattern: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
+  +    },
+  +    {
+  +      "id": "a-impact-source",
+  +      "text": "The exact failed-attempt impact is cited.",
+  +      "critical": false,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [IMP-A2]"
+  +    },
+  +    {
+  +      "id": "a-followup-state",
+  +      "text": "The alerting follow-up remains proposed and not started.",
+  +      "critical": false,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
+  +    },
+  +    {
+  +      "id": "a-output-contract",
+  +      "text": "The report uses every required incident-summary section.",
+  +      "critical": false,
+  +      "passed": false,
+  +      "evidence": "Missing required values: ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+  +    }
+  +  ],
+  +  "summary": {
+  +    "passed": 0,
+  +    "failed": 5,
+  +    "total": 5,
+  +    "pass_rate": 0
+  +  }
+  +}
+  +45 -0
+
+05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-1/outputs/incident-summary.md
+  @@ -0,0 +1,33 @@
+  +# Engineering Post-Incident Summary: Checkout Retry Saturation
+  +
+  +## Summary
+  +
+  +A checkout-error alert opened at 09:02 after its five-minute threshold was crossed. Payment retries were disabled at 09:11, reducing error volume, but health probes continued to fail. Deployment `pay-184` removed the retry loop at 09:18. Recovery was confirmed at 09:24 after three consecutive payment and checkout probes passed.
+  +
+  +## Impact
+  +
+  +- 318 checkout attempts failed.
+  +- Unique customer impact was not measured.
+  +
+  +## Timeline
+  +
+  +- **09:02** — Checkout-error alert opened.
+  +- **09:11** — Payment retries disabled; error volume fell, but health probes still failed.
+  +- **09:18** — Deployment `pay-184` removed the retry loop.
+  +- **09:24** — Three consecutive payment and checkout probes passed, confirming recovery.
+  +
+  +The interval from alert opening to confirmed recovery was 22 minutes.
+  +
+  +## Cause
+  +
+  +The cause review remains incomplete. The current hypothesis is that retry amplification exhausted the worker pool; this has not been confirmed.
+  +
+  +## Follow-up
+  +
+  +- Add retry-saturation alerting.
+  +  - **Owner:** Payments Platform
+  +  - **Status:** Proposed; not started
+  +
+  +## Evidence note
+  +
+  +The superseded status note claiming recovery at 09:11 is inconsistent with the health-probe evidence. The confirmed recovery time is 09:24.
+  +33 -0
+
+05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-1/timing.json
+  @@ -0,0 +1,20 @@
+  +{
+  +  "eval_id": 1,
+  +  "configuration": "without_skill",
+  +  "run_number": 1,
+  +  "agent": "Codex CLI 0.153.4",
+  +  "model": "gpt-5.6-sol (low reasoning)",
+  +  "runtime": "codex exec --ephemeral",
+  +  "tools": [
+  +    "shell",
+  +    "file read"
+  +  ],
+  +  "permissions": "read-only",
+  +  "repository_commit": "52090edddf032d026ece16ef90feb627bf8e67ac",
+  +  "time_limit_minutes": 10,
+  +  "attempt": 1,
+  +  "skill_tree_sha256": null,
+  +  "total_tokens": 31163,
+  +  "duration_ms": 27439,
+  +  "total_duration_seconds": 27.439
+  +}
+  +20 -0
+
+05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-2/grading.json
+  @@ -0,0 +1,45 @@
+  +{
+  +  "expectations": [
+  +    {
+  +      "id": "a-timeline-source",
+  +      "text": "Detection, mitigation, and recovery cite their event sources.",
+  +      "critical": true,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [EVT-A1], [EVT-A3], [EVT-A5]"
+  +    },
+  +    {
+  +      "id": "a-recovery-boundary",
+  +      "text": "Recovery is tied to the 09:24 healthy signal, not the earlier mitigation.",
+  +      "critical": true,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [EVT-A5]; Output matched forbidden pattern: (?:recovered|recovery)[^\\n.]{0,40}09:11|09:11[^\\n.]{0,40}(?:recovered|recovery)"
+  +    },
+  +    {
+  +      "id": "a-impact-source",
+  +      "text": "The exact failed-attempt impact is cited.",
+  +      "critical": false,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [IMP-A2]"
+  +    },
+  +    {
+  +      "id": "a-followup-state",
+  +      "text": "The alerting follow-up remains proposed and not started.",
+  +      "critical": false,
+  +      "passed": false,
+  +      "evidence": "Missing required values: [FUP-A1]; Found boundary language: proposed, not started, open"
+  +    },
+  +    {
+  +      "id": "a-output-contract",
+  +      "text": "The report uses every required incident-summary section.",
+  +      "critical": false,
+  +      "passed": false,
+  +      "evidence": "Missing required values: ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+  +    }
+  +  ],
+  +  "summary": {
+  +    "passed": 0,
+  +    "failed": 5,
+  +    "total": 5,
+  +    "pass_rate": 0
+  +  }
+  +}
+  +45 -0
+
+05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-2/outputs/incident-summary.md
+  @@ -0,0 +1,29 @@
+  +# Engineering Post-Incident Summary: Checkout Retry Saturation
+  +
+  +## Summary
+  +
+  +A checkout-error alert opened at 09:02 after the five-minute threshold was crossed. Payment retries were disabled at 09:11, reducing error volume, but health probes continued to fail. Deployment `pay-184` removed the retry loop at 09:18. Recovery was confirmed at 09:24 after three consecutive payment and checkout probes passed.
+  +
+  +## Impact
+  +
+  +- 318 checkout attempts failed.
+  +- Unique customers affected were not measured.
+  +
+  +## Cause
+  +
+  +The cause review is incomplete. Retry amplification exhausting the worker pool is a hypothesis, not a confirmed root cause.
+  +
+  +## Timeline
+  +
+  +- **09:02:** Checkout-error alert opened.
+  +- **09:11:** Payment retries disabled; error volume fell, but health probes still failed.
+  +- **09:18:** Deployment `pay-184` removed the retry loop.
+  +- **09:24:** Three consecutive payment and checkout probes passed, confirming recovery.
+  +
+  +## Follow-up
+  +
+  +- Add retry-saturation alerting.
+  +  - Owner: Payments Platform
+  +  - Status: Proposed; not started
+  +
+  +The superseded status note reporting recovery at 09:11 is not supported by the recovery evidence; confirmed recovery occurred at 09:24.
+  +29 -0
+
+05 Skill Packaging/exercise-03-skill-benchmark-package-gate/benchmark-workspace/eval-1/without_skill/run-2/timing.json
+  @@ -0,0 +1,20 @@
+  +{
+  +  "eval_id": 1,
+  +  "configuration": "without_skill",
+  +  "run_number": 2,
+  +  "agent": "Codex CLI 0.153.4",
+  +  "model": "gpt-5.6-sol (low reasoning)",
+
+... (more changes truncated)
+  +6 -0
+[full diff: rtk git diff --no-compact]

@@ -1,0 +1,45 @@
+{
+  "expectations": [
+    {
+      "id": "c-facts",
+      "text": "Verified cache saturation is separated from the deployment hypothesis.",
+      "critical": true,
+      "passed": false,
+      "evidence": "Missing required values: [OBS-C2], [HYP-C3]; Found boundary language: hypothesis, unconfirmed, may have"
+    },
+    {
+      "id": "c-timeline",
+      "text": "Detection and recovery cite the correct events.",
+      "critical": true,
+      "passed": false,
+      "evidence": "Missing required values: [EVT-C1], [EVT-C6]"
+    },
+    {
+      "id": "c-impact",
+      "text": "The delayed-request impact is cited without converting it to customers.",
+      "critical": false,
+      "passed": false,
+      "evidence": "Missing required values: [IMP-C4]; Forbidden pattern was absent: 12,?400\\s+(?:customers|tenants)"
+    },
+    {
+      "id": "c-action",
+      "text": "The reproduction action remains open with its owner.",
+      "critical": false,
+      "passed": false,
+      "evidence": "Missing required values: [ACT-C2]; Found boundary language: open"
+    },
+    {
+      "id": "c-output-contract",
+      "text": "The report uses every required incident-summary section.",
+      "critical": false,
+      "passed": false,
+      "evidence": "Missing required values: ## Impact, ## Cause and uncertainty, ## Resolution, ## Follow-up actions"
+    }
+  ],
+  "summary": {
+    "passed": 0,
+    "failed": 5,
+    "total": 5,
+    "pass_rate": 0
+  }
+}

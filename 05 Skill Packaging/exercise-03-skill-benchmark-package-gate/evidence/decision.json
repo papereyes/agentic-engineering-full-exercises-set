@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "decision": "package",
+  "benchmark_sha256": "067e65da19dba47aa26d051a02d5261e8d3f3860cb2b17a541d0cb91bd9dfcdd",
+  "reason": "Package: held-out and critical quality are both 100%, variance is zero, quality improves by at least 83.3 percentage points over both baselines, and token and elapsed ratios pass their limits."
+}

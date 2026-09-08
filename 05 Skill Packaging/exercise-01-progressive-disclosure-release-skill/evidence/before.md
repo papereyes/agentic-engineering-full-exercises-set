@@ -7,6 +7,9 @@
 - Time limit: 10 minutes
 - Prompt: Create customer release notes for `exercise-base..origin/exercise-head`. Trace every published item to Git, identify breaking and migration impact, report missing verification evidence, and exclude internal-only work.
 - Repository commit: 52090edddf032d026ece16ef90feb627bf8e67ac
+- Starting commit: 52090edddf032d026ece16ef90feb627bf8e67ac
+- Implementation commit: 0964363c0212fb98d6853487466c25b33c5cac0e
+- Patch SHA-256: 2b142224c53a8480bf7e7ce0f43a3f3470c2a099861d4958d1c95a111476b6b5
 - Attempt: 1
 - Release-notes skill: disabled
 - Input context: `docs/monolithic-skill-draft.md`, `docs/pr-descriptions.md`, and `docs/ci-evidence.md`

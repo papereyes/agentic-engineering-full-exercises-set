@@ -7,6 +7,9 @@
 - Time limit: 10 minutes
 - Prompt: Create customer release notes for `exercise-base..origin/exercise-head`. Trace every published item to Git, identify breaking and migration impact, report missing verification evidence, and exclude internal-only work.
 - Repository commit: 52090edddf032d026ece16ef90feb627bf8e67ac
+- Starting commit: 52090edddf032d026ece16ef90feb627bf8e67ac
+- Implementation commit: da308526d94b5605af27dad7ab1b190bcf60b06d
+- Patch SHA-256: b39f09d0dbfd2d844005c7ba5db8921365f5ba128c9688e63ef57837f003981f
 - Attempt: 1
 - Release-notes skill: enabled
 - Input context: `.agents/skills/release-notes/SKILL.md` with conditionally routed references

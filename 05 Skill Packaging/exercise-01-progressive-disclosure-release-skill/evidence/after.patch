@@ -1,0 +1,1102 @@
+.../evidence/after-output.md                       |  23 +++++
+ .../evidence/after.md                              |  23 +++++
+ .../evidence/before-output.md                      |  16 ++++
+ .../evidence/before.md                             |  23 +++++
+ .../evidence/before.patch                          | 104 +++++++++++++++++++++
+ .../evidence/comparison.md                         |  21 +++++
+ .../evidence/eval-results.json                     |  48 ++++++++++
+ .../evidence/hotfix-output.md                      |  21 +++++
+ .../evidence/internal-output.md                    |  11 +++
+ .../evidence/resource-usage.json                   |  37 ++++++++
+ .../evidence/skill-record.md                       |   8 ++
+ .../.agents/skills/release-notes/SKILL.md          |  17 ++++
+ .../.agents/skills/release-notes/evals/evals.json  |  26 ++++++
+ .../skills/release-notes/evals/trigger-evals.json  |  12 +++
+ .../release-notes/references/evidence-policy.md    |  10 ++
+ .../release-notes/references/migration-policy.md   |   9 ++
+ .../release-notes/references/publication-policy.md |  10 ++
+ .../release-notes/scripts/extract-release.mjs      |  31 ++++++
+ 18 files changed, 450 insertions(+)
+
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/after-output.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/after-output.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..6a8e068acd58e1ba62413fa447e78e5707232c4c
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/after-output.md	
+@@ -0,0 +1,23 @@
++## Customer-facing changes
++
++### Retry declined card payments
++
++Customers now receive a clearer decline message and can retry payment after a card is declined.
++
++- Compatibility: Non-breaking.
++- Verification: `unit tests` passed (`CI-881-unit`); `browser test` passed (`CI-881-e2e`).
++- Missing evidence: No browser screenshot was provided, so visual confirmation remains incomplete.
++- Trace: `d3b56d0c977ebeb81b01e8d001157e027ad0bf52` — `src/checkout.js`
++
++### Breaking: Billing export field renamed
++
++Billing exports now use `total` instead of `invoiceTotal`.
++
++- Migration: Update integrations, schemas, queries, and field mappings from `invoiceTotal` to `total` before upgrading. The old field is no longer emitted.
++- Verification: `provider contract` passed (`CI-884-pact`).
++- Missing evidence: `migration dry run` was not provided; migration behavior remains unverified.
++- Trace: `1c4310183a6ef4fb9d2b1826464bd357b80e542f` — `src/billing-export.js`
++
++Range: `exercise-base..origin/exercise-head`
++
++Prepared using the [release-notes skill](/tmp/exercise-05-01-full-fixture-finalproof/.agents/skills/release-notes/SKILL.md).
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/after.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/after.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d8e61c7a70880567d4f2414e52b75f994189c9c6
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/after.md	
+@@ -0,0 +1,23 @@
++# After Run
++
++- Agent: Codex CLI 0.153.4
++- Model: gpt-5.6-sol (medium reasoning)
++- Other tools: shell, Git, filesystem
++- Permissions: danger-full-access in a disposable fixture
++- Time limit: 10 minutes
++- Prompt: Create customer release notes for `exercise-base..origin/exercise-head`. Trace every published item to Git, identify breaking and migration impact, report missing verification evidence, and exclude internal-only work.
++- Repository commit: 52090edddf032d026ece16ef90feb627bf8e67ac
++- Attempt: 1
++- Release-notes skill: enabled
++- Input context: `.agents/skills/release-notes/SKILL.md` with conditionally routed references
++- Context bytes: 2887
++- Output: `evidence/after-output.md`
++
++## Observations
++
++- Files read: `SKILL.md`, `references/publication-policy.md`, `references/evidence-policy.md`, and `references/migration-policy.md`; PR descriptions and CI evidence were supplied as task data. The extractor source was executed, not read into context.
++- Commands executed: loaded the routed policies; ran `scripts/extract-release.mjs` once for `exercise-base..origin/exercise-head`; inspected the two customer-facing diffs.
++- Verification: `npm run release:verify -- /tmp/exercise-05-01-full-fixture-finalproof /tmp/exercise-05-01-full-output-finalproof.md` passed 11 of 11 checks (score 100).
++- Exit code: the agent session exited 0; release verification exited 0.
++
++The full-release run used 2887 UTF-8 bytes of skill context, measured with `npm run context:measure` against the four files actually read.
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..2e12019319b6b4317c607724b51dc6d58f3b89e0
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md	
+@@ -0,0 +1,16 @@
++Created the customer release notes and a reusable standards-compliant skill package.
++
++- [Release notes](/tmp/exercise-05-01-before-fixture-final/RELEASE_NOTES.md)
++- [Release skill](/tmp/exercise-05-codex-home/skills/customer-release-notes/SKILL.md)
++- [Publication and evidence policy](/tmp/exercise-05-codex-home/skills/customer-release-notes/references/publication-and-evidence.md)
++
++The notes:
++
++- Identify `invoiceTotal` → `total` as breaking and provide migration timing.
++- Publish the checkout retry improvement.
++- Trace both items to full Git commit hashes.
++- Exclude the internal telemetry cleanup.
++- Report the missing browser screenshot and migration dry run.
++- Correctly state that the release is not fully verified for publication.
++
++Direct behavior checks and structural YAML checks passed. The bundled skill validator could not run because its `PyYAML` dependency is not installed.
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..c2f7e2b1305a0a1f97fa0998b500ea0c35af6762
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md	
+@@ -0,0 +1,23 @@
++# Before Run
++
++- Agent: Codex CLI 0.153.4
++- Model: gpt-5.6-sol (medium reasoning)
++- Other tools: shell, Git, filesystem
++- Permissions: danger-full-access in a disposable fixture
++- Time limit: 10 minutes
++- Prompt: Create customer release notes for `exercise-base..origin/exercise-head`. Trace every published item to Git, identify breaking and migration impact, report missing verification evidence, and exclude internal-only work.
++- Repository commit: 52090edddf032d026ece16ef90feb627bf8e67ac
++- Attempt: 1
++- Release-notes skill: disabled
++- Input context: `docs/monolithic-skill-draft.md`, `docs/pr-descriptions.md`, and `docs/ci-evidence.md`
++- Context bytes: 2934
++- Output: `evidence/before-output.md`
++
++## Observations
++
++- Files read: the three supplied task files, fixture Git history and diffs, and the automatically available system `skill-creator/SKILL.md`. The candidate `.agents/skills/release-notes/SKILL.md` was absent.
++- Commands executed: inspected the exact Git range; initialized an unrelated global skill package; wrote `RELEASE_NOTES.md` in the disposable fixture; ran direct checkout and billing behavior checks plus structural YAML checks.
++- Verification: `npm run release:verify -- /tmp/exercise-05-01-before-fixture-final /tmp/exercise-05-01-before-output-final.md` scored 1 of 11 checks (9) because the final response linked to its artifact instead of containing the required release-note structure.
++- Exit code: the agent session exited 0; release verification exited 1.
++
++`npm run context:measure -- ../docs/monolithic-skill-draft.md` measured the monolithic instruction context at exactly 2934 UTF-8 bytes. PR descriptions and CI evidence were task data supplied equally to both primary runs, not skill-instruction context.
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.patch b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.patch
+new file mode 100644
+index 0000000000000000000000000000000000000000..7f6be80240997dcdbe8d204eb63682029c789062
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.patch	
+@@ -0,0 +1,104 @@
++.../evidence/before-output.md                      | 16 +++++++++++++++
++ .../evidence/before.md                             | 23 ++++++++++++++++++++++
++ 2 files changed, 39 insertions(+)
++
++diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md
++new file mode 100644
++index 0000000000000000000000000000000000000000..2e12019319b6b4317c607724b51dc6d58f3b89e0
++--- /dev/null
+++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md	
++@@ -0,0 +1,16 @@
+++Created the customer release notes and a reusable standards-compliant skill package.
+++
+++- [Release notes](/tmp/exercise-05-01-before-fixture-final/RELEASE_NOTES.md)
+++- [Release skill](/tmp/exercise-05-codex-home/skills/customer-release-notes/SKILL.md)
+++- [Publication and evidence policy](/tmp/exercise-05-codex-home/skills/customer-release-notes/references/publication-and-evidence.md)
+++
+++The notes:
+++
+++- Identify `invoiceTotal` → `total` as breaking and provide migration timing.
+++- Publish the checkout retry improvement.
+++- Trace both items to full Git commit hashes.
+++- Exclude the internal telemetry cleanup.
+++- Report the missing browser screenshot and migration dry run.
+++- Correctly state that the release is not fully verified for publication.
+++
+++Direct behavior checks and structural YAML checks passed. The bundled skill validator could not run because its `PyYAML` dependency is not installed.
++diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md
++new file mode 100644
++index 0000000000000000000000000000000000000000..c2f7e2b1305a0a1f97fa0998b500ea0c35af6762
++--- /dev/null
+++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md	
++@@ -0,0 +1,23 @@
+++# Before Run
+++
+++- Agent: Codex CLI 0.153.4
+++- Model: gpt-5.6-sol (medium reasoning)
+++- Other tools: shell, Git, filesystem
+++- Permissions: danger-full-access in a disposable fixture
+++- Time limit: 10 minutes
+++- Prompt: Create customer release notes for `exercise-base..origin/exercise-head`. Trace every published item to Git, identify breaking and migration impact, report missing verification evidence, and exclude internal-only work.
+++- Repository commit: 52090edddf032d026ece16ef90feb627bf8e67ac
+++- Attempt: 1
+++- Release-notes skill: disabled
+++- Input context: `docs/monolithic-skill-draft.md`, `docs/pr-descriptions.md`, and `docs/ci-evidence.md`
+++- Context bytes: 2934
+++- Output: `evidence/before-output.md`
+++
+++## Observations
+++
+++- Files read: the three supplied task files, fixture Git history and diffs, and the automatically available system `skill-creator/SKILL.md`. The candidate `.agents/skills/release-notes/SKILL.md` was absent.
+++- Commands executed: inspected the exact Git range; initialized an unrelated global skill package; wrote `RELEASE_NOTES.md` in the disposable fixture; ran direct checkout and billing behavior checks plus structural YAML checks.
+++- Verification: `npm run release:verify -- /tmp/exercise-05-01-before-fixture-final /tmp/exercise-05-01-before-output-final.md` scored 1 of 11 checks (9) because the final response linked to its artifact instead of containing the required release-note structure.
+++- Exit code: the agent session exited 0; release verification exited 1.
+++
+++`npm run context:measure -- ../docs/monolithic-skill-draft.md` measured the monolithic instruction context at exactly 2934 UTF-8 bytes. PR descriptions and CI evidence were task data supplied equally to both primary runs, not skill-instruction context.
++
++Changes:
++
++05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md
++  @@ -0,0 +1,16 @@
++  +Created the customer release notes and a reusable standards-compliant skill package.
++  +
++  +- [Release notes](/tmp/exercise-05-01-before-fixture-final/RELEASE_NOTES.md)
++  +- [Release skill](/tmp/exercise-05-codex-home/skills/customer-release-notes/SKILL.md)
++  +- [Publication and evidence policy](/tmp/exercise-05-codex-home/skills/customer-release-notes/references/publication-and-evidence.md)
++  +
++  +The notes:
++  +
++  +- Identify `invoiceTotal` → `total` as breaking and provide migration timing.
++  +- Publish the checkout retry improvement.
++  +- Trace both items to full Git commit hashes.
++  +- Exclude the internal telemetry cleanup.
++  +- Report the missing browser screenshot and migration dry run.
++  +- Correctly state that the release is not fully verified for publication.
++  +
++  +Direct behavior checks and structural YAML checks passed. The bundled skill validator could not run because its `PyYAML` dependency is not installed.
++  +16 -0
++
++05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md
++  @@ -0,0 +1,23 @@
++  +# Before Run
++  +
++  +- Agent: Codex CLI 0.153.4
++  +- Model: gpt-5.6-sol (medium reasoning)
++  +- Other tools: shell, Git, filesystem
++  +- Permissions: danger-full-access in a disposable fixture
++  +- Time limit: 10 minutes
++  +- Prompt: Create customer release notes for `exercise-base..origin/exercise-head`. Trace every published item to Git, identify breaking and migration impact, report missing verification evidence, and exclude internal-only work.
++  +- Repository commit: 52090edddf032d026ece16ef90feb627bf8e67ac
++  +- Attempt: 1
++  +- Release-notes skill: disabled
++  +- Input context: `docs/monolithic-skill-draft.md`, `docs/pr-descriptions.md`, and `docs/ci-evidence.md`
++  +- Context bytes: 2934
++  +- Output: `evidence/before-output.md`
++  +
++  +## Observations
++  +
++  +- Files read: the three supplied task files, fixture Git history and diffs, and the automatically available system `skill-creator/SKILL.md`. The candidate `.agents/skills/release-notes/SKILL.md` was absent.
++  +- Commands executed: inspected the exact Git range; initialized an unrelated global skill package; wrote `RELEASE_NOTES.md` in the disposable fixture; ran direct checkout and billing behavior checks plus structural YAML checks.
++  +- Verification: `npm run release:verify -- /tmp/exercise-05-01-before-fixture-final /tmp/exercise-05-01-before-output-final.md` scored 1 of 11 checks (9) because the final response linked to its artifact instead of containing the required release-note structure.
++  +- Exit code: the agent session exited 0; release verification exited 1.
++  +
++  +`npm run context:measure -- ../docs/monolithic-skill-draft.md` measured the monolithic instruction context at exactly 2934 UTF-8 bytes. PR descriptions and CI evidence were task data supplied equally to both primary runs, not skill-instruction context.
++  +23 -0
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/comparison.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/comparison.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..c6a597de1b61f316fafdc00b8fd5ceb6a341932c
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/comparison.md	
+@@ -0,0 +1,21 @@
++# Comparison
++
++## Same conditions
++
++Both primary runs used the same prompt, same agent (Codex CLI 0.153.4), same model (`gpt-5.6-sol`, medium reasoning), same tools, same permissions, same time limit, repository commit `52090edddf032d026ece16ef90feb627bf8e67ac`, and first-attempt evaluation. PR descriptions and CI evidence were identical. The release-notes skill was the only changed input: the before run received the protected monolithic draft; the after run received `.agents/skills/release-notes/SKILL.md` and its routed resources.
++
++## Before
++
++The broad draft triggered a skill-packaging detour. Its final response summarized and linked an artifact instead of returning the required release notes, so verification scored 1/11 (9%). It asserted Git tracing without including trace values in the saved output, mentioned internal telemetry, and loaded 2934 bytes of monolithic instructions.
++
++## After
++
++The trigger selected the customer release workflow and the extractor used the exact Git range. The response published two customer items, gave real Git traces, labeled the billing rename breaking, explained the migration from `invoiceTotal` to `total`, preserved missing evidence for the screenshot and migration dry run, and excluded internal work. Verification scored 11/11 (100%).
++
++## Proof
++
++The reusable script ran once in each skill-backed scenario. Resource logs show selective loading: full release used publication, evidence, and migration resources (2887 bytes); hotfix used publication and evidence only (2446 bytes); internal-only used publication only (1898 bytes). The full path saved 47 context bytes versus the monolith while improving the verified output by 91 percentage points. Hotfix and internal outputs prove unrelated resources were not read.
++
++## Conclusion
++
++Progressive disclosure improved the deliverable and trigger boundary without adding irrelevant context. Git extraction stayed deterministic and reusable, customer classification stayed policy-driven, and context cost fell for every evaluated route.
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/eval-results.json b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/eval-results.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..69008e9ffee89f1c79863231b2b2ae958a612eb8
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/eval-results.json	
+@@ -0,0 +1,48 @@
++{
++  "quality": [
++    {
++      "id": "full-release",
++      "configuration": "without_skill",
++      "passed": 3,
++      "total": 5,
++      "output": "evidence/before-output.md",
++      "evidence": ["Names the two intended customer changes in its summary.", "Does not include the promised Git hashes in the saved response.", "Names the invoiceTotal to total migration.", "Reports both missing verification artifacts.", "Mentions internal telemetry instead of fully excluding it."]
++    },
++    {
++      "id": "full-release",
++      "configuration": "with_skill",
++      "passed": 5,
++      "total": 5,
++      "output": "evidence/after-output.md",
++      "evidence": ["Contains exactly two customer change headings.", "Each item cites a range commit and changed path.", "Explains invoiceTotal to total migration.", "Reports screenshot and migration dry run gaps.", "Customer section contains no telemetry work."]
++    },
++    {
++      "id": "hotfix-only",
++      "configuration": "with_skill",
++      "passed": 4,
++      "total": 4,
++      "output": "evidence/hotfix-output.md",
++      "evidence": ["Publishes only the declined-card retry hotfix.", "Cites the checkout commit and source path.", "Cites both passing CI evidence identifiers.", "Reports the missing browser screenshot without billing or telemetry."]
++    },
++    {
++      "id": "internal-only",
++      "configuration": "with_skill",
++      "passed": 4,
++      "total": 4,
++      "output": "evidence/internal-output.md",
++      "evidence": ["States that no customer-facing changes exist.", "Names breaking-head..origin/exercise-head.", "Cites the telemetry commit and changed path.", "Does not create a customer-facing section."]
++    }
++  ],
++  "trigger": [
++    {"query":"Create customer-facing release notes for the Git range v2.4.0..main and trace every published change to its commit.","expected":true,"actual":true,"evidence":"Direct customer release-note creation with a Git range matches the description."},
++    {"query":"Decide whether commits release-base..release-head contain anything suitable for customer release notes.","expected":true,"actual":true,"evidence":"Publication suitability for a Git range is an explicit positive trigger."},
++    {"query":"Draft a customer changelog from the last release tag to HEAD, excluding internal refactors and build work.","expected":true,"actual":true,"evidence":"A customer changelog with internal exclusions is release-note work."},
++    {"query":"Prepare hotfix release notes with Git traces and clearly identify missing verification evidence.","expected":true,"actual":true,"evidence":"Hotfix customer notes with Git evidence are within the skill boundary."},
++    {"query":"Summarize customer-visible changes in this Git range and include breaking migration guidance where needed.","expected":true,"actual":true,"evidence":"Customer-visible Git changes and migration guidance require this workflow."},
++    {"query":"Write an internal engineering changelog listing every refactor and test-file change from this sprint.","expected":false,"actual":false,"evidence":"The description explicitly excludes internal engineering changelogs."},
++    {"query":"Review this commit for implementation defects and suggest smaller code changes before it is merged.","expected":false,"actual":false,"evidence":"Implementation review is explicitly outside the release-note boundary."},
++    {"query":"Explain why the release deployment workflow failed in CI and diagnose the underlying shell error.","expected":false,"actual":false,"evidence":"CI debugging is neither customer publication nor Git-range classification."},
++    {"query":"Generate conventional commit messages for my currently staged source files without publishing notes.","expected":false,"actual":false,"evidence":"Commit-message generation does not request customer release notes."},
++    {"query":"Compare two API schema files and identify compatibility risks, but do not create a customer changelog.","expected":false,"actual":false,"evidence":"The user expressly excludes the publication deliverable this skill creates."}
++  ]
++}
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/hotfix-output.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/hotfix-output.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..1027fee62f5a06bb11785c176d64509628666314
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/hotfix-output.md	
+@@ -0,0 +1,21 @@
++# Hotfix release notes
++
++Range: `exercise-base..hotfix-head`
++
++## Customer-facing changes
++
++### Retry declined card payments with clearer guidance
++
++Customers can now retry checkout after a card decline. The checkout message explains that the card was declined and prompts them to check the card before trying again.
++
++Git trace:
++
++- Commit: `d3b56d0c977ebeb81b01e8d001157e027ad0bf52`
++- Subject: `fix checkout maybe retry declined cards`
++- Changed file: `src/checkout.js`
++
++Verification status: automated checks passed; visual evidence is incomplete.
++
++- `unit tests` — passed (`CI-881-unit`)
++- `browser test` — passed (`CI-881-e2e`)
++- Browser screenshot — missing; no evidence ID was supplied, so visual verification cannot be confirmed.
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/internal-output.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/internal-output.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..fc2fae18b8b1b83761b0063b8f1f25c85cf82aab
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/internal-output.md	
+@@ -0,0 +1,11 @@
++No customer-facing changes were found in `breaking-head..origin/exercise-head`.
++
++Git evidence:
++
++- Range: `1c431018..1db5cd5`
++- One commit: `1db5cd5 chore: clean events`
++- One modified file: `src/telemetry.js`
++- Change: internal telemetry event renamed from `checkout.completed` to `billing.checkout.completed`
++- Diff size: 1 insertion, 1 deletion
++
++Internal telemetry is excluded by the publication policy, so this range does not warrant customer release notes.
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/resource-usage.json b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/resource-usage.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..1befbca0ecba73dc5c53b26b7d82531ca7fd8ef3
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/resource-usage.json	
+@@ -0,0 +1,37 @@
++{
++  "scenarios": [
++    {
++      "id": "full-release",
++      "prompt": "Create customer release notes for `exercise-base..origin/exercise-head`. Trace every published item to Git, identify breaking and migration impact, report missing verification evidence, and exclude internal-only work.",
++      "resources_read": ["references/publication-policy.md", "references/evidence-policy.md", "references/migration-policy.md"],
++      "context_files": ["SKILL.md", "references/publication-policy.md", "references/evidence-policy.md", "references/migration-policy.md"],
++      "context_bytes": {"SKILL.md": 1385, "references/publication-policy.md": 513, "references/evidence-policy.md": 548, "references/migration-policy.md": 441},
++      "total_context_bytes": 2887,
++      "scripts_run": ["scripts/extract-release.mjs"],
++      "reason": "Publication classified the range; evidence covered supplied checks; migration covered the breaking field rename.",
++      "output": "evidence/after-output.md"
++    },
++    {
++      "id": "hotfix-only",
++      "prompt": "Create customer release notes for this hotfix range `exercise-base..hotfix-head` with Git traces and verification status.",
++      "resources_read": ["references/publication-policy.md", "references/evidence-policy.md"],
++      "context_files": ["SKILL.md", "references/publication-policy.md", "references/evidence-policy.md"],
++      "context_bytes": {"SKILL.md": 1385, "references/publication-policy.md": 513, "references/evidence-policy.md": 548},
++      "total_context_bytes": 2446,
++      "scripts_run": ["scripts/extract-release.mjs"],
++      "reason": "The selected range contained a publishable verified hotfix but no breaking contract, so migration guidance stayed unloaded.",
++      "output": "evidence/hotfix-output.md"
++    },
++    {
++      "id": "internal-only",
++      "prompt": "Check whether `breaking-head..origin/exercise-head` contains anything suitable for customer release notes and support the decision with Git evidence.",
++      "resources_read": ["references/publication-policy.md"],
++      "context_files": ["SKILL.md", "references/publication-policy.md"],
++      "context_bytes": {"SKILL.md": 1385, "references/publication-policy.md": 513},
++      "total_context_bytes": 1898,
++      "scripts_run": ["scripts/extract-release.mjs"],
++      "reason": "Git showed only internal telemetry, so publication policy was sufficient and evidence and migration guidance stayed unloaded.",
++      "output": "evidence/internal-output.md"
++    }
++  ]
++}
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/skill-record.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/skill-record.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..78423696a8f3dffcfbb4b8b2ee5333da58df4cda
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/skill-record.md	
+@@ -0,0 +1,8 @@
++# Skill Creator Provenance
++
++- Source: https://github.com/anthropics/skills/tree/main/skills/skill-creator
++- Source commit: 41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f
++- Installed path: `/home/papereyes/.codex/skills/skill-creator/SKILL.md`
++- SKILL.md SHA-256: dcd4803e61e913e6fc27294184cd3a71f09f5e924ff20c8a9a20173e7b3c2bcf
++
++Installed from the official Anthropic repository before creating the candidate package.
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/SKILL.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/SKILL.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..dafd30c9e65e33ec770eea0a2fe900a5d5c33650
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/SKILL.md	
+@@ -0,0 +1,17 @@
++---
++name: release-notes
++description: Use when creating customer release notes or deciding whether a Git range contains publishable changes. Exclude requests for internal engineering changelogs, commit summaries, or implementation reviews that are not customer-facing.
++compatibility: Requires Git and Node.js 22 or newer.
++---
++
++# Release Notes
++
++Derive release facts from Git, then write only customer-visible changes.
++
++1. Read [references/publication-policy.md](references/publication-policy.md).
++2. Run `node scripts/extract-release.mjs --repo <path> --base <ref> --head <ref>` once for the requested range. Treat its JSON as the Git trace.
++3. Classify the commits. Put publishable items under `## Customer-facing changes`, one `###` item per change, and do not mention excluded internal work anywhere in that deliverable. If nothing is publishable, report that decision with the range and Git evidence; do not add that heading.
++4. When a publishable change has supplied verification records, read [references/evidence-policy.md](references/evidence-policy.md).
++5. When a publishable change alters or removes an existing contract, read [references/migration-policy.md](references/migration-policy.md).
++
++Do not preload conditional references. Select them only after extraction and only for commits inside the requested range; ignore supporting material about changes outside that range.
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/evals/evals.json b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/evals/evals.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..f07edcabcf3c0e914c8e96a9d47470f0b4d0ab35
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/evals/evals.json	
+@@ -0,0 +1,26 @@
++{
++  "skill_name": "release-notes",
++  "evals": [
++    {
++      "id": 3,
++      "prompt": "internal-only: Check breaking-head..origin/exercise-head for customer release-note material and support the decision using the exact Git range and changed paths.",
++      "expected_output": "A Git-supported statement that the internal telemetry-only range has no customer-facing release changes.",
++      "files": [],
++      "expectations": ["States there are no customer-facing changes", "Names the exact range", "Cites telemetry Git evidence", "Does not create a customer-facing section"]
++    },
++    {
++      "id": 1,
++      "prompt": "full-release: Create customer release notes for exercise-base..origin/exercise-head with Git traces, breaking migration impact, verification gaps, and internal-only work excluded.",
++      "expected_output": "Two traced customer changes, including the breaking billing migration and all supplied evidence gaps.",
++      "files": ["docs/pr-descriptions.md", "docs/ci-evidence.md"],
++      "expectations": ["Publishes exactly two customer changes", "Traces every item to Git", "Explains invoiceTotal to total migration", "Reports missing screenshot and migration dry run", "Excludes telemetry"]
++    },
++    {
++      "id": 2,
++      "prompt": "hotfix-only: Create customer release notes for exercise-base..hotfix-head with Git traces and the supplied verification status, without unrelated release content.",
++      "expected_output": "One checkout hotfix with its Git trace, passing CI identifiers, and the missing screenshot evidence.",
++      "files": ["docs/pr-descriptions.md", "docs/ci-evidence.md"],
++      "expectations": ["Publishes exactly the checkout hotfix", "Cites checkout Git and passing CI evidence", "Reports the missing screenshot", "Excludes billing and telemetry"]
++    }
++  ]
++}
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/evals/trigger-evals.json b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/evals/trigger-evals.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..979e6460f36f12dcab62c6a014cdf99aa7a4864d
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/evals/trigger-evals.json	
+@@ -0,0 +1,12 @@
++[
++  {"query":"Create customer-facing release notes for the Git range v2.4.0..main and trace every published change to its commit.","should_trigger":true},
++  {"query":"Decide whether commits release-base..release-head contain anything suitable for customer release notes.","should_trigger":true},
++  {"query":"Draft a customer changelog from the last release tag to HEAD, excluding internal refactors and build work.","should_trigger":true},
++  {"query":"Prepare hotfix release notes with Git traces and clearly identify missing verification evidence.","should_trigger":true},
++  {"query":"Summarize customer-visible changes in this Git range and include breaking migration guidance where needed.","should_trigger":true},
++  {"query":"Write an internal engineering changelog listing every refactor and test-file change from this sprint.","should_trigger":false},
++  {"query":"Review this commit for implementation defects and suggest smaller code changes before it is merged.","should_trigger":false},
++  {"query":"Explain why the release deployment workflow failed in CI and diagnose the underlying shell error.","should_trigger":false},
++  {"query":"Generate conventional commit messages for my currently staged source files without publishing notes.","should_trigger":false},
++  {"query":"Compare two API schema files and identify compatibility risks, but do not create a customer changelog.","should_trigger":false}
++]
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/references/evidence-policy.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/references/evidence-policy.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..af911e432d6df4c673bce26fb56b512a6efe9da2
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/references/evidence-policy.md	
+@@ -0,0 +1,10 @@
++# Evidence Policy
++
++- Cite a verification result only when supplied evidence marks it passed.
++- Include the evidence ID beside each claimed pass.
++- Preserve supplied check names verbatim so each claim remains auditable.
++- Report missing evidence explicitly; never convert it into a pass.
++- Keep evidence attached to the customer change it verifies.
++- Do not infer test execution from changed test files or a PR description.
++- Distinguish verified behavior from incomplete visual or operational proof.
++- Omit evidence for unrelated internal changes.
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/references/migration-policy.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/references/migration-policy.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..fd30c65b220cc65c73849254f01811ddd3c8ada9
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/references/migration-policy.md	
+@@ -0,0 +1,9 @@
++# Migration Policy
++
++- Label a removed or renamed public contract as breaking.
++- Name the old contract and its replacement.
++- Tell customers the concrete migration they must perform.
++- State when compatibility or migration proof is missing.
++- Do not soften a breaking change because one contract check passed.
++- Keep migration guidance with the affected release item.
++- Avoid migration advice for changes that preserve the existing contract.
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/references/publication-policy.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/references/publication-policy.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..2d4292d190a2b178204683d62e6929d5b7393698
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/references/publication-policy.md	
+@@ -0,0 +1,10 @@
++# Publication Policy
++
++- Use the exact requested Git range.
++- Publish only behavior a customer can observe.
++- Give each customer change a `###` heading.
++- Add a `- Trace:` line with a changed path or commit from the range.
++- PR descriptions may explain a change but cannot replace its Git trace.
++- Exclude internal telemetry, refactors, tests, and build-only work.
++- If nothing qualifies, state that no customer-facing changes were found.
++- Support an exclusion decision with the range and inspected Git evidence.
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/scripts/extract-release.mjs b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/scripts/extract-release.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..a45b525948ed1a18fad767d9da3131cb4d81b227
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/scripts/extract-release.mjs	
+@@ -0,0 +1,31 @@
++#!/usr/bin/env node
++import { execFileSync } from "node:child_process";
++
++const entries = process.argv.slice(2);
++const args = Object.fromEntries(Array.from({ length: Math.ceil(entries.length / 2) }, (_, index) => entries.slice(index * 2, index * 2 + 2)));
++const repo = args["--repo"];
++const base = args["--base"];
++const head = args["--head"];
++
++if (!repo || !base || !head) {
++  console.error("Usage: extract-release.mjs --repo <path> --base <ref> --head <ref>");
++  process.exit(2);
++}
++
++const git = (...gitArgs) => execFileSync("git", ["-C", repo, ...gitArgs], { encoding: "utf8" }).trim();
++
++try {
++  const commits = git("log", "--reverse", "--format=%H%x1f%s", `${base}..${head}`)
++    .split(/\r?\n/)
++    .filter(Boolean)
++    .map((line) => {
++      const [sha, subject] = line.split("\u001f");
++      const files = git("diff-tree", "--no-commit-id", "--name-only", "-r", sha).split(/\r?\n/).filter(Boolean).sort();
++      return { sha, subject, files };
++    });
++  const changedFiles = git("diff", "--name-only", `${base}..${head}`).split(/\r?\n/).filter(Boolean).sort();
++  console.log(JSON.stringify({ range: { base, head }, commits, changedFiles }, null, 2));
++} catch (error) {
++  console.error(`Unable to inspect Git range ${base}..${head}: ${error.stderr?.toString().trim() || error.message}`);
++  process.exit(1);
++}
+
+Changes:
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/after-output.md
+  @@ -0,0 +1,23 @@
+  +## Customer-facing changes
+  +
+  +### Retry declined card payments
+  +
+  +Customers now receive a clearer decline message and can retry payment after a card is declined.
+  +
+  +- Compatibility: Non-breaking.
+  +- Verification: `unit tests` passed (`CI-881-unit`); `browser test` passed (`CI-881-e2e`).
+  +- Missing evidence: No browser screenshot was provided, so visual confirmation remains incomplete.
+  +- Trace: `d3b56d0c977ebeb81b01e8d001157e027ad0bf52` — `src/checkout.js`
+  +
+  +### Breaking: Billing export field renamed
+  +
+  +Billing exports now use `total` instead of `invoiceTotal`.
+  +
+  +- Migration: Update integrations, schemas, queries, and field mappings from `invoiceTotal` to `total` before upgrading. The old field is no longer emitted.
+  +- Verification: `provider contract` passed (`CI-884-pact`).
+  +- Missing evidence: `migration dry run` was not provided; migration behavior remains unverified.
+  +- Trace: `1c4310183a6ef4fb9d2b1826464bd357b80e542f` — `src/billing-export.js`
+  +
+  +Range: `exercise-base..origin/exercise-head`
+  +
+  +Prepared using the [release-notes skill](/tmp/exercise-05-01-full-fixture-finalproof/.agents/skills/release-notes/SKILL.md).
+  +23 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/after.md
+  @@ -0,0 +1,23 @@
+  +# After Run
+  +
+  +- Agent: Codex CLI 0.153.4
+  +- Model: gpt-5.6-sol (medium reasoning)
+  +- Other tools: shell, Git, filesystem
+  +- Permissions: danger-full-access in a disposable fixture
+  +- Time limit: 10 minutes
+  +- Prompt: Create customer release notes for `exercise-base..origin/exercise-head`. Trace every published item to Git, identify breaking and migration impact, report missing verification evidence, and exclude internal-only work.
+  +- Repository commit: 52090edddf032d026ece16ef90feb627bf8e67ac
+  +- Attempt: 1
+  +- Release-notes skill: enabled
+  +- Input context: `.agents/skills/release-notes/SKILL.md` with conditionally routed references
+  +- Context bytes: 2887
+  +- Output: `evidence/after-output.md`
+  +
+  +## Observations
+  +
+  +- Files read: `SKILL.md`, `references/publication-policy.md`, `references/evidence-policy.md`, and `references/migration-policy.md`; PR descriptions and CI evidence were supplied as task data. The extractor source was executed, not read into context.
+  +- Commands executed: loaded the routed policies; ran `scripts/extract-release.mjs` once for `exercise-base..origin/exercise-head`; inspected the two customer-facing diffs.
+  +- Verification: `npm run release:verify -- /tmp/exercise-05-01-full-fixture-finalproof /tmp/exercise-05-01-full-output-finalproof.md` passed 11 of 11 checks (score 100).
+  +- Exit code: the agent session exited 0; release verification exited 0.
+  +
+  +The full-release run used 2887 UTF-8 bytes of skill context, measured with `npm run context:measure` against the four files actually read.
+  +23 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md
+  @@ -0,0 +1,16 @@
+  +Created the customer release notes and a reusable standards-compliant skill package.
+  +
+  +- [Release notes](/tmp/exercise-05-01-before-fixture-final/RELEASE_NOTES.md)
+  +- [Release skill](/tmp/exercise-05-codex-home/skills/customer-release-notes/SKILL.md)
+  +- [Publication and evidence policy](/tmp/exercise-05-codex-home/skills/customer-release-notes/references/publication-and-evidence.md)
+  +
+  +The notes:
+  +
+  +- Identify `invoiceTotal` → `total` as breaking and provide migration timing.
+  +- Publish the checkout retry improvement.
+  +- Trace both items to full Git commit hashes.
+  +- Exclude the internal telemetry cleanup.
+  +- Report the missing browser screenshot and migration dry run.
+  +- Correctly state that the release is not fully verified for publication.
+  +
+  +Direct behavior checks and structural YAML checks passed. The bundled skill validator could not run because its `PyYAML` dependency is not installed.
+  +16 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md
+  @@ -0,0 +1,23 @@
+  +# Before Run
+  +
+  +- Agent: Codex CLI 0.153.4
+  +- Model: gpt-5.6-sol (medium reasoning)
+  +- Other tools: shell, Git, filesystem
+  +- Permissions: danger-full-access in a disposable fixture
+  +- Time limit: 10 minutes
+  +- Prompt: Create customer release notes for `exercise-base..origin/exercise-head`. Trace every published item to Git, identify breaking and migration impact, report missing verification evidence, and exclude internal-only work.
+  +- Repository commit: 52090edddf032d026ece16ef90feb627bf8e67ac
+  +- Attempt: 1
+  +- Release-notes skill: disabled
+  +- Input context: `docs/monolithic-skill-draft.md`, `docs/pr-descriptions.md`, and `docs/ci-evidence.md`
+  +- Context bytes: 2934
+  +- Output: `evidence/before-output.md`
+  +
+  +## Observations
+  +
+  +- Files read: the three supplied task files, fixture Git history and diffs, and the automatically available system `skill-creator/SKILL.md`. The candidate `.agents/skills/release-notes/SKILL.md` was absent.
+  +- Commands executed: inspected the exact Git range; initialized an unrelated global skill package; wrote `RELEASE_NOTES.md` in the disposable fixture; ran direct checkout and billing behavior checks plus structural YAML checks.
+  +- Verification: `npm run release:verify -- /tmp/exercise-05-01-before-fixture-final /tmp/exercise-05-01-before-output-final.md` scored 1 of 11 checks (9) because the final response linked to its artifact instead of containing the required release-note structure.
+  +- Exit code: the agent session exited 0; release verification exited 1.
+  +
+  +`npm run context:measure -- ../docs/monolithic-skill-draft.md` measured the monolithic instruction context at exactly 2934 UTF-8 bytes. PR descriptions and CI evidence were task data supplied equally to both primary runs, not skill-instruction context.
+  +23 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.patch
+  @@ -0,0 +1,104 @@
+  +.../evidence/before-output.md                      | 16 +++++++++++++++
+  + .../evidence/before.md                             | 23 ++++++++++++++++++++++
+  + 2 files changed, 39 insertions(+)
+  +
+  +diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md
+  +new file mode 100644
+  +index 0000000000000000000000000000000000000000..2e12019319b6b4317c607724b51dc6d58f3b89e0
+  +--- /dev/null
+  ++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md	
+  +@@ -0,0 +1,16 @@
+  ++Created the customer release notes and a reusable standards-compliant skill package.
+  ++
+  ++- [Release notes](/tmp/exercise-05-01-before-fixture-final/RELEASE_NOTES.md)
+  ++- [Release skill](/tmp/exercise-05-codex-home/skills/customer-release-notes/SKILL.md)
+  ++- [Publication and evidence policy](/tmp/exercise-05-codex-home/skills/customer-release-notes/references/publication-and-evidence.md)
+  ++
+  ++The notes:
+  ++
+  ++- Identify `invoiceTotal` → `total` as breaking and provide migration timing.
+  ++- Publish the checkout retry improvement.
+  ++- Trace both items to full Git commit hashes.
+  ++- Exclude the internal telemetry cleanup.
+  ++- Report the missing browser screenshot and migration dry run.
+  ++- Correctly state that the release is not fully verified for publication.
+  ++
+  ++Direct behavior checks and structural YAML checks passed. The bundled skill validator could not run because its `PyYAML` dependency is not installed.
+  +diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md
+  +new file mode 100644
+  +index 0000000000000000000000000000000000000000..c2f7e2b1305a0a1f97fa0998b500ea0c35af6762
+  +--- /dev/null
+  ++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md	
+  +@@ -0,0 +1,23 @@
+  ++# Before Run
+  ++
+  ++- Agent: Codex CLI 0.153.4
+  ++- Model: gpt-5.6-sol (medium reasoning)
+  ++- Other tools: shell, Git, filesystem
+  ++- Permissions: danger-full-access in a disposable fixture
+  ++- Time limit: 10 minutes
+  ++- Prompt: Create customer release notes for `exercise-base..origin/exercise-head`. Trace every published item to Git, identify breaking and migration impact, report missing verification evidence, and exclude internal-only work.
+  ++- Repository commit: 52090edddf032d026ece16ef90feb627bf8e67ac
+  ++- Attempt: 1
+  ++- Release-notes skill: disabled
+  ++- Input context: `docs/monolithic-skill-draft.md`, `docs/pr-descriptions.md`, and `docs/ci-evidence.md`
+  ++- Context bytes: 2934
+  ++- Output: `evidence/before-output.md`
+  ++
+  ++## Observations
+  ++
+  ++- Files read: the three supplied task files, fixture Git history and diffs, and the automatically available system `skill-creator/SKILL.md`. The candidate `.agents/skills/release-notes/SKILL.md` was absent.
+  ++- Commands executed: inspected the exact Git range; initialized an unrelated global skill package; wrote `RELEASE_NOTES.md` in the disposable fixture; ran direct checkout and billing behavior checks plus structural YAML checks.
+  ++- Verification: `npm run release:verify -- /tmp/exercise-05-01-before-fixture-final /tmp/exercise-05-01-before-output-final.md` scored 1 of 11 checks (9) because the final response linked to its artifact instead of containing the required release-note structure.
+  ++- Exit code: the agent session exited 0; release verification exited 1.
+  ++
+  ++`npm run context:measure -- ../docs/monolithic-skill-draft.md` measured the monolithic instruction context at exactly 2934 UTF-8 bytes. PR descriptions and CI evidence were task data supplied equally to both primary runs, not skill-instruction context.
+  +
+  +Changes:
+  +
+  +05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md
+  +  @@ -0,0 +1,16 @@
+  +  +Created the customer release notes and a reusable standards-compliant skill package.
+  +  +
+  +  +- [Release notes](/tmp/exercise-05-01-before-fixture-final/RELEASE_NOTES.md)
+  +  +- [Release skill](/tmp/exercise-05-codex-home/skills/customer-release-notes/SKILL.md)
+  +  +- [Publication and evidence policy](/tmp/exercise-05-codex-home/skills/customer-release-notes/references/publication-and-evidence.md)
+  +  +
+  +  +The notes:
+  +  +
+  +  +- Identify `invoiceTotal` → `total` as breaking and provide migration timing.
+  +  +- Publish the checkout retry improvement.
+  +  +- Trace both items to full Git commit hashes.
+  +  +- Exclude the internal telemetry cleanup.
+  +  +- Report the missing browser screenshot and migration dry run.
+  +  +- Correctly state that the release is not fully verified for publication.
+  +  +
+  +  +Direct behavior checks and structural YAML checks passed. The bundled skill validator could not run because its `PyYAML` dependency is not installed.
+  +  +16 -0
+  +
+  +05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md
+  +  @@ -0,0 +1,23 @@
+  +  +# Before Run
+  +  +
+  +  +- Agent: Codex CLI 0.153.4
+  +  +- Model: gpt-5.6-sol (medium reasoning)
+  +  +- Other tools: shell, Git, filesystem
+  +  +- Permissions: danger-full-access in a disposable fixture
+  +  +- Time limit: 10 minutes
+  +  +- Prompt: Create customer release notes for `exercise-base..origin/exercise-head`. Trace every published item to Git, identify breaking and migration impact, report missing verification evidence, and exclude internal-only work.
+  +  +- Repository commit: 52090edddf032d026ece16ef90feb627bf8e67ac
+  +  +- Attempt: 1
+  +  +- Release-notes skill: disabled
+  +  +- Input context: `docs/monolithic-skill-draft.md`, `docs/pr-descriptions.md`, and `docs/ci-evidence.md`
+  +  +- Context bytes: 2934
+  +  +- Output: `evidence/before-output.md`
+  +  +
+  +  +## Observations
+  +  +
+  +  +- Files read: the three supplied task files, fixture Git history and diffs, and the automatically available system `skill-creator/SKILL.md`. The candidate `.agents/skills/release-notes/SKILL.md` was absent.
+  +  +- Commands executed: inspected the exact Git range; initialized an unrelated global skill package; wrote `RELEASE_NOTES.md` in the disposable fixture; ran direct checkout and billing behavior checks plus structural YAML checks.
+  +  +- Verification: `npm run release:verify -- /tmp/exercise-05-01-before-fixture-final /tmp/exercise-05-01-before-output-final.md` scored 1 of 11 checks (9) because the final response linked to its artifact instead of containing the required release-note structure.
+  ... (4 lines truncated)
+  +102 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/comparison.md
+  @@ -0,0 +1,21 @@
+  +# Comparison
+  +
+  +## Same conditions
+  +
+  +Both primary runs used the same prompt, same agent (Codex CLI 0.153.4), same model (`gpt-5.6-sol`, medium reasoning), same tools, same permissions, same time limit, repository commit `52090edddf032d026ece16ef90feb627bf8e67ac`, and first-attempt evaluation. PR descriptions and CI evidence were identical. The release-notes skill was the only changed input: the before run received the protected monolithic draft; the after run received `.agents/skills/release-notes/SKILL.md` and its routed resources.
+  +
+  +## Before
+  +
+  +The broad draft triggered a skill-packaging detour. Its final response summarized and linked an artifact instead of returning the required release notes, so verification scored 1/11 (9%). It asserted Git tracing without including trace values in the saved output, mentioned internal telemetry, and loaded 2934 bytes of monolithic instructions.
+  +
+  +## After
+  +
+  +The trigger selected the customer release workflow and the extractor used the exact Git range. The response published two customer items, gave real Git traces, labeled the billing rename breaking, explained the migration from `invoiceTotal` to `total`, preserved missing evidence for the screenshot and migration dry run, and excluded internal work. Verification scored 11/11 (100%).
+  +
+  +## Proof
+  +
+  +The reusable script ran once in each skill-backed scenario. Resource logs show selective loading: full release used publication, evidence, and migration resources (2887 bytes); hotfix used publication and evidence only (2446 bytes); internal-only used publication only (1898 bytes). The full path saved 47 context bytes versus the monolith while improving the verified output by 91 percentage points. Hotfix and internal outputs prove unrelated resources were not read.
+  +
+  +## Conclusion
+  +
+  +Progressive disclosure improved the deliverable and trigger boundary without adding irrelevant context. Git extraction stayed deterministic and reusable, customer classification stayed policy-driven, and context cost fell for every evaluated route.
+  +21 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/eval-results.json
+  @@ -0,0 +1,48 @@
+  +{
+  +  "quality": [
+  +    {
+  +      "id": "full-release",
+  +      "configuration": "without_skill",
+  +      "passed": 3,
+  +      "total": 5,
+  +      "output": "evidence/before-output.md",
+  +      "evidence": ["Names the two intended customer changes in its summary.", "Does not include the promised Git hashes in the saved response.", "Names the invoiceTotal to total migration.", "Reports both missing verification artifacts.", "Mentions internal telemetry instead of fully excluding it."]
+  +    },
+  +    {
+  +      "id": "full-release",
+  +      "configuration": "with_skill",
+  +      "passed": 5,
+  +      "total": 5,
+  +      "output": "evidence/after-output.md",
+  +      "evidence": ["Contains exactly two customer change headings.", "Each item cites a range commit and changed path.", "Explains invoiceTotal to total migration.", "Reports screenshot and migration dry run gaps.", "Customer section contains no telemetry work."]
+  +    },
+  +    {
+  +      "id": "hotfix-only",
+  +      "configuration": "with_skill",
+  +      "passed": 4,
+  +      "total": 4,
+  +      "output": "evidence/hotfix-output.md",
+  +      "evidence": ["Publishes only the declined-card retry hotfix.", "Cites the checkout commit and source path.", "Cites both passing CI evidence identifiers.", "Reports the missing browser screenshot without billing or telemetry."]
+  +    },
+  +    {
+  +      "id": "internal-only",
+  +      "configuration": "with_skill",
+  +      "passed": 4,
+  +      "total": 4,
+  +      "output": "evidence/internal-output.md",
+  +      "evidence": ["States that no customer-facing changes exist.", "Names breaking-head..origin/exercise-head.", "Cites the telemetry commit and changed path.", "Does not create a customer-facing section."]
+  +    }
+  +  ],
+  +  "trigger": [
+  +    {"query":"Create customer-facing release notes for the Git range v2.4.0..main and trace every published change to its commit.","expected":true,"actual":true,"evidence":"Direct customer release-note creation with a Git range matches the description."},
+  +    {"query":"Decide whether commits release-base..release-head contain anything suitable for customer release notes.","expected":true,"actual":true,"evidence":"Publication suitability for a Git range is an explicit positive trigger."},
+  +    {"query":"Draft a customer changelog from the last release tag to HEAD, excluding internal refactors and build work.","expected":true,"actual":true,"evidence":"A customer changelog with internal exclusions is release-note work."},
+  +    {"query":"Prepare hotfix release notes with Git traces and clearly identify missing verification evidence.","expected":true,"actual":true,"evidence":"Hotfix customer notes with Git evidence are within the skill boundary."},
+  +    {"query":"Summarize customer-visible changes in this Git range and include breaking migration guidance where needed.","expected":true,"actual":true,"evidence":"Customer-visible Git changes and migration guidance require this workflow."},
+  +    {"query":"Write an internal engineering changelog listing every refactor and test-file change from this sprint.","expected":false,"actual":false,"evidence":"The description explicitly excludes internal engineering changelogs."},
+  +    {"query":"Review this commit for implementation defects and suggest smaller code changes before it is merged.","expected":false,"actual":false,"evidence":"Implementation review is explicitly outside the release-note boundary."},
+  +    {"query":"Explain why the release deployment workflow failed in CI and diagnose the underlying shell error.","expected":false,"actual":false,"evidence":"CI debugging is neither customer publication nor Git-range classification."},
+  +    {"query":"Generate conventional commit messages for my currently staged source files without publishing notes.","expected":false,"actual":false,"evidence":"Commit-message generation does not request customer release notes."},
+  +    {"query":"Compare two API schema files and identify compatibility risks, but do not create a customer changelog.","expected":false,"actual":false,"evidence":"The user expressly excludes the publication deliverable this skill creates."}
+  +  ]
+  +}
+  +48 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/hotfix-output.md
+  @@ -0,0 +1,21 @@
+  +# Hotfix release notes
+  +
+  +Range: `exercise-base..hotfix-head`
+  +
+  +## Customer-facing changes
+  +
+  +### Retry declined card payments with clearer guidance
+  +
+  +Customers can now retry checkout after a card decline. The checkout message explains that the card was declined and prompts them to check the card before trying again.
+  +
+  +Git trace:
+  +
+  +- Commit: `d3b56d0c977ebeb81b01e8d001157e027ad0bf52`
+  +- Subject: `fix checkout maybe retry declined cards`
+  +- Changed file: `src/checkout.js`
+  +
+  +Verification status: automated checks passed; visual evidence is incomplete.
+  +
+  +- `unit tests` — passed (`CI-881-unit`)
+  +- `browser test` — passed (`CI-881-e2e`)
+  +- Browser screenshot — missing; no evidence ID was supplied, so visual verification cannot be confirmed.
+  +21 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/internal-output.md
+  @@ -0,0 +1,11 @@
+  +No customer-facing changes were found in `breaking-head..origin/exercise-head`.
+  +
+  +Git evidence:
+  +
+  +- Range: `1c431018..1db5cd5`
+  +- One commit: `1db5cd5 chore: clean events`
+  +- One modified file: `src/telemetry.js`
+  +- Change: internal telemetry event renamed from `checkout.completed` to `billing.checkout.completed`
+  +- Diff size: 1 insertion, 1 deletion
+  +
+  +Internal telemetry is excluded by the publication policy, so this range does not warrant customer release notes.
+  +11 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/resource-usage.json
+  @@ -0,0 +1,37 @@
+  +{
+  +  "scenarios": [
+  +    {
+  +      "id": "full-release",
+  +      "prompt": "Create customer release notes for `exercise-base..origin/exercise-head`. Trace every published item to Git, identify breaking and migration impact, report missing verification evidence, and exclude internal-only work.",
+  +      "resources_read": ["references/publication-policy.md", "references/evidence-policy.md", "references/migration-policy.md"],
+  +      "context_files": ["SKILL.md", "references/publication-policy.md", "references/evidence-policy.md", "references/migration-policy.md"],
+  +      "context_bytes": {"SKILL.md": 1385, "references/publication-policy.md": 513, "references/evidence-policy.md": 548, "references/migration-policy.md": 441},
+  +      "total_context_bytes": 2887,
+  +      "scripts_run": ["scripts/extract-release.mjs"],
+  +      "reason": "Publication classified the range; evidence covered supplied checks; migration covered the breaking field rename.",
+  +      "output": "evidence/after-output.md"
+  +    },
+  +    {
+  +      "id": "hotfix-only",
+  +      "prompt": "Create customer release notes for this hotfix range `exercise-base..hotfix-head` with Git traces and verification status.",
+  +      "resources_read": ["references/publication-policy.md", "references/evidence-policy.md"],
+  +      "context_files": ["SKILL.md", "references/publication-policy.md", "references/evidence-policy.md"],
+  +      "context_bytes": {"SKILL.md": 1385, "references/publication-policy.md": 513, "references/evidence-policy.md": 548},
+  +      "total_context_bytes": 2446,
+  +      "scripts_run": ["scripts/extract-release.mjs"],
+  +      "reason": "The selected range contained a publishable verified hotfix but no breaking contract, so migration guidance stayed unloaded.",
+  +      "output": "evidence/hotfix-output.md"
+  +    },
+  +    {
+  +      "id": "internal-only",
+  +      "prompt": "Check whether `breaking-head..origin/exercise-head` contains anything suitable for customer release notes and support the decision with Git evidence.",
+  +      "resources_read": ["references/publication-policy.md"],
+  +      "context_files": ["SKILL.md", "references/publication-policy.md"],
+  +      "context_bytes": {"SKILL.md": 1385, "references/publication-policy.md": 513},
+  +      "total_context_bytes": 1898,
+  +      "scripts_run": ["scripts/extract-release.mjs"],
+  +      "reason": "Git showed only internal telemetry, so publication policy was sufficient and evidence and migration guidance stayed unloaded.",
+  +      "output": "evidence/internal-output.md"
+  +    }
+  +  ]
+  +}
+  +37 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/skill-record.md
+  @@ -0,0 +1,8 @@
+  +# Skill Creator Provenance
+  +
+  +- Source: https://github.com/anthropics/skills/tree/main/skills/skill-creator
+  +- Source commit: 41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f
+  +- Installed path: `/home/papereyes/.codex/skills/skill-creator/SKILL.md`
+  +- SKILL.md SHA-256: dcd4803e61e913e6fc27294184cd3a71f09f5e924ff20c8a9a20173e7b3c2bcf
+  +
+  +Installed from the official Anthropic repository before creating the candidate package.
+  +8 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/SKILL.md
+  @@ -0,0 +1,17 @@
+  +---
+  +name: release-notes
+  +description: Use when creating customer release notes or deciding whether a Git range contains publishable changes. Exclude requests for internal engineering changelogs, commit summaries, or implementation reviews that are not customer-facing.
+  +compatibility: Requires Git and Node.js 22 or newer.
+  +---
+  +
+  +# Release Notes
+  +
+  +Derive release facts from Git, then write only customer-visible changes.
+  +
+  +1. Read [references/publication-policy.md](references/publication-policy.md).
+  +2. Run `node scripts/extract-release.mjs --repo <path> --base <ref> --head <ref>` once for the requested range. Treat its JSON as the Git trace.
+  +3. Classify the commits. Put publishable items under `## Customer-facing changes`, one `###` item per change, and do not mention excluded internal work anywhere in that deliverable. If nothing is publishable, report that decision with the range and Git evidence; do not add that heading.
+  +4. When a publishable change has supplied verification records, read [references/evidence-policy.md](references/evidence-policy.md).
+  +5. When a publishable change alters or removes an existing contract, read [references/migration-policy.md](references/migration-policy.md).
+  +
+  +Do not preload conditional references. Select them only after extraction and only for commits inside the requested range; ignore supporting material about changes outside that range.
+  +17 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/evals/evals.json
+  @@ -0,0 +1,26 @@
+  +{
+  +  "skill_name": "release-notes",
+  +  "evals": [
+  +    {
+  +      "id": 3,
+  +      "prompt": "internal-only: Check breaking-head..origin/exercise-head for customer release-note material and support the decision using the exact Git range and changed paths.",
+  +      "expected_output": "A Git-supported statement that the internal telemetry-only range has no customer-facing release changes.",
+  +      "files": [],
+  +      "expectations": ["States there are no customer-facing changes", "Names the exact range", "Cites telemetry Git evidence", "Does not create a customer-facing section"]
+  +    },
+  +    {
+  +      "id": 1,
+  +      "prompt": "full-release: Create customer release notes for exercise-base..origin/exercise-head with Git traces, breaking migration impact, verification gaps, and internal-only work excluded.",
+  +      "expected_output": "Two traced customer changes, including the breaking billing migration and all supplied evidence gaps.",
+  +      "files": ["docs/pr-descriptions.md", "docs/ci-evidence.md"],
+  +      "expectations": ["Publishes exactly two customer changes", "Traces every item to Git", "Explains invoiceTotal to total migration", "Reports missing screenshot and migration dry run", "Excludes telemetry"]
+  +    },
+  +    {
+  +      "id": 2,
+  +      "prompt": "hotfix-only: Create customer release notes for exercise-base..hotfix-head with Git traces and the supplied verification status, without unrelated release content.",
+  +      "expected_output": "One checkout hotfix with its Git trace, passing CI identifiers, and the missing screenshot evidence.",
+  +      "files": ["docs/pr-descriptions.md", "docs/ci-evidence.md"],
+  +      "expectations": ["Publishes exactly the checkout hotfix", "Cites checkout Git and passing CI evidence", "Reports the missing screenshot", "Excludes billing and telemetry"]
+  +    }
+  +  ]
+  +}
+  +26 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/evals/trigger-evals.json
+  @@ -0,0 +1,12 @@
+  +[
+  +  {"query":"Create customer-facing release notes for the Git range v2.4.0..main and trace every published change to its commit.","should_trigger":true},
+  +  {"query":"Decide whether commits release-base..release-head contain anything suitable for customer release notes.","should_trigger":true},
+  +  {"query":"Draft a customer changelog from the last release tag to HEAD, excluding internal refactors and build work.","should_trigger":true},
+  +  {"query":"Prepare hotfix release notes with Git traces and clearly identify missing verification evidence.","should_trigger":true},
+  +  {"query":"Summarize customer-visible changes in this Git range and include breaking migration guidance where needed.","should_trigger":true},
+  +  {"query":"Write an internal engineering changelog listing every refactor and test-file change from this sprint.","should_trigger":false},
+  +  {"query":"Review this commit for implementation defects and suggest smaller code changes before it is merged.","should_trigger":false},
+  +  {"query":"Explain why the release deployment workflow failed in CI and diagnose the underlying shell error.","should_trigger":false},
+  +  {"query":"Generate conventional commit messages for my currently staged source files without publishing notes.","should_trigger":false},
+  +  {"query":"Compare two API schema files and identify compatibility risks, but do not create a customer changelog.","should_trigger":false}
+  +]
+  +12 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/references/evidence-policy.md
+  @@ -0,0 +1,10 @@
+  +# Evidence Policy
+  +
+  +- Cite a verification result only when supplied evidence marks it passed.
+  +- Include the evidence ID beside each claimed pass.
+  +- Preserve supplied check names verbatim so each claim remains auditable.
+  +- Report missing evidence explicitly; never convert it into a pass.
+  +- Keep evidence attached to the customer change it verifies.
+  +- Do not infer test execution from changed test files or a PR description.
+  +- Distinguish verified behavior from incomplete visual or operational proof.
+  +- Omit evidence for unrelated internal changes.
+  +10 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/references/migration-policy.md
+  @@ -0,0 +1,9 @@
+  +# Migration Policy
+  +
+  +- Label a removed or renamed public contract as breaking.
+  +- Name the old contract and its replacement.
+  +- Tell customers the concrete migration they must perform.
+  +- State when compatibility or migration proof is missing.
+  +- Do not soften a breaking change because one contract check passed.
+  +- Keep migration guidance with the affected release item.
+  +- Avoid migration advice for changes that preserve the existing contract.
+  +9 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/references/publication-policy.md
+  @@ -0,0 +1,10 @@
+  +# Publication Policy
+  +
+  +- Use the exact requested Git range.
+  +- Publish only behavior a customer can observe.
+  +- Give each customer change a `###` heading.
+  +- Add a `- Trace:` line with a changed path or commit from the range.
+  +- PR descriptions may explain a change but cannot replace its Git trace.
+  +- Exclude internal telemetry, refactors, tests, and build-only work.
+  +- If nothing qualifies, state that no customer-facing changes were found.
+  +- Support an exclusion decision with the range and inspected Git evidence.
+  +10 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app/.agents/skills/release-notes/scripts/extract-release.mjs
+  @@ -0,0 +1,31 @@
+  +#!/usr/bin/env node
+  +import { execFileSync } from "node:child_process";
+  +
+  +const entries = process.argv.slice(2);
+  +const args = Object.fromEntries(Array.from({ length: Math.ceil(entries.length / 2) }, (_, index) => entries.slice(index * 2, index * 2 + 2)));
+  +const repo = args["--repo"];
+  +const base = args["--base"];
+  +const head = args["--head"];
+  +
+  +if (!repo || !base || !head) {
+  +  console.error("Usage: extract-release.mjs --repo <path> --base <ref> --head <ref>");
+  +  process.exit(2);
+  +}
+  +
+  +const git = (...gitArgs) => execFileSync("git", ["-C", repo, ...gitArgs], { encoding: "utf8" }).trim();
+  +
+  +try {
+  +  const commits = git("log", "--reverse", "--format=%H%x1f%s", `${base}..${head}`)
+  +    .split(/\r?\n/)
+  +    .filter(Boolean)
+  +    .map((line) => {
+  +      const [sha, subject] = line.split("\u001f");
+  +      const files = git("diff-tree", "--no-commit-id", "--name-only", "-r", sha).split(/\r?\n/).filter(Boolean).sort();
+  +      return { sha, subject, files };
+  +    });
+  +  const changedFiles = git("diff", "--name-only", `${base}..${head}`).split(/\r?\n/).filter(Boolean).sort();
+  +  console.log(JSON.stringify({ range: { base, head }, commits, changedFiles }, null, 2));
+  +} catch (error) {
+  +  console.error(`Unable to inspect Git range ${base}..${head}: ${error.stderr?.toString().trim() || error.message}`);
+  +  process.exit(1);
+  +}
+
+... (more changes truncated)
+  +31 -0
+[full diff: rtk git diff --no-compact]

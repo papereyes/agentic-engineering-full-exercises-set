@@ -1,5 +1,5 @@
 diff --git a/04 Test Automation/exercise-03-verification-skill-workflow-gate/scripts/verification-gate.mjs b/04 Test Automation/exercise-03-verification-skill-workflow-gate/scripts/verification-gate.mjs
-index 71d756d..2591ff3 100644
+index 71d756d598b3af99891bf16a6ef3fee907a66438..2591ff38b0c089d0e82998daa944a00687badb79 100644
 --- a/04 Test Automation/exercise-03-verification-skill-workflow-gate/scripts/verification-gate.mjs	
 +++ b/04 Test Automation/exercise-03-verification-skill-workflow-gate/scripts/verification-gate.mjs	
 @@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
@@ -65,7 +65,7 @@ index 71d756d..2591ff3 100644
  }
  
 diff --git a/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-gate-app/src/services/workflowContractClient.ts b/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-gate-app/src/services/workflowContractClient.ts
-index 0ed7251..107d0cd 100644
+index 0ed7251ba48ad034bb82394ac165d3694180aecb..107d0cd3564e97ab65f7c14b6188d4869a2835ea 100644
 --- a/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-gate-app/src/services/workflowContractClient.ts	
 +++ b/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-gate-app/src/services/workflowContractClient.ts	
 @@ -11,7 +11,16 @@ export interface ContractWorkflow {
@@ -87,7 +87,7 @@ index 0ed7251..107d0cd 100644
  
  export async function listWorkflows(baseUrl = ""): Promise<ContractWorkflow[]> {
 diff --git a/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowItem.java b/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowItem.java
-index b947fb2..5b4b4c7 100644
+index b947fb2521e0f81c41de9f89106b2cf657bb0f91..5b4b4c749eebcbb341880162931296b8f8b7fe11 100644
 --- a/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowItem.java	
 +++ b/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowItem.java	
 @@ -1,5 +1,7 @@
@@ -113,7 +113,7 @@ index b947fb2..5b4b4c7 100644
 +  }
  }
 diff --git a/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowService.java b/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowService.java
-index 57f8a6d..53e62dc 100644
+index 57f8a6dfa976e27b0cb93e7c97789a4b4f1631d0..53e62dca0bed0d08db69c96d15e813bcff610cc9 100644
 --- a/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowService.java	
 +++ b/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-rules-api/src/main/java/dev/agentic/exercise/workflow/WorkflowService.java	
 @@ -19,6 +19,10 @@ public class WorkflowService {

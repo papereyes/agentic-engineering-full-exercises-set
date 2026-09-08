@@ -1,5 +1,5 @@
 diff --git a/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/flaky-checkout.spec.ts b/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/flaky-checkout.spec.ts
-index d604f40..5fc28a7 100644
+index d604f409fc97954e1cd4521892f429c005861c4f..5fc28a70fb6d08f759c72735b2967dafa5a98785 100644
 --- a/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/flaky-checkout.spec.ts	
 +++ b/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/flaky-checkout.spec.ts	
 @@ -1,15 +1,71 @@

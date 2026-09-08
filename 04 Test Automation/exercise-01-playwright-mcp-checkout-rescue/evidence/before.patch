@@ -1,6 +1,6 @@
 diff --git a/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/checkout.spec.ts b/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/checkout.spec.ts
 new file mode 100644
-index 0000000..2d4c436
+index 0000000000000000000000000000000000000000..2d4c43641c55c28a727dfcdc6e01e7b919daa435
 --- /dev/null
 +++ b/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/checkout.spec.ts	
 @@ -0,0 +1,72 @@
@@ -78,7 +78,7 @@ index 0000000..2d4c436
 +});
 diff --git a/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/flaky-checkout.spec.ts b/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/flaky-checkout.spec.ts
 deleted file mode 100644
-index d604f40..0000000
+index d604f409fc97954e1cd4521892f429c005861c4f..0000000000000000000000000000000000000000
 --- a/04 Test Automation/exercise-01-playwright-mcp-checkout-rescue/checkout-e2e-app/tests/e2e/flaky-checkout.spec.ts	
 +++ /dev/null
 @@ -1,15 +0,0 @@

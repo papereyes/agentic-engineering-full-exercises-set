@@ -47,7 +47,13 @@ test("recovers from a decline and approves the retry", async ({ page }) => {
 
   await page.getByRole("button", { name: "Try another payment" }).click();
   await page.getByLabel("Card number").fill("4242424242424242");
+  const retryAuthorizationRequestPromise = page.waitForRequest("**/api/payments/authorize");
   await pay.click();
+  expect((await retryAuthorizationRequestPromise).postDataJSON()).toEqual({
+    cardholder: "Asha Kumar",
+    cardNumber: "4242424242424242",
+    total: 106.92,
+  });
   await expect(page.getByRole("heading", { name: "Order confirmed" })).toBeVisible();
 });
 

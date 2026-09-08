@@ -1,0 +1,80 @@
+Date: 2026-09-08
+Command: PLAYWRIGHT_HTML_OUTPUT_DIR=/tmp/exercise-04-01-review-verify-report PLAYWRIGHT_OUTPUT_DIR=/tmp/exercise-04-01-review-verify-results npm run verify:exercise
+
+> checkout-e2e-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+
+> checkout-e2e-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+
+> checkout-e2e-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+
+> checkout-e2e-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+
+Verified 23 protected challenge inputs.
+
+> checkout-e2e-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+
+lint-check passed
+
+> checkout-e2e-app@0.1.0 test
+> node ./scripts/agent-check.mjs
+
+agent-check passed for Playwright MCP Checkout Rescue
+
+> checkout-e2e-app@0.1.0 format
+> node ./scripts/format-check.mjs
+
+format-check passed
+
+> checkout-e2e-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+
+> checkout-e2e-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 29 modules transformed.
+rendering chunks...
+computing gzip size...
+../../../../exercise-vite-build-Gv7Uha/dist/index.html                   0.42 kB │ gzip:  0.28 kB
+../../../../exercise-vite-build-Gv7Uha/dist/assets/index-CChD34sP.css    1.09 kB │ gzip:  0.57 kB
+../../../../exercise-vite-build-Gv7Uha/dist/assets/index-Vs6bxrT7.js   195.77 kB │ gzip: 61.61 kB
+✓ built in 980ms
+
+> checkout-e2e-app@0.1.0 verify:implementation
+> npm run test:e2e
+
+> checkout-e2e-app@0.1.0 test:e2e
+> playwright test
+
+[WebServer] (node:569138) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 2 workers
+
+(node:569157) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:569158) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/4] [chromium] › tests/e2e/flaky-checkout.spec.ts:14:1 › approves checkout with the tax and authorization contracts
+[2/4] [chromium] › tests/e2e/starter-smoke.spec.ts:3:1 › the documented checkout workflow is mounted and reachable
+[3/4] [chromium] › tests/e2e/flaky-checkout.spec.ts:33:1 › recovers from a decline and approves the retry
+[4/4] [chromium] › tests/e2e/flaky-checkout.spec.ts:60:1 › duplicate submits send one authorization request
+  4 passed (11.0s)
+
+> checkout-e2e-app@0.1.0 verify:submission
+> npm run test:checkout
+
+> checkout-e2e-app@0.1.0 test:checkout
+> node ./scripts/verify-checkout-submission.mjs
+
+Checkout verification passed: 1 repaired spec files, comparable first attempts, complete MCP evidence, isolation, repeat proof, and trace.
+PASS verify:exercise left tracked files, the Git index, and untracked or ignored paths unchanged
+
+Exit code: 0

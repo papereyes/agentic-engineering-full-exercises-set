@@ -1,0 +1,104 @@
+.../evidence/before-output.md                      | 16 +++++++++++++++
+ .../evidence/before.md                             | 23 ++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
+
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..2e12019319b6b4317c607724b51dc6d58f3b89e0
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md	
+@@ -0,0 +1,16 @@
++Created the customer release notes and a reusable standards-compliant skill package.
++
++- [Release notes](/tmp/exercise-05-01-before-fixture-final/RELEASE_NOTES.md)
++- [Release skill](/tmp/exercise-05-codex-home/skills/customer-release-notes/SKILL.md)
++- [Publication and evidence policy](/tmp/exercise-05-codex-home/skills/customer-release-notes/references/publication-and-evidence.md)
++
++The notes:
++
++- Identify `invoiceTotal` → `total` as breaking and provide migration timing.
++- Publish the checkout retry improvement.
++- Trace both items to full Git commit hashes.
++- Exclude the internal telemetry cleanup.
++- Report the missing browser screenshot and migration dry run.
++- Correctly state that the release is not fully verified for publication.
++
++Direct behavior checks and structural YAML checks passed. The bundled skill validator could not run because its `PyYAML` dependency is not installed.
+diff --git a/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..c2f7e2b1305a0a1f97fa0998b500ea0c35af6762
+--- /dev/null
++++ b/05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md	
+@@ -0,0 +1,23 @@
++# Before Run
++
++- Agent: Codex CLI 0.153.4
++- Model: gpt-5.6-sol (medium reasoning)
++- Other tools: shell, Git, filesystem
++- Permissions: danger-full-access in a disposable fixture
++- Time limit: 10 minutes
++- Prompt: Create customer release notes for `exercise-base..origin/exercise-head`. Trace every published item to Git, identify breaking and migration impact, report missing verification evidence, and exclude internal-only work.
++- Repository commit: 52090edddf032d026ece16ef90feb627bf8e67ac
++- Attempt: 1
++- Release-notes skill: disabled
++- Input context: `docs/monolithic-skill-draft.md`, `docs/pr-descriptions.md`, and `docs/ci-evidence.md`
++- Context bytes: 2934
++- Output: `evidence/before-output.md`
++
++## Observations
++
++- Files read: the three supplied task files, fixture Git history and diffs, and the automatically available system `skill-creator/SKILL.md`. The candidate `.agents/skills/release-notes/SKILL.md` was absent.
++- Commands executed: inspected the exact Git range; initialized an unrelated global skill package; wrote `RELEASE_NOTES.md` in the disposable fixture; ran direct checkout and billing behavior checks plus structural YAML checks.
++- Verification: `npm run release:verify -- /tmp/exercise-05-01-before-fixture-final /tmp/exercise-05-01-before-output-final.md` scored 1 of 11 checks (9) because the final response linked to its artifact instead of containing the required release-note structure.
++- Exit code: the agent session exited 0; release verification exited 1.
++
++`npm run context:measure -- ../docs/monolithic-skill-draft.md` measured the monolithic instruction context at exactly 2934 UTF-8 bytes. PR descriptions and CI evidence were task data supplied equally to both primary runs, not skill-instruction context.
+
+Changes:
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before-output.md
+  @@ -0,0 +1,16 @@
+  +Created the customer release notes and a reusable standards-compliant skill package.
+  +
+  +- [Release notes](/tmp/exercise-05-01-before-fixture-final/RELEASE_NOTES.md)
+  +- [Release skill](/tmp/exercise-05-codex-home/skills/customer-release-notes/SKILL.md)
+  +- [Publication and evidence policy](/tmp/exercise-05-codex-home/skills/customer-release-notes/references/publication-and-evidence.md)
+  +
+  +The notes:
+  +
+  +- Identify `invoiceTotal` → `total` as breaking and provide migration timing.
+  +- Publish the checkout retry improvement.
+  +- Trace both items to full Git commit hashes.
+  +- Exclude the internal telemetry cleanup.
+  +- Report the missing browser screenshot and migration dry run.
+  +- Correctly state that the release is not fully verified for publication.
+  +
+  +Direct behavior checks and structural YAML checks passed. The bundled skill validator could not run because its `PyYAML` dependency is not installed.
+  +16 -0
+
+05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/evidence/before.md
+  @@ -0,0 +1,23 @@
+  +# Before Run
+  +
+  +- Agent: Codex CLI 0.153.4
+  +- Model: gpt-5.6-sol (medium reasoning)
+  +- Other tools: shell, Git, filesystem
+  +- Permissions: danger-full-access in a disposable fixture
+  +- Time limit: 10 minutes
+  +- Prompt: Create customer release notes for `exercise-base..origin/exercise-head`. Trace every published item to Git, identify breaking and migration impact, report missing verification evidence, and exclude internal-only work.
+  +- Repository commit: 52090edddf032d026ece16ef90feb627bf8e67ac
+  +- Attempt: 1
+  +- Release-notes skill: disabled
+  +- Input context: `docs/monolithic-skill-draft.md`, `docs/pr-descriptions.md`, and `docs/ci-evidence.md`
+  +- Context bytes: 2934
+  +- Output: `evidence/before-output.md`
+  +
+  +## Observations
+  +
+  +- Files read: the three supplied task files, fixture Git history and diffs, and the automatically available system `skill-creator/SKILL.md`. The candidate `.agents/skills/release-notes/SKILL.md` was absent.
+  +- Commands executed: inspected the exact Git range; initialized an unrelated global skill package; wrote `RELEASE_NOTES.md` in the disposable fixture; ran direct checkout and billing behavior checks plus structural YAML checks.
+  +- Verification: `npm run release:verify -- /tmp/exercise-05-01-before-fixture-final /tmp/exercise-05-01-before-output-final.md` scored 1 of 11 checks (9) because the final response linked to its artifact instead of containing the required release-note structure.
+  +- Exit code: the agent session exited 0; release verification exited 1.
+  +
+  +`npm run context:measure -- ../docs/monolithic-skill-draft.md` measured the monolithic instruction context at exactly 2934 UTF-8 bytes. PR descriptions and CI evidence were task data supplied equally to both primary runs, not skill-instruction context.
+  +23 -0

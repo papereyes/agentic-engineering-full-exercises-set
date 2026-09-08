@@ -1,0 +1,26 @@
+{
+  "skill_name": "release-notes",
+  "evals": [
+    {
+      "id": 3,
+      "prompt": "internal-only: Check breaking-head..origin/exercise-head for customer release-note material and support the decision using the exact Git range and changed paths.",
+      "expected_output": "A Git-supported statement that the internal telemetry-only range has no customer-facing release changes.",
+      "files": [],
+      "expectations": ["States there are no customer-facing changes", "Names the exact range", "Cites telemetry Git evidence", "Does not create a customer-facing section"]
+    },
+    {
+      "id": 1,
+      "prompt": "full-release: Create customer release notes for exercise-base..origin/exercise-head with Git traces, breaking migration impact, verification gaps, and internal-only work excluded.",
+      "expected_output": "Two traced customer changes, including the breaking billing migration and all supplied evidence gaps.",
+      "files": ["docs/pr-descriptions.md", "docs/ci-evidence.md"],
+      "expectations": ["Publishes exactly two customer changes", "Traces every item to Git", "Explains invoiceTotal to total migration", "Reports missing screenshot and migration dry run", "Excludes telemetry"]
+    },
+    {
+      "id": 2,
+      "prompt": "hotfix-only: Create customer release notes for exercise-base..hotfix-head with Git traces and the supplied verification status, without unrelated release content.",
+      "expected_output": "One checkout hotfix with its Git trace, passing CI identifiers, and the missing screenshot evidence.",
+      "files": ["docs/pr-descriptions.md", "docs/ci-evidence.md"],
+      "expectations": ["Publishes exactly the checkout hotfix", "Cites checkout Git and passing CI evidence", "Reports the missing screenshot", "Excludes billing and telemetry"]
+    }
+  ]
+}

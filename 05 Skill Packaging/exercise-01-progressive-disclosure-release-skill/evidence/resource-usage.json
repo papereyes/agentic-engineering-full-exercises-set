@@ -1,0 +1,37 @@
+{
+  "scenarios": [
+    {
+      "id": "full-release",
+      "prompt": "Create customer release notes for `exercise-base..origin/exercise-head`. Trace every published item to Git, identify breaking and migration impact, report missing verification evidence, and exclude internal-only work.",
+      "resources_read": ["references/publication-policy.md", "references/evidence-policy.md", "references/migration-policy.md"],
+      "context_files": ["SKILL.md", "references/publication-policy.md", "references/evidence-policy.md", "references/migration-policy.md"],
+      "context_bytes": {"SKILL.md": 1385, "references/publication-policy.md": 513, "references/evidence-policy.md": 548, "references/migration-policy.md": 441},
+      "total_context_bytes": 2887,
+      "scripts_run": ["scripts/extract-release.mjs"],
+      "reason": "Publication classified the range; evidence covered supplied checks; migration covered the breaking field rename.",
+      "output": "evidence/after-output.md"
+    },
+    {
+      "id": "hotfix-only",
+      "prompt": "Create customer release notes for this hotfix range `exercise-base..hotfix-head` with Git traces and verification status.",
+      "resources_read": ["references/publication-policy.md", "references/evidence-policy.md"],
+      "context_files": ["SKILL.md", "references/publication-policy.md", "references/evidence-policy.md"],
+      "context_bytes": {"SKILL.md": 1385, "references/publication-policy.md": 513, "references/evidence-policy.md": 548},
+      "total_context_bytes": 2446,
+      "scripts_run": ["scripts/extract-release.mjs"],
+      "reason": "The selected range contained a publishable verified hotfix but no breaking contract, so migration guidance stayed unloaded.",
+      "output": "evidence/hotfix-output.md"
+    },
+    {
+      "id": "internal-only",
+      "prompt": "Check whether `breaking-head..origin/exercise-head` contains anything suitable for customer release notes and support the decision with Git evidence.",
+      "resources_read": ["references/publication-policy.md"],
+      "context_files": ["SKILL.md", "references/publication-policy.md"],
+      "context_bytes": {"SKILL.md": 1385, "references/publication-policy.md": 513},
+      "total_context_bytes": 1898,
+      "scripts_run": ["scripts/extract-release.mjs"],
+      "reason": "Git showed only internal telemetry, so publication policy was sufficient and evidence and migration guidance stayed unloaded.",
+      "output": "evidence/internal-output.md"
+    }
+  ]
+}

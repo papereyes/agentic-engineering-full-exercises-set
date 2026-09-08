@@ -1,0 +1,12 @@
+[
+  {"query":"Create customer-facing release notes for the Git range v2.4.0..main and trace every published change to its commit.","should_trigger":true},
+  {"query":"Decide whether commits release-base..release-head contain anything suitable for customer release notes.","should_trigger":true},
+  {"query":"Draft a customer changelog from the last release tag to HEAD, excluding internal refactors and build work.","should_trigger":true},
+  {"query":"Prepare hotfix release notes with Git traces and clearly identify missing verification evidence.","should_trigger":true},
+  {"query":"Summarize customer-visible changes in this Git range and include breaking migration guidance where needed.","should_trigger":true},
+  {"query":"Write an internal engineering changelog listing every refactor and test-file change from this sprint.","should_trigger":false},
+  {"query":"Review this commit for implementation defects and suggest smaller code changes before it is merged.","should_trigger":false},
+  {"query":"Explain why the release deployment workflow failed in CI and diagnose the underlying shell error.","should_trigger":false},
+  {"query":"Generate conventional commit messages for my currently staged source files without publishing notes.","should_trigger":false},
+  {"query":"Compare two API schema files and identify compatibility risks, but do not create a customer changelog.","should_trigger":false}
+]

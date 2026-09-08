@@ -1,0 +1,48 @@
+{
+  "quality": [
+    {
+      "id": "full-release",
+      "configuration": "without_skill",
+      "passed": 3,
+      "total": 5,
+      "output": "evidence/before-output.md",
+      "evidence": ["Names the two intended customer changes in its summary.", "Does not include the promised Git hashes in the saved response.", "Names the invoiceTotal to total migration.", "Reports both missing verification artifacts.", "Mentions internal telemetry instead of fully excluding it."]
+    },
+    {
+      "id": "full-release",
+      "configuration": "with_skill",
+      "passed": 5,
+      "total": 5,
+      "output": "evidence/after-output.md",
+      "evidence": ["Contains exactly two customer change headings.", "Each item cites a range commit and changed path.", "Explains invoiceTotal to total migration.", "Reports screenshot and migration dry run gaps.", "Customer section contains no telemetry work."]
+    },
+    {
+      "id": "hotfix-only",
+      "configuration": "with_skill",
+      "passed": 4,
+      "total": 4,
+      "output": "evidence/hotfix-output.md",
+      "evidence": ["Publishes only the declined-card retry hotfix.", "Cites the checkout commit and source path.", "Cites both passing CI evidence identifiers.", "Reports the missing browser screenshot without billing or telemetry."]
+    },
+    {
+      "id": "internal-only",
+      "configuration": "with_skill",
+      "passed": 4,
+      "total": 4,
+      "output": "evidence/internal-output.md",
+      "evidence": ["States that no customer-facing changes exist.", "Names breaking-head..origin/exercise-head.", "Cites the telemetry commit and changed path.", "Does not create a customer-facing section."]
+    }
+  ],
+  "trigger": [
+    {"query":"Create customer-facing release notes for the Git range v2.4.0..main and trace every published change to its commit.","expected":true,"actual":true,"evidence":"Direct customer release-note creation with a Git range matches the description."},
+    {"query":"Decide whether commits release-base..release-head contain anything suitable for customer release notes.","expected":true,"actual":true,"evidence":"Publication suitability for a Git range is an explicit positive trigger."},
+    {"query":"Draft a customer changelog from the last release tag to HEAD, excluding internal refactors and build work.","expected":true,"actual":true,"evidence":"A customer changelog with internal exclusions is release-note work."},
+    {"query":"Prepare hotfix release notes with Git traces and clearly identify missing verification evidence.","expected":true,"actual":true,"evidence":"Hotfix customer notes with Git evidence are within the skill boundary."},
+    {"query":"Summarize customer-visible changes in this Git range and include breaking migration guidance where needed.","expected":true,"actual":true,"evidence":"Customer-visible Git changes and migration guidance require this workflow."},
+    {"query":"Write an internal engineering changelog listing every refactor and test-file change from this sprint.","expected":false,"actual":false,"evidence":"The description explicitly excludes internal engineering changelogs."},
+    {"query":"Review this commit for implementation defects and suggest smaller code changes before it is merged.","expected":false,"actual":false,"evidence":"Implementation review is explicitly outside the release-note boundary."},
+    {"query":"Explain why the release deployment workflow failed in CI and diagnose the underlying shell error.","expected":false,"actual":false,"evidence":"CI debugging is neither customer publication nor Git-range classification."},
+    {"query":"Generate conventional commit messages for my currently staged source files without publishing notes.","expected":false,"actual":false,"evidence":"Commit-message generation does not request customer release notes."},
+    {"query":"Compare two API schema files and identify compatibility risks, but do not create a customer changelog.","expected":false,"actual":false,"evidence":"The user expressly excludes the publication deliverable this skill creates."}
+  ]
+}

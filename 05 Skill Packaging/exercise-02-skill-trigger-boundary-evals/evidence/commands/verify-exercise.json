@@ -1,0 +1,9 @@
+{
+  "command": "npm run verify:exercise",
+  "working_directory": "05 Skill Packaging/exercise-02-skill-trigger-boundary-evals/skill-trigger-app",
+  "verified_commit": "c3fe353daba8a254c089358ade319eb9c32b61ba",
+  "captured_at": "2026-09-09T10:55:36.531Z",
+  "exit_code": 0,
+  "transcript": "evidence/commands/verify-exercise.txt",
+  "transcript_sha256": "3cafdea333bae9c01e202cd0697c76d3cbaf9ebcbfe6c196cfb9bf8b59f7ccae"
+}

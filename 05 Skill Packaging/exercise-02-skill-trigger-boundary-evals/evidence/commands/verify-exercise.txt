@@ -1,0 +1,45 @@
+> skill-trigger-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+> skill-trigger-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+> skill-trigger-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+> skill-trigger-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+Verified 18 protected challenge inputs.
+> skill-trigger-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+lint-check passed
+> skill-trigger-app@0.1.0 test
+> node ./scripts/test-trigger-evaluation.mjs && node ./scripts/agent-check.mjs
+trigger evaluation framework self-test passed
+agent-check passed for Skill Trigger Boundary Evals
+> skill-trigger-app@0.1.0 format
+> node ./scripts/format-check.mjs
+format-check passed
+> skill-trigger-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+> skill-trigger-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 31 modules transformed.
+rendering chunks...
+computing gzip size...
+../../../../exercise-vite-build-iGijXZ/dist/index.html                   0.41 kB │ gzip:  0.28 kB
+../../../../exercise-vite-build-iGijXZ/dist/assets/index-BAmIHqwj.css    3.99 kB │ gzip:  1.44 kB
+../../../../exercise-vite-build-iGijXZ/dist/assets/index-DJjpEdvO.js   195.83 kB │ gzip: 61.59 kB
+✓ built in 902ms
+> skill-trigger-app@0.1.0 verify:implementation
+> npm run skill:validate
+> skill-trigger-app@0.1.0 skill:validate
+> node ./scripts/validate-change-review-skill.mjs
+Original description SHA-256: 6686763b22f80693bcf05f97cb63867534514aaebc1e1d950ba8cf96f435ab3c
+Current description SHA-256:  5602079fb8faf9cb4292c3f3403ecf6b08c216418aba9720bac8817f01ee34d6
+The change-review description has explicit boundaries, keeps the skill body unchanged, and avoids held-out phrase leakage.
+> skill-trigger-app@0.1.0 verify:submission
+> npm run test:submission
+> skill-trigger-app@0.1.0 test:submission
+> node ./scripts/verify-trigger-submission.mjs
+The submitted description improves repeated held-out routing, preserves the skill body, and includes complete evidence.
+PASS verify:exercise left tracked files, the Git index, and untracked or ignored paths unchanged

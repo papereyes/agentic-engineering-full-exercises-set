@@ -1,14 +1,18 @@
-Date: 2026-09-08
-Command: MAVEN_ARGS=-Dproject.build.directory=/tmp/exercise-04-03-review-verify-target npm run verify:exercise
+Date: 2026-09-09T12:02:00+05:30
+Fresh checkout: /tmp/exercise-04-03-review-green
+Command: MAVEN_BUILD_DIRECTORY=/tmp/exercise-04-03-green-target npm run verify:exercise
 
 > workflow-gate-app@0.1.0 verify:exercise
 > node ../../../scripts/run-clean-verification.mjs
 
+
 > workflow-gate-app@0.1.0 verify:exercise:core
 > npm run agent:check && npm run verify:implementation && npm run verify:submission
 
+
 > workflow-gate-app@0.1.0 agent:check
 > npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+
 
 > workflow-gate-app@0.1.0 test:integrity
 > node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
@@ -33,6 +37,7 @@ format-check passed
 > workflow-gate-app@0.1.0 typecheck
 > node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
 
+
 > workflow-gate-app@0.1.0 build
 > node ../../../scripts/run-vite-build.mjs
 
@@ -41,25 +46,28 @@ transforming...
 ✓ 31 modules transformed.
 rendering chunks...
 computing gzip size...
-../../../../exercise-vite-build-7H94Kn/dist/index.html                   0.42 kB │ gzip:  0.28 kB
-../../../../exercise-vite-build-7H94Kn/dist/assets/index-BAmIHqwj.css    3.99 kB │ gzip:  1.44 kB
-../../../../exercise-vite-build-7H94Kn/dist/assets/index-CHROF8hF.js   195.84 kB │ gzip: 61.58 kB
-✓ built in 1.48s
+../../../../exercise-vite-build-hln78F/dist/index.html                   0.42 kB │ gzip:  0.28 kB
+../../../../exercise-vite-build-hln78F/dist/assets/index-BAmIHqwj.css    3.99 kB │ gzip:  1.44 kB
+../../../../exercise-vite-build-hln78F/dist/assets/index-CHROF8hF.js   195.84 kB │ gzip: 61.51 kB
+✓ built in 1.23s
 
 > workflow-gate-app@0.1.0 verify:implementation
 > npm run test:release && npm run test:gate && node ../scripts/verification-gate.mjs
 
+
 > workflow-gate-app@0.1.0 test:release
 > vitest run tests/release/workflow.release.test.ts --pool=forks --maxWorkers=1
 
- RUN  v3.2.7 /tmp/agentic-exercise-04-03-after/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-gate-app
 
- ✓ tests/release/workflow.release.test.ts (6 tests) 4ms
+ RUN  v3.2.7 /tmp/exercise-04-03-review-green/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-gate-app
+
+ ✓ tests/release/workflow.release.test.ts (6 tests) 5ms
 
  Test Files  1 passed (1)
       Tests  6 passed (6)
-   Start at  12:16:01
-   Duration  230ms (transform 30ms, setup 0ms, collect 25ms, tests 4ms, environment 0ms, prepare 63ms)
+   Start at  12:02:26
+   Duration  329ms (transform 47ms, setup 0ms, collect 39ms, tests 5ms, environment 0ms, prepare 91ms)
+
 
 > workflow-gate-app@0.1.0 test:gate
 > node ./scripts/verify-gate-contract.mjs
@@ -81,20 +89,22 @@ VERIFY client-release: npm run test:release
 > workflow-gate-app@0.1.0 test:release
 > vitest run tests/release/workflow.release.test.ts --pool=forks --maxWorkers=1
 
- RUN  v3.2.7 /tmp/agentic-exercise-04-03-after/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-gate-app
 
- ✓ tests/release/workflow.release.test.ts (6 tests) 4ms
+ RUN  v3.2.7 /tmp/exercise-04-03-review-green/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-gate-app
+
+ ✓ tests/release/workflow.release.test.ts (6 tests) 6ms
 
  Test Files  1 passed (1)
       Tests  6 passed (6)
-   Start at  12:16:02
-   Duration  216ms (transform 30ms, setup 0ms, collect 25ms, tests 4ms, environment 0ms, prepare 65ms)
+   Start at  12:02:27
+   Duration  254ms (transform 39ms, setup 0ms, collect 31ms, tests 6ms, environment 0ms, prepare 80ms)
 
 PASS client-release
 VERIFY client-quality-build: npm run agent:check
 
 > workflow-gate-app@0.1.0 agent:check
 > npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+
 
 > workflow-gate-app@0.1.0 test:integrity
 > node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
@@ -119,6 +129,7 @@ format-check passed
 > workflow-gate-app@0.1.0 typecheck
 > node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
 
+
 > workflow-gate-app@0.1.0 build
 > node ../../../scripts/run-vite-build.mjs
 
@@ -127,10 +138,10 @@ transforming...
 ✓ 31 modules transformed.
 rendering chunks...
 computing gzip size...
-../../../../exercise-vite-build-vRlhGs/dist/index.html                   0.42 kB │ gzip:  0.28 kB
-../../../../exercise-vite-build-vRlhGs/dist/assets/index-BAmIHqwj.css    3.99 kB │ gzip:  1.44 kB
-../../../../exercise-vite-build-vRlhGs/dist/assets/index-CHROF8hF.js   195.84 kB │ gzip: 61.58 kB
-✓ built in 918ms
+../../../../exercise-vite-build-nJyDw8/dist/index.html                   0.42 kB │ gzip:  0.28 kB
+../../../../exercise-vite-build-nJyDw8/dist/assets/index-BAmIHqwj.css    3.99 kB │ gzip:  1.44 kB
+../../../../exercise-vite-build-nJyDw8/dist/assets/index-CHROF8hF.js   195.84 kB │ gzip: 61.51 kB
+✓ built in 809ms
 PASS client-quality-build
 VERIFY provider-tests-build: ./mvnw -q verify
 WARNING: A restricted method in java.lang.System has been called
@@ -144,6 +155,7 @@ VERIFIED release gate passed.
 > workflow-gate-app@0.1.0 verify:submission
 > npm run test:submission
 
+
 > workflow-gate-app@0.1.0 test:submission
 > node ./scripts/verify-release-submission.mjs
 
@@ -151,3 +163,4 @@ Comparable runs, skill provenance, claim audit, gate proof, and fresh release ev
 PASS verify:exercise left tracked files, the Git index, and untracked or ignored paths unchanged
 
 Exit code: 0
+

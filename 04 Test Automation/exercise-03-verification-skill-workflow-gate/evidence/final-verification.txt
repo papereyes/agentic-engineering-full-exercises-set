@@ -1,6 +1,7 @@
 Implementation commit: 2420dc90530defebc976d55b02a41c2c49f7faf1
-Date: 2026-09-08T12:14:18+05:30
-Command: MAVEN_ARGS=-Dproject.build.directory=/tmp/exercise-04-03-review-gate-target node scripts/verification-gate.mjs
+Date: 2026-09-09T12:03:04+05:30
+Fresh checkout: /tmp/exercise-04-03-review-green
+Command: MAVEN_BUILD_DIRECTORY=/tmp/exercise-04-03-gate-target node scripts/verification-gate.mjs
 
 VERIFY gate-contract: npm run test:gate
 
@@ -16,13 +17,15 @@ VERIFY client-release: npm run test:release
 > workflow-gate-app@0.1.0 test:release
 > vitest run tests/release/workflow.release.test.ts --pool=forks --maxWorkers=1
 
- RUN  v3.2.7 /tmp/agentic-exercise-04-03-after/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-gate-app
 
- ✓ tests/release/workflow.release.test.ts (6 tests) 5ms
+ RUN  v3.2.7 /tmp/exercise-04-03-review-green/04 Test Automation/exercise-03-verification-skill-workflow-gate/workflow-gate-app
+
+ ✓ tests/release/workflow.release.test.ts (6 tests) 4ms
 
  Test Files  1 passed (1)
       Tests  6 passed (6)
-   Duration  263ms
+   Start at  12:03:18
+   Duration  200ms (transform 29ms, setup 0ms, collect 24ms, tests 4ms, environment 0ms, prepare 59ms)
 
 PASS client-release
 VERIFY client-quality-build: npm run agent:check
@@ -30,13 +33,43 @@ VERIFY client-quality-build: npm run agent:check
 > workflow-gate-app@0.1.0 agent:check
 > npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
 
+
+> workflow-gate-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+
 Verified 15 protected challenge inputs.
+
+> workflow-gate-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+
 lint-check passed
+
+> workflow-gate-app@0.1.0 test
+> node ./scripts/agent-check.mjs
+
 agent-check passed for Verification Skill Workflow Gate
+
+> workflow-gate-app@0.1.0 format
+> node ./scripts/format-check.mjs
+
 format-check passed
+
+> workflow-gate-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+
+
+> workflow-gate-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+
 vite v7.3.6 building client environment for production...
+transforming...
 ✓ 31 modules transformed.
-✓ built in 1.23s
+rendering chunks...
+computing gzip size...
+../../../../exercise-vite-build-lXoRAp/dist/index.html                   0.42 kB │ gzip:  0.28 kB
+../../../../exercise-vite-build-lXoRAp/dist/assets/index-BAmIHqwj.css    3.99 kB │ gzip:  1.44 kB
+../../../../exercise-vite-build-lXoRAp/dist/assets/index-CHROF8hF.js   195.84 kB │ gzip: 61.51 kB
+✓ built in 846ms
 PASS client-quality-build
 VERIFY provider-tests-build: ./mvnw -q verify
 WARNING: A restricted method in java.lang.System has been called
@@ -46,4 +79,6 @@ WARNING: Restricted methods will be blocked in a future release unless native ac
 
 PASS provider-tests-build
 VERIFIED release gate passed.
+
 Exit code: 0
+

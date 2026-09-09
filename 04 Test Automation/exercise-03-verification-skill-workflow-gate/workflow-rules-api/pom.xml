@@ -14,7 +14,24 @@
   <version>0.0.1-SNAPSHOT</version>
   <properties>
     <java.version>21</java.version>
+    <maven.build.directory>${project.basedir}/target</maven.build.directory>
   </properties>
+  <build>
+    <directory>${maven.build.directory}</directory>
+  </build>
+  <profiles>
+    <profile>
+      <id>external-build-directory</id>
+      <activation>
+        <property>
+          <name>env.MAVEN_BUILD_DIRECTORY</name>
+        </property>
+      </activation>
+      <properties>
+        <maven.build.directory>${env.MAVEN_BUILD_DIRECTORY}</maven.build.directory>
+      </properties>
+    </profile>
+  </profiles>
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>

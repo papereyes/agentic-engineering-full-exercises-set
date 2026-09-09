@@ -1,0 +1,22 @@
+stateDiagram-v2
+    [*] --> Draft
+    Draft --> ManagerApproval: Submit request
+    ManagerApproval --> DataOwnerApproval: Manager approves
+    DataOwnerApproval --> Provisioning: Data owner approves
+    Provisioning --> Provisioning: Provisioning fails / retry automatically
+    Provisioning --> Provisioned: Access granted
+    Provisioned --> [*]
+
+    note right of DataOwnerApproval
+        Security review occurs outside the application
+        and does not affect routing.
+    end note
+
+    note right of Provisioning
+        Rollback and identity-administrator actions
+        occur outside the application.
+    end note
+
+    note right of Provisioned
+        Sole completed workflow state
+    end note

@@ -1,0 +1,16 @@
+sequenceDiagram
+    autonumber
+    participant App as Access Application
+    participant Provisioner as Provisioning Service
+    participant IdentityAdmin as External Identity Administrator
+
+    App->>Provisioner: Provision approved access
+
+    loop Retry automatically until access is granted
+        Provisioner-->>App: Provisioning failed
+        Note over App,IdentityAdmin: Rollback and identity-administrator actions are outside the application
+        App->>Provisioner: Retry provisioning
+    end
+
+    Provisioner-->>App: Access granted
+    Note right of App: Provisioned is the only completed workflow state

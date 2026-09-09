@@ -1,0 +1,27 @@
+sequenceDiagram
+    autonumber
+    actor Requester
+    participant App as Access Application
+    actor Manager
+    actor Owner as Data Owner
+    participant Security as External Security Review
+    participant Provisioner as Provisioning Service
+
+    Requester->>App: Submit access request
+
+    alt Normal request
+        App->>Manager: Request approval
+        Manager-->>App: Approve
+        App->>Owner: Request approval directly
+        Owner-->>App: Approve
+    else High-risk request
+        App->>Manager: Request approval
+        Manager-->>App: Approve
+        App->>Owner: Request approval directly
+        Owner-->>App: Approve
+        Note over App,Security: Security review is external and does not affect routing
+    end
+
+    App->>Provisioner: Provision approved access
+    Provisioner-->>App: Access granted
+    App-->>Requester: Request provisioned

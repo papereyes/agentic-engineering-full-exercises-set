@@ -1,0 +1,141 @@
+
+> workflow-reconstruction-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+
+
+> workflow-reconstruction-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+
+
+> workflow-reconstruction-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+
+
+> workflow-reconstruction-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+
+Verified 20 protected challenge inputs.
+
+> workflow-reconstruction-app@0.1.0 lint
+> node ./scripts/starter-check.mjs
+
+starter-check passed
+
+> workflow-reconstruction-app@0.1.0 test
+> node ./scripts/test-diagram-verifier.mjs && node ./scripts/starter-check.mjs
+
+workflow diagram verifier self-test passed
+starter-check passed
+
+> workflow-reconstruction-app@0.1.0 format
+> node ./scripts/format-check.mjs
+
+format-check passed
+
+> workflow-reconstruction-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+
+
+> workflow-reconstruction-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs --skip-typecheck
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 36 modules transformed.
+rendering chunks...
+computing gzip size...
+../../../../exercise-vite-build-ojXaTE/dist/index.html                   0.42 kB │ gzip:  0.28 kB
+../../../../exercise-vite-build-ojXaTE/dist/assets/index-DdS6lGJU.css    3.14 kB │ gzip:  1.20 kB
+../../../../exercise-vite-build-ojXaTE/dist/assets/index-RG18iaWp.js   207.64 kB │ gzip: 63.97 kB
+✓ built in 843ms
+
+> workflow-reconstruction-app@0.1.0 verify:implementation
+> npm run workflow:trace && npm run diagrams:parse
+
+
+> workflow-reconstruction-app@0.1.0 workflow:trace
+> node ./scripts/trace-workflow.mjs
+
+Source SHA: f18f451109b241b8da2206286505342c0143de2c
+{
+  "normal": {
+    "states": [
+      "draft",
+      "submitted",
+      "manager-approved",
+      "data-owner-review",
+      "provisioning",
+      "provisioned"
+    ],
+    "actors": [
+      "Employee",
+      "Manager",
+      "Data owner",
+      "Data owner",
+      "Provisioning system"
+    ]
+  },
+  "highRisk": {
+    "states": [
+      "draft",
+      "submitted",
+      "manager-approved",
+      "security-review",
+      "data-owner-review",
+      "provisioning",
+      "provisioned"
+    ],
+    "actors": [
+      "Employee",
+      "Manager",
+      "Policy engine",
+      "Security",
+      "Data owner",
+      "Provisioning system"
+    ]
+  },
+  "failure": {
+    "states": [
+      "manager-approved",
+      "data-owner-review",
+      "provisioning",
+      "failed-provisioning",
+      "rollback-requested",
+      "rolled-back"
+    ],
+    "actors": [
+      "Data owner",
+      "Data owner",
+      "Provisioning system",
+      "Provisioning system",
+      "Identity admin"
+    ]
+  }
+}
+PASS: normal approval, high-risk security review, provisioning failure, and rollback traces match the implementation.
+
+> workflow-reconstruction-app@0.1.0 diagrams:parse
+> node ./scripts/parse-diagrams.mjs
+
+Source SHA: f18f451109b241b8da2206286505342c0143de2c
+PASS: diagrams/access-state.mmd parsed as stateDiagram
+PASS: diagrams/access-approval-sequence.mmd parsed as sequence
+PASS: diagrams/access-failure-sequence.mmd parsed as sequence
+PASS: all three Mermaid diagrams parsed successfully.
+
+> workflow-reconstruction-app@0.1.0 verify:submission
+> npm run test:submission
+
+
+> workflow-reconstruction-app@0.1.0 test:submission
+> npm run diagrams:verify && node ../../../scripts/verify-submission-contract.mjs ./submission-contract.json
+
+
+> workflow-reconstruction-app@0.1.0 diagrams:verify
+> node ./scripts/verify-diagrams.mjs
+
+Verified Mermaid syntax, implemented transitions, actor sequences, source-line traceability, contradictions, Git source binding, and evidence hashes.
+Verified Implementation-Backed Workflow Reconstruction: 9 files and 3 directories.
+PASS verify:exercise left tracked files, the Git index, and untracked or ignored paths unchanged
+
+exit code: 0

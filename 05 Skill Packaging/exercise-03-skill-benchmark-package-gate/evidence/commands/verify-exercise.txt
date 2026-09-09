@@ -1,0 +1,50 @@
+> skill-benchmark-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+> skill-benchmark-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+> skill-benchmark-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+> skill-benchmark-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+Verified 26 protected challenge inputs.
+> skill-benchmark-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+lint-check passed
+> skill-benchmark-app@0.1.0 test
+> node ./scripts/test-benchmark-framework.mjs && python ./scripts/test-package-framework.py && node ./scripts/agent-check.mjs
+benchmark and output-grading framework self-test passed
+Packaged evaluated skill ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551 to /tmp/skill-package-self-test-i9esw3qx/dist/incident-su...
+Package exactly matches evaluated skill tree ea51e0bdc9a5663530d36ed0fcd328b5e1a12b2135a970fc7abdc0d359bc2551.
+skill package framework self-test passed
+agent-check passed for Skill Benchmark and Package Gate
+> skill-benchmark-app@0.1.0 format
+> node ./scripts/format-check.mjs
+format-check passed
+> skill-benchmark-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+> skill-benchmark-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 34 modules transformed.
+rendering chunks...
+computing gzip size...
+../../../../exercise-vite-build-rYTbtF/dist/index.html                   0.42 kB │ gzip:  0.28 kB
+../../../../exercise-vite-build-rYTbtF/dist/assets/index-B8S07xzC.css    2.83 kB │ gzip:  1.11 kB
+../../../../exercise-vite-build-rYTbtF/dist/assets/index-Dvny2PvQ.js   198.79 kB │ gzip: 62.45 kB
+✓ built in 977ms
+> skill-benchmark-app@0.1.0 verify:implementation
+> npm run skill:validate && npm run benchmark:aggregate
+> skill-benchmark-app@0.1.0 skill:validate
+> node ./scripts/validate-benchmark-skill.mjs
+Incident skill is concise, source-aware, free of fixture leakage, and has tree SHA-256 215530830a0d6e2404d8f69843e78bd8f720ac96ff935447be18a28369ea...
+> skill-benchmark-app@0.1.0 benchmark:aggregate
+> node ./scripts/aggregate-benchmark.mjs
+Benchmark gate passed. Results written to evidence/benchmark.json and evidence/benchmark.md.
+Benchmark SHA-256: 067e65da19dba47aa26d051a02d5261e8d3f3860cb2b17a541d0cb91bd9dfcdd
+> skill-benchmark-app@0.1.0 verify:submission
+> npm run test:submission
+> skill-benchmark-app@0.1.0 test:submission
+> node ./scripts/verify-benchmark-submission.mjs
+All 36 runs were regraded, the gate passed, and the archive exactly matches the evaluated skill.
+PASS verify:exercise left tracked files, the Git index, and untracked or ignored paths unchanged

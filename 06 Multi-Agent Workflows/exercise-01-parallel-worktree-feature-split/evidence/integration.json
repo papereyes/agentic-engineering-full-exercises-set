@@ -14,7 +14,14 @@
     "command": "npm run test:integrated",
     "exit_code": 0,
     "output_path": "evidence/commands/integrated.txt",
-    "output_sha256": "e4b9706a92cab81cbdb30ceb3d49a0eefc795a592e48cf81880cb5d6e6e72958"
+    "output_sha256": "cf85503fbcca8a6562a47032f09a4497cd06bc2671fe2f67e774f3e309c68a33"
+  },
+  "final_verification": {
+    "snapshot_sha": "b152c10a251136d3f9e64a65b00e494dd0e4e5f3",
+    "command": "npm run verify:exercise",
+    "exit_code": 0,
+    "output_path": "evidence/commands/verify-exercise.txt",
+    "output_sha256": "5f77a44c6349dbcdd5a35c487053e36971a251755ed5726d86383721d4fb7f8d"
   },
   "untrusted_handoff_review": {
     "handoff_id": "UNTRUSTED-01",

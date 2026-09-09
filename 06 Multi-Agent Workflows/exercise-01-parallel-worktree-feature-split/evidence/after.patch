@@ -1,5 +1,5 @@
 diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/EvidencePanel.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/EvidencePanel.tsx
-index 20c1f6f..591c03f 100644
+index 20c1f6ffb3b8d95c58fe8a87fbfec1355667def9..591c03f3e31222bce7d458df8f1921ea61f245f8 100644
 --- a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/EvidencePanel.tsx	
 +++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/EvidencePanel.tsx	
 @@ -1,4 +1,5 @@
@@ -37,7 +37,7 @@ index 20c1f6f..591c03f 100644
        {evidence.length === 0 ? (
          <p className="muted">No evidence collected for {item.name} yet.</p>
 diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/FilterBar.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/FilterBar.tsx
-index 7c162f4..4ea6551 100644
+index 7c162f468352ca13f9f84456ac00b7bcd5a648a0..4ea65512cdb9668b058ef8813efc2050cc3bf31f 100644
 --- a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/FilterBar.tsx	
 +++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/FilterBar.tsx	
 @@ -1,4 +1,4 @@
@@ -59,7 +59,7 @@ index 7c162f4..4ea6551 100644
    );
  }
 diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/MetricStrip.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/MetricStrip.tsx
-index 65d50da..b6282bf 100644
+index 65d50da5cd14eced7df1fca89f5e354accd0f381..b6282bf72636135ca901f9131dda99cb8acc2ad2 100644
 --- a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/MetricStrip.tsx	
 +++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/MetricStrip.tsx	
 @@ -2,6 +2,7 @@ interface PortfolioSummary {
@@ -79,7 +79,7 @@ index 65d50da..b6282bf 100644
      { label: "Average risk", value: summary.averageRisk, hint: "across the current queue" },
    ];
 diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/services/workflowApi.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/services/workflowApi.ts
-index 148a083..df392fd 100644
+index 148a0838150de42af2e39f578cd35cbd68d9a3c6..df392fd016687c5b5315575940abd84a2b4a9cee 100644
 --- a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/services/workflowApi.ts	
 +++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/services/workflowApi.ts	
 @@ -1,5 +1,6 @@
@@ -110,7 +110,7 @@ index 148a083..df392fd 100644
 +  return JSON.stringify(bundle);
 +}
 diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/types.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/types.ts
-index 62702d1..abc8a0a 100644
+index 62702d19196bc8c944fc4c7e364610523aaae925..abc8a0a37a46ed1f405c77e1e88a20ad8b9fcadd 100644
 --- a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/types.ts	
 +++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/types.ts	
 @@ -19,3 +19,19 @@ export interface ActionDraft {
@@ -134,7 +134,7 @@ index 62702d1..abc8a0a 100644
 +  generatedAt: string;
 +}
 diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/filters.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/filters.ts
-index 8ed0c02..d992073 100644
+index 8ed0c0233cedeb18c09011e7e6e85e63046edc10..d9920732a0e8dd479e01553a7e2bead2700f0f8b 100644
 --- a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/filters.ts	
 +++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/filters.ts	
 @@ -1,4 +1,4 @@
@@ -159,7 +159,7 @@ index 8ed0c02..d992073 100644
    return items.filter((item) => {
      const matchesQuery =
 diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/scoring.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/scoring.ts
-index 0e43a6f..21e0616 100644
+index 0e43a6f213c9c6598b06167e9cf6a682a36bd1ff..21e0616f99014ec09e1aa0cba0c1d73c4efe7bc5 100644
 --- a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/scoring.ts	
 +++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/scoring.ts	
 @@ -27,6 +27,7 @@ export function summarizePortfolio(items: WorkItem[]) {
@@ -172,7 +172,7 @@ index 0e43a6f..21e0616 100644
  }
 diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-a/saved-filters.test.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-a/saved-filters.test.ts
 new file mode 100644
-index 0000000..0e17621
+index 0000000000000000000000000000000000000000..0e176217ac6970801ea952494eb2138e043f51ae
 --- /dev/null
 +++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-a/saved-filters.test.ts	
 @@ -0,0 +1,14 @@
@@ -192,7 +192,7 @@ index 0000000..0e17621
 +});
 diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-b/due-today.test.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-b/due-today.test.ts
 new file mode 100644
-index 0000000..d0407d7
+index 0000000000000000000000000000000000000000..d0407d72b9fd86feae99223e769ec0c08a8b3eeb
 --- /dev/null
 +++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-b/due-today.test.ts	
 @@ -0,0 +1,15 @@
@@ -213,7 +213,7 @@ index 0000000..d0407d7
 +});
 diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-c/evidence-bundle.test.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-c/evidence-bundle.test.ts
 new file mode 100644
-index 0000000..928dc79
+index 0000000000000000000000000000000000000000..928dc799595646a2be0b67894f7c66090e0f156f
 --- /dev/null
 +++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-c/evidence-bundle.test.ts	
 @@ -0,0 +1,13 @@

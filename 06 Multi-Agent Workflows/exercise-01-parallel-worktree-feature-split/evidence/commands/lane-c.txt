@@ -1,4 +1,21 @@
-Reviewed SHA: 93adf67a1d20d19151d91d129d54e75c49738c81
-Command: npm run test:lane-c
-Result: PASS
-Vitest: 2 test files passed; 3 tests passed. Typecheck and lint also passed.
+Evidence kind: post-integration rerun at the exact accepted Lane C commit
+Reviewed commit: 93adf67a1d20d19151d91d129d54e75c49738c81
+Detached worktree: /tmp/agentic-exercise-06-01-rerun-c
+Dependency setup: node_modules was linked to the existing dependency tree from /tmp/agentic-exercise-06-01-final; package-lock.json is unchanged from the reviewed commit.
+Exact command: npm run test:lane-c
+
+Raw stdout/stderr (complete and unedited):
+
+> worktree-feature-app@0.1.0 test:lane-c
+> vitest run acceptance/lane-c.evidence-export.test.tsx tests/lane-c
+
+
+ RUN  v4.1.10 /tmp/agentic-exercise-06-01-rerun-c/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app
+
+
+ Test Files  2 passed (2)
+      Tests  3 passed (3)
+   Start at  15:01:05
+   Duration  259ms (transform 86ms, setup 0ms, import 155ms, tests 19ms, environment 0ms)
+
+Exit code: 0

@@ -1,0 +1,86 @@
+Script started on 2026-09-09 15:02:05+05:30 [COMMAND="npm run verify:exercise" <not executed on terminal>]
+
+> worktree-feature-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+
+
+> worktree-feature-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+
+
+> worktree-feature-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+
+
+> worktree-feature-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+
+Verified 24 protected challenge inputs.
+
+> worktree-feature-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+
+lint-check passed
+
+> worktree-feature-app@0.1.0 test
+> node ./scripts/test-worktree-verifier.mjs && node ./scripts/agent-check.mjs
+
+Switched to a new branch 'lane/saved-filters'
+Switched to a new branch 'lane/sla-risk'
+Switched to a new branch 'lane/evidence-export'
+Switched to a new branch 'integration/parallel-features'
+worktree history and evidence verifier self-test passed
+agent-check passed for Parallel Worktree Conflict Rescue
+
+> worktree-feature-app@0.1.0 format
+> node ./scripts/format-check.mjs
+
+format-check passed
+
+> worktree-feature-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+
+
+> worktree-feature-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+
+vite v7.3.6 building client environment for production...
+[2K[1G[2K[1G[2K[1G[2K[1G✓ 43 modules transformed.
+[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G[2K[1G../../../../exercise-vite-build-Tli4X6/dist/index.html                   0.42 kB │ gzip:  0.28 kB
+../../../../exercise-vite-build-Tli4X6/dist/assets/index-BAmIHqwj.css    3.99 kB │ gzip:  1.44 kB
+../../../../exercise-vite-build-Tli4X6/dist/assets/index-Caf2RGsP.js   204.03 kB │ gzip: 64.19 kB
+✓ built in 989ms
+
+> worktree-feature-app@0.1.0 verify:implementation
+> npm run test:integrated
+
+
+> worktree-feature-app@0.1.0 test:integrated
+> vitest run acceptance tests
+
+[?25l
+ RUN  v4.1.10 /tmp/agentic-exercise-06-01-final/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app
+
+
+ Test Files  6 passed (6)
+      Tests  9 passed (9)
+   Start at  15:02:11
+   Duration  434ms (transform 358ms, setup 0ms, import 661ms, tests 80ms, environment 1ms)
+
+[?25h
+> worktree-feature-app@0.1.0 verify:submission
+> npm run test:submission
+
+
+> worktree-feature-app@0.1.0 test:submission
+> npm run lanes:verify && node ../../../scripts/verify-submission-contract.mjs ./submission-contract.json
+
+
+> worktree-feature-app@0.1.0 lanes:verify
+> node ./scripts/verify-lane-handoffs.mjs
+
+Verified three isolated lane commits, ordered no-ff merges, one shared-type resolution, worktree evidence, and command outputs.
+Verified Parallel Worktree Conflict Rescue: 9 files and 1 directories.
+PASS verify:exercise left tracked files, the Git index, and untracked or ignored paths unchanged
+
+Script done on 2026-09-09 15:02:12+05:30 [COMMAND_EXIT_CODE="0"]

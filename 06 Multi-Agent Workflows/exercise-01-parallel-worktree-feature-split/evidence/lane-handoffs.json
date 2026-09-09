@@ -13,7 +13,7 @@
       "owned_paths": ["src/components/FilterBar.tsx", "src/utils/filters.ts", "tests/lane-a/"],
       "changed_paths": ["src/components/FilterBar.tsx", "src/utils/filters.ts", "tests/lane-a/saved-filters.test.ts"],
       "shared_requests": [{"path": "src/types.ts", "symbol": "FilterPreset", "reason": "Promote the lane-local contract for shared ownership after all lane merges."}],
-      "verification": {"command": "npm run test:lane-a", "exit_code": 0, "output_path": "evidence/commands/lane-a.txt", "output_sha256": "9708e77c0ddf354ab8b748bf6f55bf057b49df3df90404c9b82d020e7c6846c5"},
+      "verification": {"command": "npm run test:lane-a", "exit_code": 0, "output_path": "evidence/commands/lane-a.txt", "output_sha256": "765d84bc58eb72ca147b0891b9c58e65180f2ef03ce9750a5c4e23d3af6128b4"},
       "rollback": "git revert cb2fc176ea2c27f40e34e6959e35b36c557199cd",
       "risks": "None beyond the integration-owned type promotion."
     },
@@ -28,7 +28,7 @@
       "owned_paths": ["src/components/MetricStrip.tsx", "src/utils/scoring.ts", "tests/lane-b/"],
       "changed_paths": ["src/components/MetricStrip.tsx", "src/utils/scoring.ts", "tests/lane-b/due-today.test.ts"],
       "shared_requests": [],
-      "verification": {"command": "npm run test:lane-b", "exit_code": 0, "output_path": "evidence/commands/lane-b.txt", "output_sha256": "55143a2b96a3458241127fa101015576647723e8052e72dc9eae2845a768ee9a"},
+      "verification": {"command": "npm run test:lane-b", "exit_code": 0, "output_path": "evidence/commands/lane-b.txt", "output_sha256": "b574bd655afafb5251bc1f2af4fa9c663931d092d2f6dc16ca568ab94e5943af"},
       "rollback": "git revert 1ac6bbdd195cdda94c08b00c5c6e49ac63a6736d",
       "risks": "None; missing loading-state data renders as zero."
     },
@@ -43,7 +43,7 @@
       "owned_paths": ["src/components/EvidencePanel.tsx", "src/services/workflowApi.ts", "tests/lane-c/"],
       "changed_paths": ["src/components/EvidencePanel.tsx", "src/services/workflowApi.ts", "tests/lane-c/evidence-bundle.test.ts"],
       "shared_requests": [{"path": "src/types.ts", "symbol": "EvidenceBundle", "reason": "Promote the lane-local export contract after all lane merges."}],
-      "verification": {"command": "npm run test:lane-c", "exit_code": 0, "output_path": "evidence/commands/lane-c.txt", "output_sha256": "584c4ede2715506ad8ed12fa17fe833edbe8e2c63dc8c7b7b6f964ce62bc8bf1"},
+      "verification": {"command": "npm run test:lane-c", "exit_code": 0, "output_path": "evidence/commands/lane-c.txt", "output_sha256": "7934963843a0c6767c6d024cfdf0116baf10d622cff21800b1d7680920f9f837"},
       "rollback": "git revert 93adf67a1d20d19151d91d129d54e75c49738c81",
       "risks": "Browser download behavior remains covered by protected acceptance tests."
     }

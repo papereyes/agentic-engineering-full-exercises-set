@@ -1,1 +1,4375 @@
-
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/acceptance/lane-a.saved-filters.test.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/acceptance/lane-a.saved-filters.test.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..c809ee78e253cd573b8d2b1c416687aac8620da4
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/acceptance/lane-a.saved-filters.test.tsx	
+@@ -0,0 +1,25 @@
++import { renderToStaticMarkup } from "react-dom/server";
++import { describe, expect, it } from "vitest";
++import { FilterBar } from "../src/components/FilterBar";
++import { workItems } from "../src/data/workItems";
++import {
++  applyFilterPreset,
++  defaultFilters,
++  filterItems,
++  savedFilterPresets,
++} from "../src/utils/filters";
++
++describe("lane A saved filters", () => {
++  it("provides a high-priority blocked preset without erasing search", () => {
++    const preset = savedFilterPresets.find((candidate) => candidate.id === "high-priority-blocked");
++    expect(preset?.name).toBe("High-priority Blocked");
++    const filters = applyFilterPreset({ ...defaultFilters, query: "atlas" }, preset!);
++    expect(filters).toEqual({ query: "atlas", priority: "High", status: "Blocked" });
++    expect(filterItems(workItems, filters).map((item) => item.id)).toEqual(["parall-01"]);
++  });
++
++  it("renders the preset as a filter-bar action", () => {
++    const markup = renderToStaticMarkup(<FilterBar filters={defaultFilters} onChange={() => undefined} />);
++    expect(markup).toContain("High-priority Blocked");
++  });
++});
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/acceptance/lane-b.sla-risk.test.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/acceptance/lane-b.sla-risk.test.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..1fc300bc7155d775533d8450634fc38b22e70208
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/acceptance/lane-b.sla-risk.test.tsx	
+@@ -0,0 +1,18 @@
++import { renderToStaticMarkup } from "react-dom/server";
++import { describe, expect, it } from "vitest";
++import { MetricStrip } from "../src/components/MetricStrip";
++import { workItems } from "../src/data/workItems";
++import { calculateRisk, riskLabel, summarizePortfolio } from "../src/utils/scoring";
++
++describe("lane B SLA risk", () => {
++  it("counts work due today and keeps a due-today blocked item critical", () => {
++    const summary = summarizePortfolio(workItems);
++    expect(summary.dueToday).toBe(1);
++    expect(riskLabel(calculateRisk(workItems[0]))).toBe("Critical");
++  });
++
++  it("renders the due-today portfolio metric", () => {
++    const markup = renderToStaticMarkup(<MetricStrip summary={summarizePortfolio(workItems)} />);
++    expect(markup).toContain("Due today");
++  });
++});
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/acceptance/lane-c.evidence-export.test.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/acceptance/lane-c.evidence-export.test.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..1ede4e20621b4c9145fbbe804cc3512a5c41d1de
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/acceptance/lane-c.evidence-export.test.tsx	
+@@ -0,0 +1,32 @@
++import { renderToStaticMarkup } from "react-dom/server";
++import { describe, expect, it } from "vitest";
++import { EvidencePanel } from "../src/components/EvidencePanel";
++import { workItems } from "../src/data/workItems";
++import { createEvidenceBundle, serializeEvidenceBundle } from "../src/services/workflowApi";
++
++describe("lane C evidence export", () => {
++  it("builds a deterministic JSON evidence bundle", () => {
++    const generatedAt = "2026-08-13T09:00:00.000Z";
++    const bundle = createEvidenceBundle(workItems[0], ["Policy approval attached"], generatedAt);
++    expect(bundle).toMatchObject({
++      id: "parall-01",
++      owner: "Asha",
++      status: "Blocked",
++      risk: 100,
++      evidence: ["Policy approval attached"],
++      generatedAt,
++    });
++    expect(JSON.parse(serializeEvidenceBundle(bundle))).toEqual(bundle);
++  });
++
++  it("offers export only after evidence has been collected", () => {
++    const withEvidence = renderToStaticMarkup(
++      <EvidencePanel item={workItems[0]} evidence={["Policy approval attached"]} onCollect={async () => undefined} />,
++    );
++    const withoutEvidence = renderToStaticMarkup(
++      <EvidencePanel item={workItems[0]} evidence={[]} onCollect={async () => undefined} />,
++    );
++    expect(withEvidence).toContain("Export JSON");
++    expect(withoutEvidence).not.toContain("Export JSON");
++  });
++});
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/challenge-integrity.json b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/challenge-integrity.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..5854ce0e57c3e1fef4d3539d5bcc56e86a55f73b
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/challenge-integrity.json	
+@@ -0,0 +1,29 @@
++{
++  "algorithm": "sha256-normalized-lf",
++  "protectedFiles": {
++    "../../../scripts/run-clean-verification.mjs": "9b17cbb8865a642a7789113c145be88c6bb965bc2d8c024b82202e8ae85bf368",
++    "../../../scripts/run-vite-build.mjs": "b7901ed4f770e6537e80f864392c8c1de841b5c97fa8993246c5df7a86d5d415",
++    "../../../scripts/verify-protected-inputs.mjs": "d99346d9a84651bcb654d07d1b5d131d39d5f3b703ee9614db4eafc86cb4d96c",
++    "../../../scripts/verify-submission-contract.mjs": "5c34aab86313eeb825b19c6ceabc8afbaf65cce3d1cde325bdea7a9739e23ca4",
++    "../README.md": "6a806be8cbdf64688cafbdd6f16a26213de2e6fa417c32972aff8e6ee13708ba",
++    "../docs/evidence-template.md": "7a4d4ec9b9b7967e30fe96220a4b6c7eba82ae81b3630a52a4317620c3e18e30",
++    "../docs/file-ownership-map.md": "1d9941826fedc4eb5978eeacd36edccad74eab2e8158d096a21677c0608d3d60",
++    "../docs/integration-contract.md": "c7e6a0d3c24cb2474670407616a2aef78a78646be8e5abb3ddc827a18e222e0b",
++    "../docs/lane-handoff-template.md": "75561fb0cf8e16a59c4bf8b8c23c9c1c5fd0b6fe0ba172a88552bde3c4418c77",
++    "../docs/task-board.md": "82b7ff1944d68d6cefcda3f201ad3c10b88222cc44a66895c0ab67eb448ebccf",
++    "../docs/untrusted-handoff.json": "fa97b1531d2d9cc2636b3504e81101fdecaa1292e4586654bf9dea889d3c5574",
++    "acceptance/lane-a.saved-filters.test.tsx": "e23896de5b946fac30c204d38ddefdee8f4698811f0beb06b21a29697b1a7ef8",
++    "acceptance/lane-b.sla-risk.test.tsx": "23c1cacddb05e8a7b31f3dfb7a25fe4830b9bf604d2b204ac97047bd8360fbae",
++    "acceptance/lane-c.evidence-export.test.tsx": "37c4ccbd1e56b01d728a9d46d24957b894bdbfdc013c29e1e2c5c194fea878d4",
++    "lab-contract.json": "01209b76c4a189141b4c2283244226c67c72203cd9451b98aef99efb567014d2",
++    "package-lock.json": "136cb6f20bdf4babc8bf32e6bd9e8eba4794e0a15bc939c240a978c8c8dbe97b",
++    "package.json": "7ec3f0a467f75704004fd69d0650ca3e40f0eb55bb9bfb86eb4ddf2a90f580df",
++    "scripts/test-worktree-verifier.mjs": "30efcb95c531f33cef4376120760f4d319dc7db4f2e644ffa6cad398ffc56601",
++    "scripts/verify-lane-handoffs.mjs": "5a72aa4e52530d3a6a5ba288b4c0e2995e7348cbd83166f55e7204a4a9491be1",
++    "scripts/worktree-verification.mjs": "98b0efb7700949c7a266bdd6a362168df89ada3ce96f4ea2ab4a8fa14e6ec973",
++    "src/App.tsx": "f058cd92e74066c4bf5aa440d66d2362b0294f4fab78454e1334bf0182902b3f",
++    "src/data/workItems.ts": "c1314e6033e84c5768da9a7a94034647f64356d59ec94734191494605740f650",
++    "src/labContract.ts": "74674822459b38a128bd7065ed788349226b3744a1429b14fb8bea160f3c178f",
++    "submission-contract.json": "64bc601a1a251e6a39feff13eddda41d5812a366f375e359efe36fe59db15f64"
++  }
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/index.html b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/index.html
+new file mode 100644
+index 0000000000000000000000000000000000000000..5b031a364905487693e8f122c6579afa4fd7755e
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/index.html	
+@@ -0,0 +1,12 @@
++<!doctype html>
++<html lang="en">
++  <head>
++    <meta charset="UTF-8" />
++    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++    <title>Parallel Worktree Conflict Rescue</title>
++  </head>
++  <body>
++    <div id="root"></div>
++    <script type="module" src="/src/main.tsx"></script>
++  </body>
++</html>
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/lab-contract.json b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/lab-contract.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..f0b3a9383d87a017f7659c7dfa351e1be5828bc7
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/lab-contract.json	
+@@ -0,0 +1,53 @@
++{
++  "title": "Parallel Worktree Conflict Rescue",
++  "competency": "06. Multi-Agent Workflows - Parallel agents on isolated tasks",
++  "domain": "A work queue application with three product changes that need isolated implementation and one shared-type integration point",
++  "mission": "Deliver saved filters, due-today risk, and evidence export through three real Git worktrees while preserving independent verification and inspectable integration history.",
++  "outcome": "Three lane commits remain independently reviewable, their shared contracts are promoted once by the integration owner, and the final product passes protected acceptance tests.",
++  "entities": [
++    "common base SHA",
++    "linked worktree and lane branch",
++    "owned path and shared-type request",
++    "lane handoff and verification output",
++    "ordered merge commit and product head"
++  ],
++  "seededDefects": [
++    "saved-filter and evidence-export work both need new shared types but do not own src/types.ts",
++    "due-today risk, saved filters, and evidence export are absent from the starter application",
++    "a supplied ready-to-merge handoff makes claims that do not match its resolved commit or evidence",
++    "declared lane evidence can drift from the actual Git parents, paths, branches, and output files"
++  ],
++  "verificationGates": [
++    "protected focused acceptance test for each lane",
++    "mandatory rejection of the supplied invalid handoff with Git-backed proof",
++    "Git history, branch, ownership, trailer, handoff, output-hash, and worktree audit",
++    "ordered B, A, C no-ff merge audit with lane blob preservation",
++    "single shared-type commit and complete integrated acceptance suite",
++    "linked-worktree cleanup and repository checks",
++    "npm run verify:exercise checks protected inputs, implementation quality, and required submission evidence."
++  ],
++  "agentWorkflow": [
++    "Record one clean base SHA and create the three required lane branches in linked worktrees.",
++    "Give each lane agent only its task, owned paths, shared request, and focused verification command.",
++    "Reject the supplied invalid handoff, then review one independently tested commit and evidence-backed handoff from every lane.",
++    "Merge B, A, and C with no-ff, then promote both shared contracts in one integration commit.",
++    "Run integrated checks, verify the submission against Git, and remove the linked worktrees.",
++    "Capture comparable before and after results using the conditions defined in the exercise README."
++  ],
++  "workingDeliverables": [
++    "Three lane branches, linked worktrees, one-parent commits, and lane-owned tests.",
++    "Saved filters, due-today risk, and JSON evidence export in the integrated application.",
++    "Machine-readable lane handoffs, integration record, command outputs, and worktree captures.",
++    "Integration review covering conflicts, risk, cleanup, and rollback.",
++    "evidence/before.md and evidence/before.patch",
++    "evidence/after.md and evidence/after.patch",
++    "evidence/comparison.md"
++  ],
++  "masterySignals": [
++    "All lane commits share one parent and change only their fixed ownership paths.",
++    "Each lane stays independently testable and requests shared contracts without editing src/types.ts.",
++    "No-ff merges preserve lane commits and content in the required B, A, C order.",
++    "One shared-type commit resolves both requests without hiding unrelated work.",
++    "Captured evidence matches Git history and passing command output byte for byte."
++  ]
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/package-lock.json b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/package-lock.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..4e042f8795447ac809c97f631c0e9893d14f237a
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/package-lock.json	
+@@ -0,0 +1,2216 @@
++{
++  "name": "worktree-feature-app",
++  "version": "0.1.0",
++  "lockfileVersion": 3,
++  "requires": true,
++  "packages": {
++    "": {
++      "name": "worktree-feature-app",
++      "version": "0.1.0",
++      "dependencies": {
++        "react": "^19.2.0",
++        "react-dom": "^19.2.0"
++      },
++      "devDependencies": {
++        "@types/react": "^19.2.7",
++        "@types/react-dom": "^19.2.3",
++        "@vitejs/plugin-react": "^5.0.4",
++        "typescript": "^5.9.3",
++        "vite": "^7.1.12",
++        "vitest": "^4.1.10"
++      },
++      "engines": {
++        "node": ">=22.12.0 <25"
++      }
++    },
++    "node_modules/@babel/code-frame": {
++      "version": "7.29.7",
++      "resolved": "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.29.7.tgz",
++      "integrity": "sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/helper-validator-identifier": "^7.29.7",
++        "js-tokens": "^4.0.0",
++        "picocolors": "^1.1.1"
++      },
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@babel/compat-data": {
++      "version": "7.29.7",
++      "resolved": "https://registry.npmjs.org/@babel/compat-data/-/compat-data-7.29.7.tgz",
++      "integrity": "sha512-locTkQyKvwIEgBzVrn8693ebc97F2U8ZHjbXwDXJ5Fn2TCpNwTlKcaKLkdHop5c/icOFE7qt7Q9JC5hnKNa6Gg==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@babel/core": {
++      "version": "7.29.7",
++      "resolved": "https://registry.npmjs.org/@babel/core/-/core-7.29.7.tgz",
++      "integrity": "sha512-RgHBCvtjbOK2gXSNBNIkNoEc9qoVEtau3hj8gEqKQuL3HZAibKarWFEI3Lfm6EYKkLalOh8eSrj9b+ch9H/VBA==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/code-frame": "^7.29.7",
++        "@babel/generator": "^7.29.7",
++        "@babel/helper-compilation-targets": "^7.29.7",
++        "@babel/helper-module-transforms": "^7.29.7",
++        "@babel/helpers": "^7.29.7",
++        "@babel/parser": "^7.29.7",
++        "@babel/template": "^7.29.7",
++        "@babel/traverse": "^7.29.7",
++        "@babel/types": "^7.29.7",
++        "@jridgewell/remapping": "^2.3.5",
++        "convert-source-map": "^2.0.0",
++        "debug": "^4.1.0",
++        "gensync": "^1.0.0-beta.2",
++        "json5": "^2.2.3",
++        "semver": "^6.3.1"
++      },
++      "engines": {
++        "node": ">=6.9.0"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/babel"
++      }
++    },
++    "node_modules/@babel/generator": {
++      "version": "7.29.8",
++      "resolved": "https://registry.npmjs.org/@babel/generator/-/generator-7.29.8.tgz",
++      "integrity": "sha512-gZbepsdh3WDtgZKWL+vTPh71LSBrm/Y4/QDZBVCcYfmeTEEuoOYwlSy+G1StfJg+/Zy550u/3TATbm7qDbbMtg==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/parser": "^7.29.8",
++        "@babel/types": "^7.29.8",
++        "@jridgewell/gen-mapping": "^0.3.12",
++        "@jridgewell/trace-mapping": "^0.3.28",
++        "jsesc": "^3.0.2"
++      },
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@babel/helper-compilation-targets": {
++      "version": "7.29.7",
++      "resolved": "https://registry.npmjs.org/@babel/helper-compilation-targets/-/helper-compilation-targets-7.29.7.tgz",
++      "integrity": "sha512-wem6WaBj4NaVYVdNhLPPVacES6ZJ+KBBfSkTMD3YZxbP3rm3Di85tJU5ljaUNhaOynt+Aj0xruhYuzQBt8n71g==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/compat-data": "^7.29.7",
++        "@babel/helper-validator-option": "^7.29.7",
++        "browserslist": "^4.24.0",
++        "lru-cache": "^5.1.1",
++        "semver": "^6.3.1"
++      },
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@babel/helper-globals": {
++      "version": "7.29.7",
++      "resolved": "https://registry.npmjs.org/@babel/helper-globals/-/helper-globals-7.29.7.tgz",
++      "integrity": "sha512-3nQVUAtvkKH9zahfWgw96Jc/uFOmjACE1kQz82E2lqWmHBgjzbNlsC22nuQTfahmWeQtTq5nQ/4Nnd2A1wj4zA==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@babel/helper-module-imports": {
++      "version": "7.29.7",
++      "resolved": "https://registry.npmjs.org/@babel/helper-module-imports/-/helper-module-imports-7.29.7.tgz",
++      "integrity": "sha512-ejHwrQQYcm9xnTivShn2IDOlIzInN34AXskvq9QicvCtEzq1Vzclu/tKF8Jq1Cg8JG2GL6/EmjgsCT7lXepE3g==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/traverse": "^7.29.7",
++        "@babel/types": "^7.29.7"
++      },
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@babel/helper-module-transforms": {
++      "version": "7.29.7",
++      "resolved": "https://registry.npmjs.org/@babel/helper-module-transforms/-/helper-module-transforms-7.29.7.tgz",
++      "integrity": "sha512-UPUVSyXbOh627KiCIGQSgwWzGeBKLkaJ9PJEdrngIwMSzxLR4jS4+f1f1jb7VzBbg8nFLaYotvVPFCTqdrmTAg==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/helper-module-imports": "^7.29.7",
++        "@babel/helper-validator-identifier": "^7.29.7",
++        "@babel/traverse": "^7.29.7"
++      },
++      "engines": {
++        "node": ">=6.9.0"
++      },
++      "peerDependencies": {
++        "@babel/core": "^7.0.0"
++      }
++    },
++    "node_modules/@babel/helper-plugin-utils": {
++      "version": "7.29.7",
++      "resolved": "https://registry.npmjs.org/@babel/helper-plugin-utils/-/helper-plugin-utils-7.29.7.tgz",
++      "integrity": "sha512-G7sHYigPY17oO5SYWnfD/0MTBwVR781S/JI643e/JhUYgVgWE/61SoW3NH9KWUKyKq5LVh3npif99Wkt6j86Jw==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@babel/helper-string-parser": {
++      "version": "7.29.7",
++      "resolved": "https://registry.npmjs.org/@babel/helper-string-parser/-/helper-string-parser-7.29.7.tgz",
++      "integrity": "sha512-Pb5ijPrZ89GDH8223L4UP8i6QApWxs04RbPQJTeWDV0/keR2E36MeKnyr6LYmUUvqRRI+Iv87SuF1W6ErINzYw==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@babel/helper-validator-identifier": {
++      "version": "7.29.7",
++      "resolved": "https://registry.npmjs.org/@babel/helper-validator-identifier/-/helper-validator-identifier-7.29.7.tgz",
++      "integrity": "sha512-qehxGkRj55h/ff8EMaJ+cYhyaKlHIxqYDn682wQD7RNp9UujOQsHog2uS0r2vzr4pW+sXf90NeeayjcNaX3fFg==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@babel/helper-validator-option": {
++      "version": "7.29.7",
++      "resolved": "https://registry.npmjs.org/@babel/helper-validator-option/-/helper-validator-option-7.29.7.tgz",
++      "integrity": "sha512-N9ZErrD+yW5geCDtBqnOoxmR8+tNKiGuxKlDpuJxfsqpa2dFcexaziGAE/qoHLiDDreVNMupxGmSoNlyvsA3gw==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@babel/helpers": {
++      "version": "7.29.7",
++      "resolved": "https://registry.npmjs.org/@babel/helpers/-/helpers-7.29.7.tgz",
++      "integrity": "sha512-1k2lAGRMfHTcwuNYcCNUmaUffmQv8KWMfh2iJUUeRlwlwH4FdNG7mfPI10NPfLHJFThE4Tyr4mv7kTNZOiPuBg==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/template": "^7.29.7",
++        "@babel/types": "^7.29.7"
++      },
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@babel/parser": {
++      "version": "7.29.8",
++      "resolved": "https://registry.npmjs.org/@babel/parser/-/parser-7.29.8.tgz",
++      "integrity": "sha512-E8lTAYNB1KW+FH+VGJuZM1ioAx2E6oVlvQFRrf5P8ZZmsiJXYAD9vTFV7yyEURNzgh1dFqMZuO6tUwcARbqFCA==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/types": "^7.29.8"
++      },
++      "bin": {
++        "parser": "bin/babel-parser.js"
++      },
++      "engines": {
++        "node": ">=6.0.0"
++      }
++    },
++    "node_modules/@babel/plugin-transform-react-jsx-self": {
++      "version": "7.29.7",
++      "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-jsx-self/-/plugin-transform-react-jsx-self-7.29.7.tgz",
++      "integrity": "sha512-TL0hMc9xzy86VD31nUiwzd5otRAcyEPcsegCxolO0PvcXuH1v0kECe/UIznYFihpkvU5wg/jk4v0TTEFfm53fw==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/helper-plugin-utils": "^7.29.7"
++      },
++      "engines": {
++        "node": ">=6.9.0"
++      },
++      "peerDependencies": {
++        "@babel/core": "^7.0.0-0"
++      }
++    },
++    "node_modules/@babel/plugin-transform-react-jsx-source": {
++      "version": "7.29.7",
++      "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-jsx-source/-/plugin-transform-react-jsx-source-7.29.7.tgz",
++      "integrity": "sha512-06IyK09H3wi4cGbhDBwp5gUGo0IKtnYa8tyTiephirPCK6fbobVGiXMMI5zLQ4aKEYP3wZ3ArU44o+8KMrSG/Q==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/helper-plugin-utils": "^7.29.7"
++      },
++      "engines": {
++        "node": ">=6.9.0"
++      },
++      "peerDependencies": {
++        "@babel/core": "^7.0.0-0"
++      }
++    },
++    "node_modules/@babel/template": {
++      "version": "7.29.7",
++      "resolved": "https://registry.npmjs.org/@babel/template/-/template-7.29.7.tgz",
++      "integrity": "sha512-puq+Gf35oI24FeN11LkoUQFqv9uwNeWpxXZi/Ji3rRIoKAzKnxRaZ+Gkj0vKS9ZCiTESfng1N9LyOyXvo+m+Gg==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/code-frame": "^7.29.7",
++        "@babel/parser": "^7.29.7",
++        "@babel/types": "^7.29.7"
++      },
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@babel/traverse": {
++      "version": "7.29.8",
++      "resolved": "https://registry.npmjs.org/@babel/traverse/-/traverse-7.29.8.tgz",
++      "integrity": "sha512-I5z7H3bf/41ktsNVLtpN0wAa336HkqIHQ5BuPLEhTkt1jVSyZpeNKIzTgEWmlxjdg81R0IgUCcaE+Ok3NvrfZg==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/code-frame": "^7.29.7",
++        "@babel/generator": "^7.29.8",
++        "@babel/helper-globals": "^7.29.7",
++        "@babel/parser": "^7.29.8",
++        "@babel/template": "^7.29.7",
++        "@babel/types": "^7.29.8",
++        "debug": "^4.3.1"
++      },
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@babel/types": {
++      "version": "7.29.8",
++      "resolved": "https://registry.npmjs.org/@babel/types/-/types-7.29.8.tgz",
++      "integrity": "sha512-Vj1jF3cPfxg7OAfoI7QnVKLoILlm2JF9pnVHrX8qx7AHMiYWT+NDAA7jChlNgRS4WTLc/fD1lXLmPixluj+3Gg==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/helper-string-parser": "^7.29.7",
++        "@babel/helper-validator-identifier": "^7.29.7"
++      },
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@esbuild/aix-ppc64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/aix-ppc64/-/aix-ppc64-0.28.1.tgz",
++      "integrity": "sha512-Svl7tq8k/08+p6CXPpRjQ1fKX+1odH/BQbb48fV6fj3CWHhsoIOoY87w1oHXm0qEpkIK3ZfVgp0hed3XBXzXMQ==",
++      "cpu": [
++        "ppc64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "aix"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/android-arm": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/android-arm/-/android-arm-0.28.1.tgz",
++      "integrity": "sha512-0k2F129Xdio1TdJfzJ8sy1Q47vUD2NnwdhiAf7drUN1EBTfPf4hsFCtmMgu/6m8JSzsBrlmVjudMBQqOfG8usQ==",
++      "cpu": [
++        "arm"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "android"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/android-arm64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/android-arm64/-/android-arm64-0.28.1.tgz",
++      "integrity": "sha512-34EGEbCIAgosYz6goLcopX6Mo7NyGv9tfwEM2/7Ce2VcVRk568iSvniGWcUXIy7wEDR1wzolcxcriFVrWYcwBg==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "android"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/android-x64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/android-x64/-/android-x64-0.28.1.tgz",
++      "integrity": "sha512-dbwY7ltSMDWsRatcRpCnES4F+im88OCUgGZjy52shC7GqHRE/cYlxNbB4Z4UpJswpcc4Qxd2oE/ufM0p61IKng==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "android"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/darwin-arm64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/darwin-arm64/-/darwin-arm64-0.28.1.tgz",
++      "integrity": "sha512-TZbWkQY7kvTAXbXUT7uVACR5cMHsDiSz9z7ZKAX/RTq/WJEk3QyRr0wZpNhBDX+/0CtdqUIJlOiodQcta6tY3Q==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/darwin-x64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/darwin-x64/-/darwin-x64-0.28.1.tgz",
++      "integrity": "sha512-zfdzgK9ACBNZLI/CyHTOx81SyNbM6YXn7rxSgX97VjyiPl9W1i4Ka4fgKECEoFCKGpvBj5qArWIGgQjOwkgskQ==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/freebsd-arm64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/freebsd-arm64/-/freebsd-arm64-0.28.1.tgz",
++      "integrity": "sha512-wG2EA8ENdEI0qhkSZMjfqrdY+ziCYCPMmtZjjIwOmXFjmyzEHn+UUxk5of+SYsjtfs3VpnlC7QLzSI5hY/rOAw==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "freebsd"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/freebsd-x64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/freebsd-x64/-/freebsd-x64-0.28.1.tgz",
++      "integrity": "sha512-i7dZ9vQgnvSCzi/rYCXNgtF/U+eKZNJBzu3eTQbRgHnM7tNSizLOkRFAl3qzVc/Op/u5YkHHa4pf/3DOYHthLQ==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "freebsd"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-arm": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-arm/-/linux-arm-0.28.1.tgz",
++      "integrity": "sha512-qVXBOHQS+d5Y722GwJzJUtOLlX7km3CraOaGormF1pDtPd2C/l1SHRPgjLunLGe51Sh5YYWKMFDyV4SxgMQYTQ==",
++      "cpu": [
++        "arm"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-arm64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-arm64/-/linux-arm64-0.28.1.tgz",
++      "integrity": "sha512-yHs+0uc8+nvEAfAfxrWQKK5peSNzBc4PegcMO0EJ2hT71uA7vB8Ihg2e77R2P7SG5uYjPbHlLLmve4LLLRCf0g==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-ia32": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-ia32/-/linux-ia32-0.28.1.tgz",
++      "integrity": "sha512-d1z4ZuP0ajrfz/FhGT4vv278rX8KnPPJx8i5+AtK7TYbx9Le9F1hyzurZpkEyjkGa9dUGhQow4C1NmeGvqxN2w==",
++      "cpu": [
++        "ia32"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-loong64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-loong64/-/linux-loong64-0.28.1.tgz",
++      "integrity": "sha512-M5sRjUVZrkm1OAPR3dlOYzNmN+loZKGVi1VUQGrwuqLcbR6qeAz+famMhjASeH3YVKvZz+zT1jlh/keC3Rj/lg==",
++      "cpu": [
++        "loong64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-mips64el": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-mips64el/-/linux-mips64el-0.28.1.tgz",
++      "integrity": "sha512-mRObBZeHh2OxcBFPWE/FjylkRgZdYuiTR3vaTozquCGOH14iP9oN4x4Ge81CoIDYQrXmIxpFumJBu5MtZpnQJQ==",
++      "cpu": [
++        "mips64el"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-ppc64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-ppc64/-/linux-ppc64-0.28.1.tgz",
++      "integrity": "sha512-slScBsMAb3GFDcdrCgLwZtPYRoH2H/youv10QiZyRjmsP48fznoveWytSgCI/R0ZcUgpc0ZhIUEx6LHts8yrfQ==",
++      "cpu": [
++        "ppc64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-riscv64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-riscv64/-/linux-riscv64-0.28.1.tgz",
++      "integrity": "sha512-kw0owk1o0GFETUJyW0jc0G4Yzs0BHZn0JDZ8JRT088vjJYX777BAs1fDGxAC+q831qOs2DTC96mNsG2opdfyyQ==",
++      "cpu": [
++        "riscv64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-s390x": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-s390x/-/linux-s390x-0.28.1.tgz",
++      "integrity": "sha512-/lAIjX8aYFRByhh6L5rYtPEDRqa9de/4V/juOXcta5frjvzXO4/sqEtyytse0g3zZFuWu5cDN0MkLz2qRDD2Ag==",
++      "cpu": [
++        "s390x"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/linux-x64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.28.1.tgz",
++      "integrity": "sha512-u/anNYF2mmVOEDwLtnQ1wOr3EZ9sTNGLWrsYGYwHWzGA3Si84IOkHXlbWTD1NB+9/1lcnweYKO54uhxZydNzfA==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/netbsd-arm64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/netbsd-arm64/-/netbsd-arm64-0.28.1.tgz",
++      "integrity": "sha512-oks0DYbLwWMmaakTsCb+zL4E+aHRVLom9IJZOAthMQEPiQmydXHkziYEsGYRx0uNV/IjEKGAV941JzH02pflqw==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "netbsd"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/netbsd-x64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/netbsd-x64/-/netbsd-x64-0.28.1.tgz",
++      "integrity": "sha512-aeL6lAnN89Hz43Mlh1G8ARasbuoYvSITDEx0tHh5b7jJnHcssqgjy9Yx430GDpmCa6OyrKoS0aNRjKundRizGg==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "netbsd"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/openbsd-arm64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/openbsd-arm64/-/openbsd-arm64-0.28.1.tgz",
++      "integrity": "sha512-MEFJe5C3R8pwXdZ5Y21oo6m7ePiS0d9pWucn99O/wvyJZChoIQKrQDxKrGeW8F5+T0okTHesAmDeiHDTIq0V/Q==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "openbsd"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/openbsd-x64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/openbsd-x64/-/openbsd-x64-0.28.1.tgz",
++      "integrity": "sha512-i/ZLIOafE0Z8cI/XANJAixoJL/uRAoS2xOA3rb0xN+KK0K177cMAsQYkzHtBrtMXAKuAc7HGgcWiZ/sRC1Nxgw==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "openbsd"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/openharmony-arm64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/openharmony-arm64/-/openharmony-arm64-0.28.1.tgz",
++      "integrity": "sha512-ge+Z7EXFNt2BO1oAMsVpiQ8EwndV9i1xXerAeTIK7AtPs3bKFXQM7nlRxDSIUIMeueR1CNXxqztLzdNeReKBJg==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "openharmony"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/sunos-x64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/sunos-x64/-/sunos-x64-0.28.1.tgz",
++      "integrity": "sha512-BEjgtECkL3vY+SaSQ6nzVfiALUeFxpawyp8Jmf5PtYhf1Ug40N1h/hxlhts+f1FvSvarEigdxS3BlSMI2PJLcQ==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "sunos"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/win32-arm64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/win32-arm64/-/win32-arm64-0.28.1.tgz",
++      "integrity": "sha512-lCv9eK/H6ZJWbE7bh2nw54CZ9M2nupBxJcTsdk/QQnWkdSjKGuxmmH8/GWrlT1eMmZfn4dGcCjRte397WqfQXA==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/win32-ia32": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/win32-ia32/-/win32-ia32-0.28.1.tgz",
++      "integrity": "sha512-zvb/mB2bSCoJOpoCBgYKKpX6YM6mJBlBUVUtVj41DlZJVEB6/0CKlRYxP5wWl1C1ILiCoAU5wZZ4q1P3qeS6Eg==",
++      "cpu": [
++        "ia32"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@esbuild/win32-x64": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.28.1.tgz",
++      "integrity": "sha512-bm4Mowrv+GXMlpWX++EcXw/iLyd1o3+bJkC2DkWXYVvgZCqD/bSj9ctZeAMC3cIxgjRVR2Dufaiu4YPxr5gW1A==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@jridgewell/gen-mapping": {
++      "version": "0.3.13",
++      "resolved": "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.3.13.tgz",
++      "integrity": "sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@jridgewell/sourcemap-codec": "^1.5.0",
++        "@jridgewell/trace-mapping": "^0.3.24"
++      }
++    },
++    "node_modules/@jridgewell/remapping": {
++      "version": "2.3.5",
++      "resolved": "https://registry.npmjs.org/@jridgewell/remapping/-/remapping-2.3.5.tgz",
++      "integrity": "sha512-LI9u/+laYG4Ds1TDKSJW2YPrIlcVYOwi2fUC6xB43lueCjgxV4lffOCZCtYFiH6TNOX+tQKXx97T4IKHbhyHEQ==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@jridgewell/gen-mapping": "^0.3.5",
++        "@jridgewell/trace-mapping": "^0.3.24"
++      }
++    },
++    "node_modules/@jridgewell/resolve-uri": {
++      "version": "3.1.2",
++      "resolved": "https://registry.npmjs.org/@jridgewell/resolve-uri/-/resolve-uri-3.1.2.tgz",
++      "integrity": "sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=6.0.0"
++      }
++    },
++    "node_modules/@jridgewell/sourcemap-codec": {
++      "version": "1.5.5",
++      "resolved": "https://registry.npmjs.org/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.5.5.tgz",
++      "integrity": "sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/@jridgewell/trace-mapping": {
++      "version": "0.3.31",
++      "resolved": "https://registry.npmjs.org/@jridgewell/trace-mapping/-/trace-mapping-0.3.31.tgz",
++      "integrity": "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@jridgewell/resolve-uri": "^3.1.0",
++        "@jridgewell/sourcemap-codec": "^1.4.14"
++      }
++    },
++    "node_modules/@napi-rs/lzma-linux-x64-gnu": {
++      "version": "1.5.1",
++      "resolved": "https://registry.npmjs.org/@napi-rs/lzma-linux-x64-gnu/-/lzma-linux-x64-gnu-1.5.1.tgz",
++      "integrity": "sha512-oTXEIha4SsuXdTA4Iyskj0kpdx2yVXdhd75c2v3xGrHFfVMsbhTPZU/nMPL4sWKo4pBHm3aucLaqGlF696dTyQ==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^22.20 || ^24.12 || >=25"
++      }
++    },
++    "node_modules/@rolldown/pluginutils": {
++      "version": "1.0.0-rc.3",
++      "resolved": "https://registry.npmjs.org/@rolldown/pluginutils/-/pluginutils-1.0.0-rc.3.tgz",
++      "integrity": "sha512-eybk3TjzzzV97Dlj5c+XrBFW57eTNhzod66y9HrBlzJ6NsCrWCp/2kaPS3K9wJmurBC0Tdw4yPjXKZqlznim3Q==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/@rollup/rollup-android-arm-eabi": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-android-arm-eabi/-/rollup-android-arm-eabi-4.62.4.tgz",
++      "integrity": "sha512-RrPokAb7dmbxFoeO3TloqHyOjgye8RkBhSqmp4aJMIex4c9r46ZstPnleDQOq1t46VOVjwIuwNogIqbodV1Vvg==",
++      "cpu": [
++        "arm"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "android"
++      ]
++    },
++    "node_modules/@rollup/rollup-android-arm64": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-android-arm64/-/rollup-android-arm64-4.62.4.tgz",
++      "integrity": "sha512-JKuJc+pnpks2pjy7L/N3v/cAkZxYlnmuZoD840ldbMI5KDbC4iO9NKwPKYdjYFCMAIIlBzYSFHxIJVYzRo2/8A==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "android"
++      ]
++    },
++    "node_modules/@rollup/rollup-darwin-arm64": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.62.4.tgz",
++      "integrity": "sha512-krw5uS2STmvJ02x0uTXHbqQNuz+9eZ1iw+qXk9dmW2gvV4jV7O2hEoOnuhFrpOPiel1mBFtqbxYZZtC46hXLOw==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ]
++    },
++    "node_modules/@rollup/rollup-darwin-x64": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-darwin-x64/-/rollup-darwin-x64-4.62.4.tgz",
++      "integrity": "sha512-wsTxtgApb4PrOsNJIm0FZ1h3WvCC+k9uxLJ4ad75hgoS4NiRes2SoJFlDAyMwiUY8IssDqGcHbXuN0sx1tfF1A==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ]
++    },
++    "node_modules/@rollup/rollup-freebsd-arm64": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-freebsd-arm64/-/rollup-freebsd-arm64-4.62.4.tgz",
++      "integrity": "sha512-GUOnQlyZe3yAXhWOtOMsn5Qkrv5E5mZXa0thbARWi5Ei2szlVXJFQhddZ4HbAzh8q92w5twp+CQvs/eFanz9YQ==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "freebsd"
++      ]
++    },
++    "node_modules/@rollup/rollup-freebsd-x64": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-freebsd-x64/-/rollup-freebsd-x64-4.62.4.tgz",
++      "integrity": "sha512-/Y7f3QuxjzPKsjA/rfEDa3+0vXqyjmJ50Ln8dPpCmWkKTrUoWHG1cWhTqaAMLob2m2nESWuC7yGrREz019Ztqg==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "freebsd"
++      ]
++    },
++    "node_modules/@rollup/rollup-linux-arm-gnueabihf": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-arm-gnueabihf/-/rollup-linux-arm-gnueabihf-4.62.4.tgz",
++      "integrity": "sha512-81wiiX3v7aqy+T+bT61TJ78yJjRquqFFTTbAPt08imfQQzkPIW8t6aJbkTagtCCrXMNc9D66+geqlK7ydLPNqA==",
++      "cpu": [
++        "arm"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ]
++    },
++    "node_modules/@rollup/rollup-linux-arm-musleabihf": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-arm-musleabihf/-/rollup-linux-arm-musleabihf-4.62.4.tgz",
++      "integrity": "sha512-9kmDIvNZqdoHOBZgNtpTBeLWYO/LVipM3H/j62P8848/l/VPEQL6N3uxU9pvP1oZAsXyC2MEnFP3ovRjo7WYNQ==",
++      "cpu": [
++        "arm"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ]
++    },
++    "node_modules/@rollup/rollup-linux-arm64-gnu": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-arm64-gnu/-/rollup-linux-arm64-gnu-4.62.4.tgz",
++      "integrity": "sha512-CcnXHWnXg69g+DX5VWL3FHts3qMRN2uVEHX+BZvGLdd07/gXkn3ePjYtO1LDJvxkGKVHMclKBRa1QUTH+6toYQ==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ]
++    },
++    "node_modules/@rollup/rollup-linux-arm64-musl": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-arm64-musl/-/rollup-linux-arm64-musl-4.62.4.tgz",
++      "integrity": "sha512-iFOibiHnTRuhrWLlRsOQFdZJJIa7S8OwkneJr4ocALP16u5yk6lWLINFwhHaEqBFMsKDUZofLkGos7+CPzGB3g==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ]
++    },
++    "node_modules/@rollup/rollup-linux-loong64-gnu": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-loong64-gnu/-/rollup-linux-loong64-gnu-4.62.4.tgz",
++      "integrity": "sha512-XnWYMI7euHlb5a871xPja+Gm7DRCFU+FGRrtS2sMq9N8FvqtpagUy6gD4YOemC5MRk9xbh8+jYMEJbigFQwsgA==",
++      "cpu": [
++        "loong64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ]
++    },
++    "node_modules/@rollup/rollup-linux-loong64-musl": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-loong64-musl/-/rollup-linux-loong64-musl-4.62.4.tgz",
++      "integrity": "sha512-qGDAlO0U8xedCcsdRm9oaoQY8DAx/QT7uIxJWhCdx0ceIWX783UC9QSYkdpzAe29wNiVfp24+bZdQmn49o45SQ==",
++      "cpu": [
++        "loong64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ]
++    },
++    "node_modules/@rollup/rollup-linux-ppc64-gnu": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-ppc64-gnu/-/rollup-linux-ppc64-gnu-4.62.4.tgz",
++      "integrity": "sha512-ru4H6ezD7ysA5EiEK6qkkaEb4modH8CTej6kUy/gQi20u3kB3G7Zn8snXXkeJSCOFKG/rbPPtM/+9Wgas1961w==",
++      "cpu": [
++        "ppc64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ]
++    },
++    "node_modules/@rollup/rollup-linux-ppc64-musl": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-ppc64-musl/-/rollup-linux-ppc64-musl-4.62.4.tgz",
++      "integrity": "sha512-2W4MO5WQVJnbJaZdvDb9rhBDuFU1nKIepPFpJUBsTh2k1YY2g+ODViaWuyOAjQ5cOP7NvrvLzt3wvHOoiAvc7w==",
++      "cpu": [
++        "ppc64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ]
++    },
++    "node_modules/@rollup/rollup-linux-riscv64-gnu": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-riscv64-gnu/-/rollup-linux-riscv64-gnu-4.62.4.tgz",
++      "integrity": "sha512-+fxjfuoAmVMCYV5QyjoIpu0cp5DOiOTeqYFk1AVaxGr+/ravWLX89XfQmptsoWcaVy/TGf2hexzbUOrCQIL1CQ==",
++      "cpu": [
++        "riscv64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ]
++    },
++    "node_modules/@rollup/rollup-linux-riscv64-musl": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-riscv64-musl/-/rollup-linux-riscv64-musl-4.62.4.tgz",
++      "integrity": "sha512-jTn8JfHGL4djjFxPuM06LmNUJDsst2jeVlsd9OmIH6zc5sC9K6rIuO4YajXatLUpBmBKl6b35ro1QZocLi+tcA==",
++      "cpu": [
++        "riscv64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ]
++    },
++    "node_modules/@rollup/rollup-linux-s390x-gnu": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-s390x-gnu/-/rollup-linux-s390x-gnu-4.62.4.tgz",
++      "integrity": "sha512-oCJCJL4pXsoDcP2QZ+JVlPTIRc6266zsIaeJJsWImmF7HO0W8nb6HuSgZlMWxJwaPf8ehbSw8yo0EUw925hKsA==",
++      "cpu": [
++        "s390x"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ]
++    },
++    "node_modules/@rollup/rollup-linux-x64-gnu": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-x64-gnu/-/rollup-linux-x64-gnu-4.62.4.tgz",
++      "integrity": "sha512-W69hukhZ3KKNRCaMIEzKvcFye42hh0FE1+YoYaf5+Ikacuftoco6yO/xouz0hc5d5W/s3yBro5jRiuEE/Q5vUw==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ]
++    },
++    "node_modules/@rollup/rollup-linux-x64-musl": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-x64-musl/-/rollup-linux-x64-musl-4.62.4.tgz",
++      "integrity": "sha512-qiXbGG2jkjXhzXpsFZSR2Xpb8DN/UaxYsbb/STbuR/6fpaDgRmmaq1B/LmtF2wQFOFOSsK2jdE0RZ3a0zHn4QA==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "linux"
++      ]
++    },
++    "node_modules/@rollup/rollup-openbsd-x64": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-openbsd-x64/-/rollup-openbsd-x64-4.62.4.tgz",
++      "integrity": "sha512-nWeM//hxv8mIo6jD7Hu4o48DVmV9pbV6gsKaWU+4NFyqHoPKwrkRiZGLKUhOBk8qNmDmpwFtPKg80Bo/Tn4xiQ==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "openbsd"
++      ]
++    },
++    "node_modules/@rollup/rollup-openharmony-arm64": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-openharmony-arm64/-/rollup-openharmony-arm64-4.62.4.tgz",
++      "integrity": "sha512-s62SQ/vgsRSvMwDkOEfTqfgASF0f26ZNaQuTA6Aok5lrikf89yI2W0gFHvZb2Jpgc6N8JnOKZgCK2iciO3CsxQ==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "openharmony"
++      ]
++    },
++    "node_modules/@rollup/rollup-win32-arm64-msvc": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-win32-arm64-msvc/-/rollup-win32-arm64-msvc-4.62.4.tgz",
++      "integrity": "sha512-J6wGf8TVGbXJq+HH+ttTvrcfNKPbuZecV6KT1B8I18BC5IURUh5kl4Yl5OEP5eFIUoI5BWxCsyYMhFsDx8kekw==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ]
++    },
++    "node_modules/@rollup/rollup-win32-ia32-msvc": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-win32-ia32-msvc/-/rollup-win32-ia32-msvc-4.62.4.tgz",
++      "integrity": "sha512-zmfrQd/0wu6oJs8Vq8KwY/YtsKSsLtKe/HwAP4Wqy8LhWjeT55fHRAkOhYQ12wI3ayS4Tt12d5CDRD7N96SAYQ==",
++      "cpu": [
++        "ia32"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ]
++    },
++    "node_modules/@rollup/rollup-win32-x64-gnu": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-win32-x64-gnu/-/rollup-win32-x64-gnu-4.62.4.tgz",
++      "integrity": "sha512-qPzHqdj9rfUD+w79dtE07zi/kFwKyCJqplp5K5ygeLTp7jLpAoc16OAH39HSmRC9UpozaecsleI8uAdEj6v2yw==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ]
++    },
++    "node_modules/@rollup/rollup-win32-x64-msvc": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.62.4.tgz",
++      "integrity": "sha512-zD6NdeWEByGE9QF9vCrlJ5YQB4oq9q91kPZS37Jwj5hOkvR1lTBSpsKhKDw4IJtbQ35LsTS1HD9DZYGKIshU1Q==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "win32"
++      ]
++    },
++    "node_modules/@standard-schema/spec": {
++      "version": "1.1.0",
++      "resolved": "https://registry.npmjs.org/@standard-schema/spec/-/spec-1.1.0.tgz",
++      "integrity": "sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/@types/babel__core": {
++      "version": "7.20.5",
++      "resolved": "https://registry.npmjs.org/@types/babel__core/-/babel__core-7.20.5.tgz",
++      "integrity": "sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/parser": "^7.20.7",
++        "@babel/types": "^7.20.7",
++        "@types/babel__generator": "*",
++        "@types/babel__template": "*",
++        "@types/babel__traverse": "*"
++      }
++    },
++    "node_modules/@types/babel__generator": {
++      "version": "7.27.0",
++      "resolved": "https://registry.npmjs.org/@types/babel__generator/-/babel__generator-7.27.0.tgz",
++      "integrity": "sha512-ufFd2Xi92OAVPYsy+P4n7/U7e68fex0+Ee8gSG9KX7eo084CWiQ4sdxktvdl0bOPupXtVJPY19zk6EwWqUQ8lg==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/types": "^7.0.0"
++      }
++    },
++    "node_modules/@types/babel__template": {
++      "version": "7.4.4",
++      "resolved": "https://registry.npmjs.org/@types/babel__template/-/babel__template-7.4.4.tgz",
++      "integrity": "sha512-h/NUaSyG5EyxBIp8YRxo4RMe2/qQgvyowRwVMzhYhBCONbW8PUsg4lkFMrhgZhUe5z3L3MiLDuvyJ/CaPa2A8A==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/parser": "^7.1.0",
++        "@babel/types": "^7.0.0"
++      }
++    },
++    "node_modules/@types/babel__traverse": {
++      "version": "7.28.0",
++      "resolved": "https://registry.npmjs.org/@types/babel__traverse/-/babel__traverse-7.28.0.tgz",
++      "integrity": "sha512-8PvcXf70gTDZBgt9ptxJ8elBeBjcLOAcOtoO/mPJjtji1+CdGbHgm77om1GrsPxsiE+uXIpNSK64UYaIwQXd4Q==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/types": "^7.28.2"
++      }
++    },
++    "node_modules/@types/chai": {
++      "version": "5.2.3",
++      "resolved": "https://registry.npmjs.org/@types/chai/-/chai-5.2.3.tgz",
++      "integrity": "sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@types/deep-eql": "*",
++        "assertion-error": "^2.0.1"
++      }
++    },
++    "node_modules/@types/deep-eql": {
++      "version": "4.0.2",
++      "resolved": "https://registry.npmjs.org/@types/deep-eql/-/deep-eql-4.0.2.tgz",
++      "integrity": "sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/@types/estree": {
++      "version": "1.0.9",
++      "resolved": "https://registry.npmjs.org/@types/estree/-/estree-1.0.9.tgz",
++      "integrity": "sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/@types/react": {
++      "version": "19.2.18",
++      "resolved": "https://registry.npmjs.org/@types/react/-/react-19.2.18.tgz",
++      "integrity": "sha512-AnzbBERsrLKtk2XSfTbYRLjQPdy116Sty4q+T+Bp3IC4l6jNBvreVPAHmpq9qhXQM7CXZPjLVmGMw9sy+hxQ3w==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "csstype": "^3.2.2"
++      }
++    },
++    "node_modules/@types/react-dom": {
++      "version": "19.2.4",
++      "resolved": "https://registry.npmjs.org/@types/react-dom/-/react-dom-19.2.4.tgz",
++      "integrity": "sha512-Bsc+QHgp+P/F02XDzNCY9jnZNCUuLki36KT7VKrTXXLdHf+vHMNZnW1rVu5DNW/rCK+fya3DATySbLM4yhtKUw==",
++      "dev": true,
++      "license": "MIT",
++      "peerDependencies": {
++        "@types/react": "^19.2.0"
++      }
++    },
++    "node_modules/@vitejs/plugin-react": {
++      "version": "5.2.0",
++      "resolved": "https://registry.npmjs.org/@vitejs/plugin-react/-/plugin-react-5.2.0.tgz",
++      "integrity": "sha512-YmKkfhOAi3wsB1PhJq5Scj3GXMn3WvtQ/JC0xoopuHoXSdmtdStOpFrYaT1kie2YgFBcIe64ROzMYRjCrYOdYw==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@babel/core": "^7.29.0",
++        "@babel/plugin-transform-react-jsx-self": "^7.27.1",
++        "@babel/plugin-transform-react-jsx-source": "^7.27.1",
++        "@rolldown/pluginutils": "1.0.0-rc.3",
++        "@types/babel__core": "^7.20.5",
++        "react-refresh": "^0.18.0"
++      },
++      "engines": {
++        "node": "^20.19.0 || >=22.12.0"
++      },
++      "peerDependencies": {
++        "vite": "^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0"
++      }
++    },
++    "node_modules/@vitest/expect": {
++      "version": "4.1.10",
++      "resolved": "https://registry.npmjs.org/@vitest/expect/-/expect-4.1.10.tgz",
++      "integrity": "sha512-YsCn+qAk1GWjQOWFEsEcL2gNQ0zmVmQu3T03qP6UyjhtmdtwtbuI+DASn/7iQB3HGTXkdBwGddzxPlmiql5vlA==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@standard-schema/spec": "^1.1.0",
++        "@types/chai": "^5.2.2",
++        "@vitest/spy": "4.1.10",
++        "@vitest/utils": "4.1.10",
++        "chai": "^6.2.2",
++        "tinyrainbow": "^3.1.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/vitest"
++      }
++    },
++    "node_modules/@vitest/mocker": {
++      "version": "4.1.10",
++      "resolved": "https://registry.npmjs.org/@vitest/mocker/-/mocker-4.1.10.tgz",
++      "integrity": "sha512-v0xaezt+DKEmKfaxg133ldzADrwLGd7Ze1MfQQTYfvs8OqZIwbxyxaYURivwV7sWy5fqn3rH5uOrSp07bp44Ow==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@vitest/spy": "4.1.10",
++        "estree-walker": "^3.0.3",
++        "magic-string": "^0.30.21"
++      },
++      "funding": {
++        "url": "https://opencollective.com/vitest"
++      },
++      "peerDependencies": {
++        "msw": "^2.4.9",
++        "vite": "^6.0.0 || ^7.0.0 || ^8.0.0"
++      },
++      "peerDependenciesMeta": {
++        "msw": {
++          "optional": true
++        },
++        "vite": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/@vitest/pretty-format": {
++      "version": "4.1.10",
++      "resolved": "https://registry.npmjs.org/@vitest/pretty-format/-/pretty-format-4.1.10.tgz",
++      "integrity": "sha512-W1HsjSH4MXQ9YfmmhLAoIYf1HRfekQCGngeIgcei6MP5QQGWUe0gkopdZQaVCFO+JDJMrAJGwa5pRpNpvy4P8Q==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "tinyrainbow": "^3.1.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/vitest"
++      }
++    },
++    "node_modules/@vitest/runner": {
++      "version": "4.1.10",
++      "resolved": "https://registry.npmjs.org/@vitest/runner/-/runner-4.1.10.tgz",
++      "integrity": "sha512-IKI6kpIH+LmpROplyLwBBaCfMgOZOMsygVa6BARD6ahA04VRuJSa6OaVG7kRvSEMD870Vd91rSSw0eegtWyLGg==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@vitest/utils": "4.1.10",
++        "pathe": "^2.0.3"
++      },
++      "funding": {
++        "url": "https://opencollective.com/vitest"
++      }
++    },
++    "node_modules/@vitest/snapshot": {
++      "version": "4.1.10",
++      "resolved": "https://registry.npmjs.org/@vitest/snapshot/-/snapshot-4.1.10.tgz",
++      "integrity": "sha512-xRkfOT1qpTAi/Ti4Y1LtfRc3kEuqxGw59eN2jN9pRWMtS/XDevekhcFSqvQqjUNGksfjMJu3Y+oJ+4Ypn2OaJw==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@vitest/pretty-format": "4.1.10",
++        "@vitest/utils": "4.1.10",
++        "magic-string": "^0.30.21",
++        "pathe": "^2.0.3"
++      },
++      "funding": {
++        "url": "https://opencollective.com/vitest"
++      }
++    },
++    "node_modules/@vitest/spy": {
++      "version": "4.1.10",
++      "resolved": "https://registry.npmjs.org/@vitest/spy/-/spy-4.1.10.tgz",
++      "integrity": "sha512-PLf/Ugvoq5wO/b4rwYCR1h2PSIdXz7wnkQFMiUpLdtM7l6pqVFcQIBEHyT1+l+cj7mNwAfZHzqXqDyjvOuwbDw==",
++      "dev": true,
++      "license": "MIT",
++      "funding": {
++        "url": "https://opencollective.com/vitest"
++      }
++    },
++    "node_modules/@vitest/utils": {
++      "version": "4.1.10",
++      "resolved": "https://registry.npmjs.org/@vitest/utils/-/utils-4.1.10.tgz",
++      "integrity": "sha512-fy9am/HWxbaGt/Sawrp90vt6Y6jQwf1RX77cz3uwoJwJVMli/e1IEwRPnMNJ7vKfPTwo0diXifkpPvwH9v7nGA==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@vitest/pretty-format": "4.1.10",
++        "convert-source-map": "^2.0.0",
++        "tinyrainbow": "^3.1.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/vitest"
++      }
++    },
++    "node_modules/assertion-error": {
++      "version": "2.0.1",
++      "resolved": "https://registry.npmjs.org/assertion-error/-/assertion-error-2.0.1.tgz",
++      "integrity": "sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=12"
++      }
++    },
++    "node_modules/baseline-browser-mapping": {
++      "version": "2.11.12",
++      "resolved": "https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.11.12.tgz",
++      "integrity": "sha512-r7WnVImvVCeFpf2DOXfy41aPWzeNg3H/A2X4dKmy1QL0MSyyk/e7z8ihJ3N6Nn2PsdhkVlqnEfnUE4a05P2aTA==",
++      "dev": true,
++      "license": "Apache-2.0",
++      "bin": {
++        "baseline-browser-mapping": "dist/cli.cjs"
++      },
++      "engines": {
++        "node": ">=6.0.0"
++      }
++    },
++    "node_modules/browserslist": {
++      "version": "4.28.7",
++      "resolved": "https://registry.npmjs.org/browserslist/-/browserslist-4.28.7.tgz",
++      "integrity": "sha512-JxV13hNrFxqjOc8alRbq9dK1MM79NEXYpma2B2J4wAtpWS5zIEIKqWPGCl7N4o7Uc7B7itylh7SuDujATRyyTw==",
++      "dev": true,
++      "funding": [
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/browserslist"
++        },
++        {
++          "type": "tidelift",
++          "url": "https://tidelift.com/funding/github/npm/browserslist"
++        },
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "baseline-browser-mapping": "^2.10.44",
++        "caniuse-lite": "^1.0.30001806",
++        "electron-to-chromium": "^1.5.393",
++        "node-releases": "^2.0.51",
++        "update-browserslist-db": "^1.2.3"
++      },
++      "bin": {
++        "browserslist": "cli.js"
++      },
++      "engines": {
++        "node": "^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7"
++      }
++    },
++    "node_modules/caniuse-lite": {
++      "version": "1.0.30001807",
++      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001807.tgz",
++      "integrity": "sha512-daRXJ9EB/rdRgu7kV+TTl1YUKtlsMWblPl2sLnpg9DZae16QCegol6A1SmCE31Lm9mXC1sRWGt/krouH+/dl7Q==",
++      "dev": true,
++      "funding": [
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/browserslist"
++        },
++        {
++          "type": "tidelift",
++          "url": "https://tidelift.com/funding/github/npm/caniuse-lite"
++        },
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
++        }
++      ],
++      "license": "CC-BY-4.0"
++    },
++    "node_modules/chai": {
++      "version": "6.2.2",
++      "resolved": "https://registry.npmjs.org/chai/-/chai-6.2.2.tgz",
++      "integrity": "sha512-NUPRluOfOiTKBKvWPtSD4PhFvWCqOi0BGStNWs57X9js7XGTprSmFoz5F0tWhR4WPjNeR9jXqdC7/UpSJTnlRg==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/convert-source-map": {
++      "version": "2.0.0",
++      "resolved": "https://registry.npmjs.org/convert-source-map/-/convert-source-map-2.0.0.tgz",
++      "integrity": "sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/csstype": {
++      "version": "3.2.3",
++      "resolved": "https://registry.npmjs.org/csstype/-/csstype-3.2.3.tgz",
++      "integrity": "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/debug": {
++      "version": "4.4.3",
++      "resolved": "https://registry.npmjs.org/debug/-/debug-4.4.3.tgz",
++      "integrity": "sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "ms": "^2.1.3"
++      },
++      "engines": {
++        "node": ">=6.0"
++      },
++      "peerDependenciesMeta": {
++        "supports-color": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/electron-to-chromium": {
++      "version": "1.5.402",
++      "resolved": "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.5.402.tgz",
++      "integrity": "sha512-/oOpMaPT6Yg+6/1XQhyIPlzgj7Ye9zf+nNM2Uh6OcE2G2oNptWazFa+qB2Pdqqbsc9KnIDzgAntoYN0dbwOXwA==",
++      "dev": true,
++      "license": "ISC"
++    },
++    "node_modules/es-module-lexer": {
++      "version": "2.3.1",
++      "resolved": "https://registry.npmjs.org/es-module-lexer/-/es-module-lexer-2.3.1.tgz",
++      "integrity": "sha512-shc1dbU90Yl/xq1QrC7QRtfcwURZuVRfPhZbDoldJ1cn1gzDvBaBWlv0eFolj5+0znnPJz5TXLxsN77X/12KTA==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/esbuild": {
++      "version": "0.28.1",
++      "resolved": "https://registry.npmjs.org/esbuild/-/esbuild-0.28.1.tgz",
++      "integrity": "sha512-HrJrvZv5ayxBzPfwphOoNzkzOIIlifzk0KJrGK2c8R4+LKpMtpYLQeUdjnwjWv/LZlkH2laZk+4w78pi99D4Vw==",
++      "dev": true,
++      "hasInstallScript": true,
++      "license": "MIT",
++      "bin": {
++        "esbuild": "bin/esbuild"
++      },
++      "engines": {
++        "node": ">=18"
++      },
++      "optionalDependencies": {
++        "@esbuild/aix-ppc64": "0.28.1",
++        "@esbuild/android-arm": "0.28.1",
++        "@esbuild/android-arm64": "0.28.1",
++        "@esbuild/android-x64": "0.28.1",
++        "@esbuild/darwin-arm64": "0.28.1",
++        "@esbuild/darwin-x64": "0.28.1",
++        "@esbuild/freebsd-arm64": "0.28.1",
++        "@esbuild/freebsd-x64": "0.28.1",
++        "@esbuild/linux-arm": "0.28.1",
++        "@esbuild/linux-arm64": "0.28.1",
++        "@esbuild/linux-ia32": "0.28.1",
++        "@esbuild/linux-loong64": "0.28.1",
++        "@esbuild/linux-mips64el": "0.28.1",
++        "@esbuild/linux-ppc64": "0.28.1",
++        "@esbuild/linux-riscv64": "0.28.1",
++        "@esbuild/linux-s390x": "0.28.1",
++        "@esbuild/linux-x64": "0.28.1",
++        "@esbuild/netbsd-arm64": "0.28.1",
++        "@esbuild/netbsd-x64": "0.28.1",
++        "@esbuild/openbsd-arm64": "0.28.1",
++        "@esbuild/openbsd-x64": "0.28.1",
++        "@esbuild/openharmony-arm64": "0.28.1",
++        "@esbuild/sunos-x64": "0.28.1",
++        "@esbuild/win32-arm64": "0.28.1",
++        "@esbuild/win32-ia32": "0.28.1",
++        "@esbuild/win32-x64": "0.28.1"
++      }
++    },
++    "node_modules/escalade": {
++      "version": "3.2.0",
++      "resolved": "https://registry.npmjs.org/escalade/-/escalade-3.2.0.tgz",
++      "integrity": "sha512-WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=6"
++      }
++    },
++    "node_modules/estree-walker": {
++      "version": "3.0.3",
++      "resolved": "https://registry.npmjs.org/estree-walker/-/estree-walker-3.0.3.tgz",
++      "integrity": "sha512-7RUKfXgSMMkzt6ZuXmqapOurLGPPfgj6l9uRZ7lRGolvk0y2yocc35LdcxKC5PQZdn2DMqioAQ2NoWcrTKmm6g==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@types/estree": "^1.0.0"
++      }
++    },
++    "node_modules/expect-type": {
++      "version": "1.4.0",
++      "resolved": "https://registry.npmjs.org/expect-type/-/expect-type-1.4.0.tgz",
++      "integrity": "sha512-KfYbmpRm0VbLjEvVa9yGwCi9GI34xvi7A/HXYWQO65CSD2u3MczUJSuwXKFIxlGsgBQizV9q5J9NHj4VG0n+pA==",
++      "dev": true,
++      "license": "Apache-2.0",
++      "engines": {
++        "node": ">=12.0.0"
++      }
++    },
++    "node_modules/fdir": {
++      "version": "6.5.0",
++      "resolved": "https://registry.npmjs.org/fdir/-/fdir-6.5.0.tgz",
++      "integrity": "sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=12.0.0"
++      },
++      "peerDependencies": {
++        "picomatch": "^3 || ^4"
++      },
++      "peerDependenciesMeta": {
++        "picomatch": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/fsevents": {
++      "version": "2.3.3",
++      "resolved": "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz",
++      "integrity": "sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==",
++      "dev": true,
++      "hasInstallScript": true,
++      "license": "MIT",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": "^8.16.0 || ^10.6.0 || >=11.0.0"
++      }
++    },
++    "node_modules/gensync": {
++      "version": "1.0.0-beta.2",
++      "resolved": "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz",
++      "integrity": "sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/js-tokens": {
++      "version": "4.0.0",
++      "resolved": "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz",
++      "integrity": "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/jsesc": {
++      "version": "3.1.0",
++      "resolved": "https://registry.npmjs.org/jsesc/-/jsesc-3.1.0.tgz",
++      "integrity": "sha512-/sM3dO2FOzXjKQhJuo0Q173wf2KOo8t4I8vHy6lF9poUp7bKT0/NHE8fPX23PwfhnykfqnC2xRxOnVw5XuGIaA==",
++      "dev": true,
++      "license": "MIT",
++      "bin": {
++        "jsesc": "bin/jsesc"
++      },
++      "engines": {
++        "node": ">=6"
++      }
++    },
++    "node_modules/json5": {
++      "version": "2.2.3",
++      "resolved": "https://registry.npmjs.org/json5/-/json5-2.2.3.tgz",
++      "integrity": "sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==",
++      "dev": true,
++      "license": "MIT",
++      "bin": {
++        "json5": "lib/cli.js"
++      },
++      "engines": {
++        "node": ">=6"
++      }
++    },
++    "node_modules/lru-cache": {
++      "version": "5.1.1",
++      "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-5.1.1.tgz",
++      "integrity": "sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==",
++      "dev": true,
++      "license": "ISC",
++      "dependencies": {
++        "yallist": "^3.0.2"
++      }
++    },
++    "node_modules/magic-string": {
++      "version": "0.30.21",
++      "resolved": "https://registry.npmjs.org/magic-string/-/magic-string-0.30.21.tgz",
++      "integrity": "sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@jridgewell/sourcemap-codec": "^1.5.5"
++      }
++    },
++    "node_modules/ms": {
++      "version": "2.1.3",
++      "resolved": "https://registry.npmjs.org/ms/-/ms-2.1.3.tgz",
++      "integrity": "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/nanoid": {
++      "version": "3.3.17",
++      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.17.tgz",
++      "integrity": "sha512-xQLf0A3HOMlgHq0n247/LRuAOYmB7dXJ/DvAxGvsSBij45XtBSmQycu+F8ODbHwns/XyFZagyL1+J0Offw1E0g==",
++      "dev": true,
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
++        }
++      ],
++      "license": "MIT",
++      "bin": {
++        "nanoid": "bin/nanoid.cjs"
++      },
++      "engines": {
++        "node": "^10 || ^12 || ^13.7 || ^14 || >=15.0.1"
++      }
++    },
++    "node_modules/node-releases": {
++      "version": "2.0.53",
++      "resolved": "https://registry.npmjs.org/node-releases/-/node-releases-2.0.53.tgz",
++      "integrity": "sha512-D9UOmYG3UH1V+ENW56t5QXBwJw1YEY18ruVeus89Rw+SyIgjPkCO84bRzO3uNIYosJbNwiabWVn48o3uJLjxFQ==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/obug": {
++      "version": "2.1.4",
++      "resolved": "https://registry.npmjs.org/obug/-/obug-2.1.4.tgz",
++      "integrity": "sha512-4a+OsYv9UktOJKE+l1A4OufDgdRF9PifWj+tJnHURo/P+WOxpG4GzUFL9qCalmWauao6ogiG+QvnCovwPoyAWA==",
++      "dev": true,
++      "funding": [
++        "https://github.com/sponsors/sxzz",
++        "https://opencollective.com/debug"
++      ],
++      "license": "MIT",
++      "engines": {
++        "node": ">=12.20.0"
++      }
++    },
++    "node_modules/pathe": {
++      "version": "2.0.3",
++      "resolved": "https://registry.npmjs.org/pathe/-/pathe-2.0.3.tgz",
++      "integrity": "sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/picocolors": {
++      "version": "1.1.1",
++      "resolved": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
++      "integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==",
++      "dev": true,
++      "license": "ISC"
++    },
++    "node_modules/picomatch": {
++      "version": "4.0.5",
++      "resolved": "https://registry.npmjs.org/picomatch/-/picomatch-4.0.5.tgz",
++      "integrity": "sha512-RvwwcruNjI1ncT5xRakeyS9Lf8lcItv34KD+aif+VH9kduAyfYBipGh12274xtenIPZ119/R9BdTBa8gAwSh0A==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=12"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/jonschlinkert"
++      }
++    },
++    "node_modules/postcss": {
++      "version": "8.5.26",
++      "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.26.tgz",
++      "integrity": "sha512-u82N74LFzG8ca+dD8puPnplTXoGH4fTPpVGuIbt36G3qvNlkvfD0lEAZSxaly3KX8TS/L1A1gsCEmvKmBcVbkQ==",
++      "dev": true,
++      "funding": [
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/postcss/"
++        },
++        {
++          "type": "tidelift",
++          "url": "https://tidelift.com/funding/github/npm/postcss"
++        },
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "nanoid": "^3.3.17",
++        "picocolors": "^1.1.1",
++        "source-map-js": "^1.2.1"
++      },
++      "engines": {
++        "node": "^10 || ^12 || >=14"
++      }
++    },
++    "node_modules/react": {
++      "version": "19.2.8",
++      "resolved": "https://registry.npmjs.org/react/-/react-19.2.8.tgz",
++      "integrity": "sha512-PWaYA1L/q9u2u7xYQi+Y3L3Yfnie7XyLeaJICV1MGD6LprsBxcAqGjYyr0eY3p+QdsA+x/Irkt4Qif8D63+Sbw==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/react-dom": {
++      "version": "19.2.8",
++      "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-19.2.8.tgz",
++      "integrity": "sha512-rVprimfGBG3DR+Tq0IQG2DT5PxKth1WIGDmj5yPmlzr4YBe7uyE+Du4oVqTDXZSHGGGXRtTJEGSSePyQCMBglQ==",
++      "license": "MIT",
++      "dependencies": {
++        "scheduler": "^0.27.0"
++      },
++      "peerDependencies": {
++        "react": "^19.2.8"
++      }
++    },
++    "node_modules/react-refresh": {
++      "version": "0.18.0",
++      "resolved": "https://registry.npmjs.org/react-refresh/-/react-refresh-0.18.0.tgz",
++      "integrity": "sha512-QgT5//D3jfjJb6Gsjxv0Slpj23ip+HtOpnNgnb2S5zU3CB26G/IDPGoy4RJB42wzFE46DRsstbW6tKHoKbhAxw==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/rollup": {
++      "version": "4.62.4",
++      "resolved": "https://registry.npmjs.org/rollup/-/rollup-4.62.4.tgz",
++      "integrity": "sha512-RXOqwaPsBGjMNMa4sQjDjHieHEZDFoj/Rdr46l2MU5DfEs16wHJPC2RPTPHWhNl+M3aI472LLqFkFKut4SblOg==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@types/estree": "1.0.9"
++      },
++      "bin": {
++        "rollup": "dist/bin/rollup"
++      },
++      "engines": {
++        "node": ">=18.0.0",
++        "npm": ">=8.0.0"
++      },
++      "optionalDependencies": {
++        "@napi-rs/lzma-linux-x64-gnu": "1.5.1",
++        "@rollup/rollup-android-arm-eabi": "4.62.4",
++        "@rollup/rollup-android-arm64": "4.62.4",
++        "@rollup/rollup-darwin-arm64": "4.62.4",
++        "@rollup/rollup-darwin-x64": "4.62.4",
++        "@rollup/rollup-freebsd-arm64": "4.62.4",
++        "@rollup/rollup-freebsd-x64": "4.62.4",
++        "@rollup/rollup-linux-arm-gnueabihf": "4.62.4",
++        "@rollup/rollup-linux-arm-musleabihf": "4.62.4",
++        "@rollup/rollup-linux-arm64-gnu": "4.62.4",
++        "@rollup/rollup-linux-arm64-musl": "4.62.4",
++        "@rollup/rollup-linux-loong64-gnu": "4.62.4",
++        "@rollup/rollup-linux-loong64-musl": "4.62.4",
++        "@rollup/rollup-linux-ppc64-gnu": "4.62.4",
++        "@rollup/rollup-linux-ppc64-musl": "4.62.4",
++        "@rollup/rollup-linux-riscv64-gnu": "4.62.4",
++        "@rollup/rollup-linux-riscv64-musl": "4.62.4",
++        "@rollup/rollup-linux-s390x-gnu": "4.62.4",
++        "@rollup/rollup-linux-x64-gnu": "4.62.4",
++        "@rollup/rollup-linux-x64-musl": "4.62.4",
++        "@rollup/rollup-openbsd-x64": "4.62.4",
++        "@rollup/rollup-openharmony-arm64": "4.62.4",
++        "@rollup/rollup-win32-arm64-msvc": "4.62.4",
++        "@rollup/rollup-win32-ia32-msvc": "4.62.4",
++        "@rollup/rollup-win32-x64-gnu": "4.62.4",
++        "@rollup/rollup-win32-x64-msvc": "4.62.4",
++        "fsevents": "~2.3.2"
++      }
++    },
++    "node_modules/scheduler": {
++      "version": "0.27.0",
++      "resolved": "https://registry.npmjs.org/scheduler/-/scheduler-0.27.0.tgz",
++      "integrity": "sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==",
++      "license": "MIT"
++    },
++    "node_modules/semver": {
++      "version": "6.3.1",
++      "resolved": "https://registry.npmjs.org/semver/-/semver-6.3.1.tgz",
++      "integrity": "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==",
++      "dev": true,
++      "license": "ISC",
++      "bin": {
++        "semver": "bin/semver.js"
++      }
++    },
++    "node_modules/siginfo": {
++      "version": "2.0.0",
++      "resolved": "https://registry.npmjs.org/siginfo/-/siginfo-2.0.0.tgz",
++      "integrity": "sha512-ybx0WO1/8bSBLEWXZvEd7gMW3Sn3JFlW3TvX1nREbDLRNQNaeNN8WK0meBwPdAaOI7TtRRRJn/Es1zhrrCHu7g==",
++      "dev": true,
++      "license": "ISC"
++    },
++    "node_modules/source-map-js": {
++      "version": "1.2.1",
++      "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz",
++      "integrity": "sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==",
++      "dev": true,
++      "license": "BSD-3-Clause",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/stackback": {
++      "version": "0.0.2",
++      "resolved": "https://registry.npmjs.org/stackback/-/stackback-0.0.2.tgz",
++      "integrity": "sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/std-env": {
++      "version": "4.2.0",
++      "resolved": "https://registry.npmjs.org/std-env/-/std-env-4.2.0.tgz",
++      "integrity": "sha512-oCUKSupKTHX53EyjDtuZQ64pjLJ6yYCtpmEw0goYxtjG9KpbRe8KAsl2tBUGU9DyMcJ0RwJ8GqJAFzMXcXW1Rw==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/tinybench": {
++      "version": "2.9.0",
++      "resolved": "https://registry.npmjs.org/tinybench/-/tinybench-2.9.0.tgz",
++      "integrity": "sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/tinyexec": {
++      "version": "1.3.0",
++      "resolved": "https://registry.npmjs.org/tinyexec/-/tinyexec-1.3.0.tgz",
++      "integrity": "sha512-QKAl9m8gWWGHV8jZcPeym6j+XULi6tOf1mT83WYJ4Lk2ytW/uwAWkrP0uFsdoYMdueVJ0qs26wZ+23xeB4ibNQ==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/tinyglobby": {
++      "version": "0.2.17",
++      "resolved": "https://registry.npmjs.org/tinyglobby/-/tinyglobby-0.2.17.tgz",
++      "integrity": "sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "fdir": "^6.5.0",
++        "picomatch": "^4.0.4"
++      },
++      "engines": {
++        "node": ">=12.0.0"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/SuperchupuDev"
++      }
++    },
++    "node_modules/tinyrainbow": {
++      "version": "3.1.1",
++      "resolved": "https://registry.npmjs.org/tinyrainbow/-/tinyrainbow-3.1.1.tgz",
++      "integrity": "sha512-yau8yJdTt989Mm0Bd/236QnzEiPf2xLLTqUZRUJOo/3CB078LSwzei343DgtJVmfJKJE3TMINY1u42SQsP6mXw==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=14.0.0"
++      }
++    },
++    "node_modules/typescript": {
++      "version": "5.9.3",
++      "resolved": "https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz",
++      "integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
++      "dev": true,
++      "license": "Apache-2.0",
++      "bin": {
++        "tsc": "bin/tsc",
++        "tsserver": "bin/tsserver"
++      },
++      "engines": {
++        "node": ">=14.17"
++      }
++    },
++    "node_modules/update-browserslist-db": {
++      "version": "1.3.0",
++      "resolved": "https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.3.0.tgz",
++      "integrity": "sha512-x/M6q3w4Ybp91CNaS4S69UnliqR3BzRpOT6LWbksjth0S/+jhfaPJsWjt/TewpT8j9eLIojUf5jr29WextHroA==",
++      "dev": true,
++      "funding": [
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/browserslist"
++        },
++        {
++          "type": "tidelift",
++          "url": "https://tidelift.com/funding/github/npm/browserslist"
++        },
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "escalade": "^3.2.0",
++        "picocolors": "^1.1.1"
++      },
++      "bin": {
++        "update-browserslist-db": "cli.js"
++      },
++      "peerDependencies": {
++        "browserslist": ">= 4.21.0"
++      }
++    },
++    "node_modules/vite": {
++      "version": "7.3.6",
++      "resolved": "https://registry.npmjs.org/vite/-/vite-7.3.6.tgz",
++      "integrity": "sha512-4XP60spRGjSZFf1qYH+dJIkK2znL3zQfl9KkOV9MkkRR/3Dls0dxaBsQPTloEc5BLXWPL9vsOxopxyKoMmDueg==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "esbuild": "^0.27.0 || ^0.28.0",
++        "fdir": "^6.5.0",
++        "picomatch": "^4.0.3",
++        "postcss": "^8.5.6",
++        "rollup": "^4.43.0",
++        "tinyglobby": "^0.2.15"
++      },
++      "bin": {
++        "vite": "bin/vite.js"
++      },
++      "engines": {
++        "node": "^20.19.0 || >=22.12.0"
++      },
++      "funding": {
++        "url": "https://github.com/vitejs/vite?sponsor=1"
++      },
++      "optionalDependencies": {
++        "fsevents": "~2.3.3"
++      },
++      "peerDependencies": {
++        "@types/node": "^20.19.0 || >=22.12.0",
++        "jiti": ">=1.21.0",
++        "less": "^4.0.0",
++        "lightningcss": "^1.21.0",
++        "sass": "^1.70.0",
++        "sass-embedded": "^1.70.0",
++        "stylus": ">=0.54.8",
++        "sugarss": "^5.0.0",
++        "terser": "^5.16.0",
++        "tsx": "^4.8.1",
++        "yaml": "^2.4.2"
++      },
++      "peerDependenciesMeta": {
++        "@types/node": {
++          "optional": true
++        },
++        "jiti": {
++          "optional": true
++        },
++        "less": {
++          "optional": true
++        },
++        "lightningcss": {
++          "optional": true
++        },
++        "sass": {
++          "optional": true
++        },
++        "sass-embedded": {
++          "optional": true
++        },
++        "stylus": {
++          "optional": true
++        },
++        "sugarss": {
++          "optional": true
++        },
++        "terser": {
++          "optional": true
++        },
++        "tsx": {
++          "optional": true
++        },
++        "yaml": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/vitest": {
++      "version": "4.1.10",
++      "resolved": "https://registry.npmjs.org/vitest/-/vitest-4.1.10.tgz",
++      "integrity": "sha512-R9jUTe5S4Qb0HCd4TNqpC7oGcrMssMRGXLW80ubjWsW9VH5GF8y1Y0SFLY9AbqSk6nt0PnOx4H4WNJYZ13GUPw==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@vitest/expect": "4.1.10",
++        "@vitest/mocker": "4.1.10",
++        "@vitest/pretty-format": "4.1.10",
++        "@vitest/runner": "4.1.10",
++        "@vitest/snapshot": "4.1.10",
++        "@vitest/spy": "4.1.10",
++        "@vitest/utils": "4.1.10",
++        "es-module-lexer": "^2.0.0",
++        "expect-type": "^1.3.0",
++        "magic-string": "^0.30.21",
++        "obug": "^2.1.1",
++        "pathe": "^2.0.3",
++        "picomatch": "^4.0.3",
++        "std-env": "^4.0.0-rc.1",
++        "tinybench": "^2.9.0",
++        "tinyexec": "^1.0.2",
++        "tinyglobby": "^0.2.15",
++        "tinyrainbow": "^3.1.0",
++        "vite": "^6.0.0 || ^7.0.0 || ^8.0.0",
++        "why-is-node-running": "^2.3.0"
++      },
++      "bin": {
++        "vitest": "vitest.mjs"
++      },
++      "engines": {
++        "node": "^20.0.0 || ^22.0.0 || >=24.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/vitest"
++      },
++      "peerDependencies": {
++        "@edge-runtime/vm": "*",
++        "@opentelemetry/api": "^1.9.0",
++        "@types/node": "^20.0.0 || ^22.0.0 || >=24.0.0",
++        "@vitest/browser-playwright": "4.1.10",
++        "@vitest/browser-preview": "4.1.10",
++        "@vitest/browser-webdriverio": "4.1.10",
++        "@vitest/coverage-istanbul": "4.1.10",
++        "@vitest/coverage-v8": "4.1.10",
++        "@vitest/ui": "4.1.10",
++        "happy-dom": "*",
++        "jsdom": "*",
++        "vite": "^6.0.0 || ^7.0.0 || ^8.0.0"
++      },
++      "peerDependenciesMeta": {
++        "@edge-runtime/vm": {
++          "optional": true
++        },
++        "@opentelemetry/api": {
++          "optional": true
++        },
++        "@types/node": {
++          "optional": true
++        },
++        "@vitest/browser-playwright": {
++          "optional": true
++        },
++        "@vitest/browser-preview": {
++          "optional": true
++        },
++        "@vitest/browser-webdriverio": {
++          "optional": true
++        },
++        "@vitest/coverage-istanbul": {
++          "optional": true
++        },
++        "@vitest/coverage-v8": {
++          "optional": true
++        },
++        "@vitest/ui": {
++          "optional": true
++        },
++        "happy-dom": {
++          "optional": true
++        },
++        "jsdom": {
++          "optional": true
++        },
++        "vite": {
++          "optional": false
++        }
++      }
++    },
++    "node_modules/why-is-node-running": {
++      "version": "2.3.0",
++      "resolved": "https://registry.npmjs.org/why-is-node-running/-/why-is-node-running-2.3.0.tgz",
++      "integrity": "sha512-hUrmaWBdVDcxvYqnyh09zunKzROWjbZTiNy8dBEjkS7ehEDQibXJ7XvlmtbwuTclUiIyN+CyXQD4Vmko8fNm8w==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "siginfo": "^2.0.0",
++        "stackback": "0.0.2"
++      },
++      "bin": {
++        "why-is-node-running": "cli.js"
++      },
++      "engines": {
++        "node": ">=8"
++      }
++    },
++    "node_modules/yallist": {
++      "version": "3.1.1",
++      "resolved": "https://registry.npmjs.org/yallist/-/yallist-3.1.1.tgz",
++      "integrity": "sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==",
++      "dev": true,
++      "license": "ISC"
++    }
++  }
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/package.json b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/package.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..5b53fd8fd68fbff3ce4802f6eced3f78f7641330
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/package.json	
+@@ -0,0 +1,42 @@
++{
++  "name": "worktree-feature-app",
++  "version": "0.1.0",
++  "private": true,
++  "type": "module",
++  "scripts": {
++    "dev": "vite --host 127.0.0.1",
++    "build": "node ../../../scripts/run-vite-build.mjs",
++    "preview": "vite preview --host 127.0.0.1",
++    "typecheck": "node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false",
++    "test": "node ./scripts/test-worktree-verifier.mjs && node ./scripts/agent-check.mjs",
++    "test:lane-a": "vitest run acceptance/lane-a.saved-filters.test.tsx tests/lane-a",
++    "test:lane-b": "vitest run acceptance/lane-b.sla-risk.test.tsx tests/lane-b",
++    "test:lane-c": "vitest run acceptance/lane-c.evidence-export.test.tsx tests/lane-c",
++    "test:integrated": "vitest run acceptance tests",
++    "lanes:verify": "node ./scripts/verify-lane-handoffs.mjs",
++    "test:submission": "npm run lanes:verify && node ../../../scripts/verify-submission-contract.mjs ./submission-contract.json",
++    "lint": "node ./scripts/lint-check.mjs",
++    "format": "node ./scripts/format-check.mjs",
++    "agent:check": "npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build",
++    "test:integrity": "node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json",
++    "verify:implementation": "npm run test:integrated",
++    "verify:submission": "npm run test:submission",
++    "verify:exercise:core": "npm run agent:check && npm run verify:implementation && npm run verify:submission",
++    "verify:exercise": "node ../../../scripts/run-clean-verification.mjs"
++  },
++  "engines": {
++    "node": ">=22.12.0 <25"
++  },
++  "dependencies": {
++    "react": "^19.2.0",
++    "react-dom": "^19.2.0"
++  },
++  "devDependencies": {
++    "@types/react": "^19.2.7",
++    "@types/react-dom": "^19.2.3",
++    "@vitejs/plugin-react": "^5.0.4",
++    "typescript": "^5.9.3",
++    "vite": "^7.1.12",
++    "vitest": "^4.1.10"
++  }
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/agent-check.mjs b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/agent-check.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..e4cb95bdbe80a5d833e9468cba061277e51276dc
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/agent-check.mjs	
+@@ -0,0 +1,35 @@
++import fs from "node:fs";
++import path from "node:path";
++
++const root = process.cwd();
++const contract = JSON.parse(fs.readFileSync(path.join(root, "lab-contract.json"), "utf8"));
++const requiredArrays = ["entities", "seededDefects", "verificationGates", "agentWorkflow", "workingDeliverables"];
++const failures = [];
++
++for (const field of requiredArrays) {
++  if (!Array.isArray(contract[field]) || contract[field].length < 3) {
++    failures.push(`${field} must contain at least three concrete entries`);
++  }
++}
++
++if (!contract.domain || contract.domain.includes("generic")) {
++  failures.push("domain must be specific and non-generic");
++}
++
++const docsDir = path.join(root, "..", "docs");
++if (fs.existsSync(docsDir)) {
++  for (const file of fs.readdirSync(docsDir)) {
++    if (!file.endsWith(".md")) continue;
++    const text = fs.readFileSync(path.join(docsDir, file), "utf8");
++    if (text.includes("intentionally incomplete starter note")) {
++      failures.push(`placeholder doc remains: ${file}`);
++    }
++  }
++}
++
++if (failures.length) {
++  console.error(failures.join("\n"));
++  process.exit(1);
++}
++
++console.log(`agent-check passed for ${contract.title}`);
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/format-check.mjs b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/format-check.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..94ff72832c3f466c5f7030bdf6d1847ef098609b
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/format-check.mjs	
+@@ -0,0 +1,28 @@
++import fs from "node:fs";
++import path from "node:path";
++
++const roots = ["src", "scripts"];
++const failures = [];
++
++function walk(dir) {
++  if (!fs.existsSync(dir)) return;
++  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
++    const full = path.join(dir, entry.name);
++    if (entry.isDirectory()) walk(full);
++    if (entry.isFile() && /\.(ts|tsx|mjs|json)$/.test(entry.name)) {
++      const lines = fs.readFileSync(full, "utf8").split(/\r?\n/);
++      lines.forEach((line, index) => {
++        if (/\s+$/.test(line)) failures.push(`${full}:${index + 1} trailing whitespace`);
++      });
++    }
++  }
++}
++
++roots.forEach(walk);
++
++if (failures.length) {
++  console.error(failures.join("\n"));
++  process.exit(1);
++}
++
++console.log("format-check passed");
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/lint-check.mjs b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/lint-check.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..103c59d1ee6b362da6f381d0045426a4a958ea4f
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/lint-check.mjs	
+@@ -0,0 +1,17 @@
++import fs from "node:fs";
++
++const source = fs.readFileSync("src/labContract.ts", "utf8");
++const failures = [];
++
++for (const phrase of ["generic workflow queue", "placeholder", "TODO:"]) {
++  if (source.toLowerCase().includes(phrase.toLowerCase())) {
++    failures.push(`lab contract contains weak phrase: ${phrase}`);
++  }
++}
++
++if (failures.length) {
++  console.error(failures.join("\n"));
++  process.exit(1);
++}
++
++console.log("lint-check passed");
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/test-worktree-verifier.mjs b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/test-worktree-verifier.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..8bb745c0ecc062e6603218c4bd2ef6f36b2ffbf6
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/test-worktree-verifier.mjs	
+@@ -0,0 +1,194 @@
++import assert from "node:assert/strict";
++import crypto from "node:crypto";
++import fs from "node:fs";
++import os from "node:os";
++import path from "node:path";
++import { execFileSync } from "node:child_process";
++import { verifyLaneSubmission } from "./worktree-verification.mjs";
++
++function run(cwd, args) {
++  return execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
++}
++
++function write(root, relative, content) {
++  const file = path.join(root, relative);
++  fs.mkdirSync(path.dirname(file), { recursive: true });
++  fs.writeFileSync(file, content);
++}
++
++function hash(file) {
++  return crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
++}
++
++const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "worktree-verifier-self-test-"));
++try {
++  const repositoryRoot = path.join(temporaryRoot, "repo");
++  const exerciseRoot = path.join(repositoryRoot, "exercise");
++  const appRoot = path.join(exerciseRoot, "worktree-feature-app");
++  const evidenceRoot = path.join(exerciseRoot, "evidence");
++  fs.mkdirSync(appRoot, { recursive: true });
++  run(repositoryRoot, ["init"]);
++  run(repositoryRoot, ["config", "core.autocrlf", "false"]);
++  run(repositoryRoot, ["config", "user.name", "Verifier Test"]);
++  run(repositoryRoot, ["config", "user.email", "verifier@example.test"]);
++
++  const starterFiles = [
++    "src/components/FilterBar.tsx",
++    "src/utils/filters.ts",
++    "src/components/MetricStrip.tsx",
++    "src/utils/scoring.ts",
++    "src/components/EvidencePanel.tsx",
++    "src/services/workflowApi.ts",
++    "src/types.ts",
++  ];
++  for (const file of starterFiles) write(appRoot, file, `// starter ${file}\n`);
++  write(exerciseRoot, "docs/untrusted-handoff.json", `${JSON.stringify({
++    schema_version: 1,
++    handoff_id: "UNTRUSTED-01",
++    lane: "A",
++    status: "ready",
++    commit_ref: "BASE_SHA",
++    claimed_parent_ref: "BASE_SHA",
++    claimed_changed_paths: ["src/components/FilterBar.tsx", "src/utils/filters.ts", "tests/lane-a/claimed-but-absent.test.ts"],
++    verification: { command: "npm run test:lane-a", exit_code: 0, output_path: "evidence/commands/untrusted-lane-a.txt" },
++  }, null, 2)}\n`);
++  run(repositoryRoot, ["add", "."]);
++  run(repositoryRoot, ["commit", "-m", "test: create base"]);
++  const baseSha = run(repositoryRoot, ["rev-parse", "HEAD"]);
++
++  const laneDefinitions = {
++    A: {
++      branch: "lane/saved-filters",
++      files: {
++        "src/components/FilterBar.tsx": "export const filterBar = true;\n",
++        "src/utils/filters.ts": "export interface FilterPreset { id: string }\nexport const presets = [];\n",
++        "tests/lane-a/saved-filter.test.ts": "// lane A test\n",
++      },
++      command: "npm run test:lane-a",
++      output: "evidence/commands/lane-a.txt",
++      owned: ["src/components/FilterBar.tsx", "src/utils/filters.ts", "tests/lane-a/"],
++      shared: [{ path: "src/types.ts", symbol: "FilterPreset", reason: "Promote the reusable preset contract." }],
++    },
++    B: {
++      branch: "lane/sla-risk",
++      files: {
++        "src/components/MetricStrip.tsx": "export const dueTodayMetric = true;\n",
++        "src/utils/scoring.ts": "export const dueToday = 1;\n",
++        "tests/lane-b/due-today.test.ts": "// lane B test\n",
++      },
++      command: "npm run test:lane-b",
++      output: "evidence/commands/lane-b.txt",
++      owned: ["src/components/MetricStrip.tsx", "src/utils/scoring.ts", "tests/lane-b/"],
++      shared: [],
++    },
++    C: {
++      branch: "lane/evidence-export",
++      files: {
++        "src/components/EvidencePanel.tsx": "export const evidenceExport = true;\n",
++        "src/services/workflowApi.ts": "export interface EvidenceBundle { id: string }\nexport const bundle = true;\n",
++        "tests/lane-c/evidence-export.test.ts": "// lane C test\n",
++      },
++      command: "npm run test:lane-c",
++      output: "evidence/commands/lane-c.txt",
++      owned: ["src/components/EvidencePanel.tsx", "src/services/workflowApi.ts", "tests/lane-c/"],
++      shared: [{ path: "src/types.ts", symbol: "EvidenceBundle", reason: "Promote the reusable export contract." }],
++    },
++  };
++
++  const commits = {};
++  const handoffs = [];
++  const worktreeRecords = [];
++  const outputContents = {};
++  for (const lane of ["A", "B", "C"]) {
++    const definition = laneDefinitions[lane];
++    run(repositoryRoot, ["switch", "-c", definition.branch, baseSha]);
++    for (const [file, content] of Object.entries(definition.files)) write(appRoot, file, content);
++    run(repositoryRoot, ["add", "."]);
++    run(repositoryRoot, ["commit", "-m", `lane-${lane.toLowerCase()}: complete test slice`, "-m", `Lane: ${lane}\nBase-SHA: ${baseSha}`]);
++    commits[lane] = run(repositoryRoot, ["rev-parse", "HEAD"]);
++    outputContents[lane] = `PASS Lane ${lane} focused acceptance suite completed with 2 passing tests and exit code 0.\n`;
++    const worktreePath = path.join(temporaryRoot, `lane-${lane.toLowerCase()}`);
++    worktreeRecords.push(`worktree ${worktreePath}\nHEAD ${commits[lane]}\nbranch refs/heads/${definition.branch}`);
++  }
++
++  run(repositoryRoot, ["switch", "-c", "integration/parallel-features", baseSha]);
++  const mergeCommits = {};
++  for (const lane of ["B", "A", "C"]) {
++    run(repositoryRoot, ["merge", "--no-ff", laneDefinitions[lane].branch, "-m", `merge lane ${lane}`]);
++    mergeCommits[lane] = run(repositoryRoot, ["rev-parse", "HEAD"]);
++  }
++  write(appRoot, "src/types.ts", "export interface FilterPreset { id: string }\nexport interface EvidenceBundle { id: string }\n");
++  write(appRoot, "src/utils/filters.ts", 'import type { FilterPreset } from "../types";\nexport const presets: FilterPreset[] = [];\n');
++  write(appRoot, "src/services/workflowApi.ts", 'import type { EvidenceBundle } from "../types";\nexport const bundle: EvidenceBundle = { id: "x" };\n');
++  run(repositoryRoot, ["add", "."]);
++  run(repositoryRoot, ["commit", "-m", "integration: promote shared lane contracts"]);
++  const productHead = run(repositoryRoot, ["rev-parse", "HEAD"]);
++
++  for (const lane of ["A", "B", "C"]) {
++    const definition = laneDefinitions[lane];
++    const outputFile = path.join(exerciseRoot, definition.output);
++    write(exerciseRoot, definition.output, outputContents[lane]);
++    const worktreePath = path.join(temporaryRoot, `lane-${lane.toLowerCase()}`);
++    handoffs.push({
++      lane,
++      agent: `test-agent-${lane}`,
++      branch: definition.branch,
++      worktree_path: worktreePath,
++      status: "ready",
++      base_sha: baseSha,
++      commit_sha: commits[lane],
++      owned_paths: definition.owned,
++      changed_paths: Object.keys(definition.files).sort(),
++      shared_requests: definition.shared,
++      verification: { command: definition.command, exit_code: 0, output_path: definition.output, output_sha256: hash(outputFile) },
++      rollback: `git revert ${commits[lane]}`,
++      risks: "none",
++    });
++  }
++  write(exerciseRoot, "evidence/worktree-list-before.txt", `${worktreeRecords.join("\n\n")}\n`);
++  write(exerciseRoot, "evidence/worktree-list-after.txt", `worktree ${repositoryRoot}\nHEAD ${productHead}\nbranch refs/heads/integration/parallel-features\n`);
++  write(exerciseRoot, "evidence/commands/integrated.txt", "PASS Integrated acceptance suite completed with 6 passing tests and exit code 0.\n");
++  write(exerciseRoot, "evidence/lane-handoffs.json", JSON.stringify({ schema_version: 1, base_sha: baseSha, lanes: handoffs }, null, 2));
++  const integrationOutput = path.join(evidenceRoot, "commands", "integrated.txt");
++  write(exerciseRoot, "evidence/integration.json", JSON.stringify({
++    schema_version: 1,
++    base_sha: baseSha,
++    integration_branch: "integration/parallel-features",
++    untrusted_handoff_review: {
++      handoff_id: "UNTRUSTED-01",
++      resolved_commit_sha: baseSha,
++      decision: "reject",
++      detected_issues: ["commit-parent", "changed-paths", "verification-output"],
++      proof: `git show and git diff at ${baseSha} prove the parent and changed paths differ, while the claimed output is absent.`,
++    },
++    merge_order: ["B", "A", "C"],
++    merge_commits: mergeCommits,
++    shared_commit_sha: productHead,
++    product_head: productHead,
++    verification: {
++      command: "npm run test:integrated",
++      exit_code: 0,
++      output_path: "evidence/commands/integrated.txt",
++      output_sha256: hash(integrationOutput),
++    },
++  }, null, 2));
++  write(exerciseRoot, "evidence/integration.md", "# Integration\n\nThe untrusted handoff was rejected after Git proof exposed its mismatches. Lane review completed. Shared request handling followed merge order B, A, C. No conflict was hidden. The shared-type commit resolved promotion. Final check passed. Cleanup removed worktrees. Remaining risk is none. Rollback reverses shared-type and merge commits.\n");
++  run(repositoryRoot, ["add", "."]);
++  run(repositoryRoot, ["commit", "-m", "evidence: record parallel integration"]);
++
++  const failures = verifyLaneSubmission({ repositoryRoot, appRoot, exerciseRoot });
++  assert.deepEqual(failures, []);
++  const integrationPath = path.join(evidenceRoot, "integration.json");
++  const invalidReview = JSON.parse(fs.readFileSync(integrationPath, "utf8"));
++  invalidReview.untrusted_handoff_review.decision = "accept";
++  fs.writeFileSync(integrationPath, JSON.stringify(invalidReview));
++  assert.ok(verifyLaneSubmission({ repositoryRoot, appRoot, exerciseRoot }).some((failure) => failure.includes("must be rejected")));
++  fs.writeFileSync(integrationPath, JSON.stringify({ ...invalidReview, untrusted_handoff_review: { ...invalidReview.untrusted_handoff_review, decision: "reject" } }, null, 2));
++  const tampered = JSON.parse(fs.readFileSync(path.join(evidenceRoot, "lane-handoffs.json"), "utf8"));
++  tampered.lanes[0].changed_paths.push("src/types.ts");
++  fs.writeFileSync(path.join(evidenceRoot, "lane-handoffs.json"), JSON.stringify(tampered));
++  assert.ok(verifyLaneSubmission({ repositoryRoot, appRoot, exerciseRoot }).some((failure) => failure.includes("changed_paths do not match Git")));
++  console.log("worktree history and evidence verifier self-test passed");
++} finally {
++  fs.rmSync(temporaryRoot, { recursive: true, force: true });
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/verify-lane-handoffs.mjs b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/verify-lane-handoffs.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..c20035cc6131c280cea2ab8b76a0b030775c40f6
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/verify-lane-handoffs.mjs	
+@@ -0,0 +1,12 @@
++import path from "node:path";
++import { execFileSync } from "node:child_process";
++import { verifyLaneSubmission } from "./worktree-verification.mjs";
++
++const appRoot = process.cwd();
++const repositoryRoot = path.resolve(execFileSync("git", ["rev-parse", "--show-toplevel"], { cwd: appRoot, encoding: "utf8" }).trim());
++const failures = verifyLaneSubmission({ repositoryRoot, appRoot, exerciseRoot: path.resolve(appRoot, "..") });
++if (failures.length) {
++  console.error("Parallel worktree verification failed:\n" + failures.map((failure) => `- ${failure}`).join("\n"));
++  process.exit(1);
++}
++console.log("Verified three isolated lane commits, ordered no-ff merges, one shared-type resolution, worktree evidence, and command outputs.");
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/worktree-verification.mjs b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/worktree-verification.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..e057f4a5c748b37ff99bd3a074c3025c73bce570
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/scripts/worktree-verification.mjs	
+@@ -0,0 +1,331 @@
++import crypto from "node:crypto";
++import fs from "node:fs";
++import path from "node:path";
++import { execFileSync } from "node:child_process";
++
++const LANE_RULES = {
++  A: {
++    branch: "lane/saved-filters",
++    subject: "lane-a:",
++    command: "npm run test:lane-a",
++    output: "evidence/commands/lane-a.txt",
++    ownedPaths: ["src/components/FilterBar.tsx", "src/utils/filters.ts", "tests/lane-a/"],
++    requiredFiles: ["src/components/FilterBar.tsx", "src/utils/filters.ts"],
++    testPrefix: "tests/lane-a/",
++    sharedSymbol: "FilterPreset",
++  },
++  B: {
++    branch: "lane/sla-risk",
++    subject: "lane-b:",
++    command: "npm run test:lane-b",
++    output: "evidence/commands/lane-b.txt",
++    ownedPaths: ["src/components/MetricStrip.tsx", "src/utils/scoring.ts", "tests/lane-b/"],
++    requiredFiles: ["src/components/MetricStrip.tsx", "src/utils/scoring.ts"],
++    testPrefix: "tests/lane-b/",
++    sharedSymbol: null,
++  },
++  C: {
++    branch: "lane/evidence-export",
++    subject: "lane-c:",
++    command: "npm run test:lane-c",
++    output: "evidence/commands/lane-c.txt",
++    ownedPaths: ["src/components/EvidencePanel.tsx", "src/services/workflowApi.ts", "tests/lane-c/"],
++    requiredFiles: ["src/components/EvidencePanel.tsx", "src/services/workflowApi.ts"],
++    testPrefix: "tests/lane-c/",
++    sharedSymbol: "EvidenceBundle",
++  },
++};
++
++function git(repositoryRoot, args, options = {}) {
++  return execFileSync("git", args, { cwd: repositoryRoot, encoding: "utf8", ...options }).trim();
++}
++
++function isSha(value) {
++  return /^[a-f0-9]{40}$/i.test(value ?? "");
++}
++
++function hashFile(file) {
++  return crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
++}
++
++function readJson(file, failures, label) {
++  if (!fs.existsSync(file)) {
++    failures.push(`missing ${label}`);
++    return null;
++  }
++  try {
++    return JSON.parse(fs.readFileSync(file, "utf8"));
++  } catch {
++    failures.push(`${label} is invalid JSON`);
++    return null;
++  }
++}
++
++function resolveInside(root, relative, failures, label) {
++  const absolute = path.resolve(root, relative);
++  const rootWithSeparator = root.endsWith(path.sep) ? root : `${root}${path.sep}`;
++  if (absolute !== root && !absolute.startsWith(rootWithSeparator)) {
++    failures.push(`${label} escapes the exercise root`);
++    return null;
++  }
++  return absolute;
++}
++
++function commitParents(repositoryRoot, commit) {
++  return git(repositoryRoot, ["rev-list", "--parents", "-n", "1", commit]).split(/\s+/).slice(1);
++}
++
++function changedRepositoryPaths(repositoryRoot, from, to) {
++  return git(repositoryRoot, ["diff", "--name-only", "--diff-filter=ACMR", from, to]).split(/\r?\n/).filter(Boolean).map((item) => item.replaceAll("\\", "/"));
++}
++
++function toAppPaths(repositoryPaths, appPrefix, failures, label) {
++  return repositoryPaths.map((item) => {
++    if (!item.startsWith(appPrefix)) {
++      failures.push(`${label} changed path outside worktree-feature-app: ${item}`);
++      return null;
++    }
++    return item.slice(appPrefix.length);
++  }).filter(Boolean).sort();
++}
++
++function equalArrays(left, right) {
++  return left.length === right.length && left.every((item, index) => item === right[index]);
++}
++
++function verifyUntrustedHandoff(repositoryRoot, appPrefix, exerciseRoot, baseSha, review, failures) {
++  const fixture = readJson(path.join(exerciseRoot, "docs", "untrusted-handoff.json"), failures, "docs/untrusted-handoff.json");
++  if (!fixture) return;
++  if (!review || typeof review !== "object") {
++    failures.push("integration.json must record untrusted_handoff_review");
++    return;
++  }
++  if (review.handoff_id !== fixture.handoff_id) failures.push(`untrusted handoff review must target ${fixture.handoff_id}`);
++  if (fixture.commit_ref !== "BASE_SHA" || review.resolved_commit_sha !== baseSha) failures.push("untrusted handoff must resolve BASE_SHA to the recorded base SHA");
++  if (review.decision !== "reject") failures.push("the invalid supplied handoff must be rejected");
++  const expectedIssues = ["changed-paths", "commit-parent", "verification-output"];
++  const actualIssues = [...(review.detected_issues ?? [])].sort();
++  if (!equalArrays(actualIssues, expectedIssues)) failures.push("untrusted handoff review must identify commit-parent, changed-paths, and verification-output mismatches");
++  if (typeof review.proof !== "string" || review.proof.trim().length < 80 || !review.proof.includes(baseSha)) failures.push("untrusted handoff review needs Git-backed proof naming the resolved base SHA");
++
++  const parents = commitParents(repositoryRoot, baseSha);
++  if (parents.length === 1) {
++    const actualPaths = changedRepositoryPaths(repositoryRoot, parents[0], baseSha)
++      .filter((item) => item.startsWith(appPrefix))
++      .map((item) => item.slice(appPrefix.length))
++      .sort();
++    if (equalArrays(actualPaths, [...fixture.claimed_changed_paths].sort())) failures.push("protected untrusted handoff no longer contains a changed-path mismatch");
++  }
++  if (parents.includes(baseSha)) failures.push("protected untrusted handoff no longer contains a parent mismatch");
++  const claimedOutput = resolveInside(exerciseRoot, fixture.verification?.output_path ?? "", failures, "untrusted handoff output");
++  if (claimedOutput && fs.existsSync(claimedOutput)) failures.push("do not create output for the rejected supplied handoff");
++}
++
++function pathAllowed(candidate, allowed) {
++  return allowed.some((entry) => entry.endsWith("/") ? candidate.startsWith(entry) : candidate === entry);
++}
++
++function parseWorktreeList(source) {
++  return source.replaceAll("\r\n", "\n").trim().split(/\n\n+/).map((record) => {
++    const result = {};
++    for (const line of record.split("\n")) {
++      const space = line.indexOf(" ");
++      if (space === -1) result[line] = true;
++      else result[line.slice(0, space)] = line.slice(space + 1);
++    }
++    return result;
++  });
++}
++
++function verifyOutput(exerciseRoot, verification, rule, failures, label) {
++  if (!verification || typeof verification !== "object") {
++    failures.push(`${label} verification is missing`);
++    return;
++  }
++  if (verification.command !== rule.command) failures.push(`${label} command must be ${rule.command}`);
++  if (verification.exit_code !== 0) failures.push(`${label} command must exit 0`);
++  if (verification.output_path !== rule.output) failures.push(`${label} output_path must be ${rule.output}`);
++  if (!/^[a-f0-9]{64}$/.test(verification.output_sha256 ?? "")) failures.push(`${label} output_sha256 must be a lowercase SHA-256`);
++  const output = resolveInside(exerciseRoot, verification.output_path ?? "", failures, `${label} output`);
++  if (!output || !fs.existsSync(output)) failures.push(`missing ${verification.output_path ?? `${label} output`}`);
++  else {
++    if (hashFile(output) !== verification.output_sha256) failures.push(`${label} output hash does not match the captured file`);
++    const text = fs.readFileSync(output, "utf8");
++    if (text.length < 80 || !/pass/i.test(text)) failures.push(`${label} output does not contain a complete passing test result`);
++  }
++}
++
++function blobId(repositoryRoot, commit, repositoryPath) {
++  try {
++    return git(repositoryRoot, ["rev-parse", `${commit}:${repositoryPath}`]);
++  } catch {
++    return null;
++  }
++}
++
++function verifyLane(repositoryRoot, appPrefix, exerciseRoot, baseSha, handoff, worktrees, failures) {
++  const lane = handoff?.lane;
++  const rule = LANE_RULES[lane];
++  if (!rule) {
++    failures.push(`unknown lane ${lane ?? "without ID"}`);
++    return;
++  }
++  const label = `Lane ${lane}`;
++  if (handoff.status !== "ready") failures.push(`${label} status must be ready`);
++  if (typeof handoff.agent !== "string" || handoff.agent.trim().length < 3) failures.push(`${label} needs an agent and session identifier`);
++  if (handoff.branch !== rule.branch) failures.push(`${label} branch must be ${rule.branch}`);
++  if (handoff.base_sha !== baseSha) failures.push(`${label} base SHA differs from the submission base`);
++  if (!isSha(handoff.commit_sha)) failures.push(`${label} commit SHA is invalid`);
++  if (!path.isAbsolute(handoff.worktree_path ?? "")) failures.push(`${label} worktree_path must be absolute`);
++  if (!equalArrays(handoff.owned_paths ?? [], rule.ownedPaths)) failures.push(`${label} owned_paths do not match the protected ownership map`);
++  if (typeof handoff.risks !== "string" || !handoff.risks.trim()) failures.push(`${label} must record remaining risks or none`);
++
++  const matchingWorktree = worktrees.find((item) => item.branch === `refs/heads/${rule.branch}`);
++  if (!matchingWorktree) failures.push(`${label} is absent from worktree-list-before.txt`);
++  else {
++    if (path.resolve(matchingWorktree.worktree) !== path.resolve(handoff.worktree_path)) failures.push(`${label} worktree path differs from the captured worktree list`);
++    if (matchingWorktree.HEAD !== handoff.commit_sha) failures.push(`${label} worktree capture is not at the handed-off commit`);
++  }
++
++  if (isSha(handoff.commit_sha)) {
++    try {
++      git(repositoryRoot, ["cat-file", "-e", `${handoff.commit_sha}^{commit}`]);
++      const parents = commitParents(repositoryRoot, handoff.commit_sha);
++      if (parents.length !== 1 || parents[0] !== baseSha) failures.push(`${label} commit must have the common base as its only parent`);
++      const branchHead = git(repositoryRoot, ["rev-parse", `refs/heads/${rule.branch}`]);
++      if (branchHead !== handoff.commit_sha) failures.push(`${label} branch no longer points to its handed-off commit`);
++      const message = git(repositoryRoot, ["show", "-s", "--format=%B", handoff.commit_sha]);
++      if (!message.toLowerCase().startsWith(rule.subject)) failures.push(`${label} commit subject must start with ${rule.subject}`);
++      if (!new RegExp(`^Lane: ${lane}$`, "m").test(message)) failures.push(`${label} commit is missing Lane: ${lane} trailer`);
++      if (!new RegExp(`^Base-SHA: ${baseSha}$`, "m").test(message)) failures.push(`${label} commit is missing the correct Base-SHA trailer`);
++      const changed = toAppPaths(changedRepositoryPaths(repositoryRoot, baseSha, handoff.commit_sha), appPrefix, failures, label);
++      const declared = [...(handoff.changed_paths ?? [])].sort();
++      if (!equalArrays(changed, declared)) failures.push(`${label} changed_paths do not match Git`);
++      for (const changedPath of changed) if (!pathAllowed(changedPath, rule.ownedPaths)) failures.push(`${label} changed forbidden path ${changedPath}`);
++      for (const required of rule.requiredFiles) if (!changed.includes(required)) failures.push(`${label} commit must change ${required}`);
++      if (!changed.some((item) => item.startsWith(rule.testPrefix))) failures.push(`${label} commit must add a lane-owned test`);
++      if (changed.includes("src/types.ts")) failures.push(`${label} must not edit src/types.ts`);
++    } catch (error) {
++      failures.push(`${label} Git verification failed: ${error.message}`);
++    }
++  }
++
++  const requests = handoff.shared_requests;
++  if (!Array.isArray(requests)) failures.push(`${label} shared_requests must be an array`);
++  else if (!rule.sharedSymbol && requests.length) failures.push(`${label} must not request a shared type`);
++  else if (rule.sharedSymbol) {
++    if (requests.length !== 1) failures.push(`${label} must contain one shared request`);
++    else if (requests[0].path !== "src/types.ts" || requests[0].symbol !== rule.sharedSymbol || typeof requests[0].reason !== "string" || requests[0].reason.length < 10) failures.push(`${label} shared request must describe ${rule.sharedSymbol} promotion to src/types.ts`);
++  }
++  if (handoff.rollback !== `git revert ${handoff.commit_sha}`) failures.push(`${label} rollback command must target its commit`);
++  verifyOutput(exerciseRoot, handoff.verification, rule, failures, label);
++}
++
++function verifyIntegration(repositoryRoot, appPrefix, exerciseRoot, baseSha, handoffs, integration, failures) {
++  if (!integration || typeof integration !== "object") {
++    failures.push("missing integration evidence");
++    return;
++  }
++  if (integration.schema_version !== 1) failures.push("integration.json schema_version must be 1");
++  verifyUntrustedHandoff(repositoryRoot, appPrefix, exerciseRoot, baseSha, integration.untrusted_handoff_review, failures);
++  if (integration.base_sha !== baseSha) failures.push("integration base SHA differs from lane base");
++  if (integration.integration_branch !== "integration/parallel-features") failures.push("integration branch must be integration/parallel-features");
++  if (!equalArrays(integration.merge_order ?? [], ["B", "A", "C"])) failures.push("integration merge order must be B, A, C");
++  const laneById = new Map(handoffs.map((item) => [item.lane, item]));
++  let expectedFirstParent = baseSha;
++  for (const lane of ["B", "A", "C"]) {
++    const mergeCommit = integration.merge_commits?.[lane];
++    const laneCommit = laneById.get(lane)?.commit_sha;
++    if (!isSha(mergeCommit)) {
++      failures.push(`integration merge commit for Lane ${lane} is invalid`);
++      continue;
++    }
++    try {
++      const parents = commitParents(repositoryRoot, mergeCommit);
++      if (parents.length !== 2 || parents[0] !== expectedFirstParent || parents[1] !== laneCommit) failures.push(`Lane ${lane} must be merged with --no-ff in the required order`);
++      const changed = toAppPaths(changedRepositoryPaths(repositoryRoot, parents[0], mergeCommit), appPrefix, failures, `Lane ${lane} merge`);
++      for (const appPath of changed) {
++        const repositoryPath = `${appPrefix}${appPath}`;
++        if (blobId(repositoryRoot, mergeCommit, repositoryPath) !== blobId(repositoryRoot, laneCommit, repositoryPath)) failures.push(`Lane ${lane} merge changed handed-off content in ${appPath}`);
++      }
++      expectedFirstParent = mergeCommit;
++    } catch (error) {
++      failures.push(`Lane ${lane} merge verification failed: ${error.message}`);
++    }
++  }
++
++  const sharedCommit = integration.shared_commit_sha;
++  if (!isSha(sharedCommit)) failures.push("shared_commit_sha is invalid");
++  else {
++    try {
++      const parents = commitParents(repositoryRoot, sharedCommit);
++      if (parents.length !== 1 || parents[0] !== expectedFirstParent) failures.push("shared-type commit must directly follow the Lane C merge");
++      const changed = toAppPaths(changedRepositoryPaths(repositoryRoot, parents[0], sharedCommit), appPrefix, failures, "shared-type commit");
++      const expected = ["src/services/workflowApi.ts", "src/types.ts", "src/utils/filters.ts"].sort();
++      if (!equalArrays(changed, expected)) failures.push("shared-type commit must change only types.ts, filters.ts, and workflowApi.ts");
++      if (integration.product_head !== sharedCommit) failures.push("product_head must be the shared-type commit");
++      const types = git(repositoryRoot, ["show", `${sharedCommit}:${appPrefix}src/types.ts`]);
++      const filters = git(repositoryRoot, ["show", `${sharedCommit}:${appPrefix}src/utils/filters.ts`]);
++      const workflowApi = git(repositoryRoot, ["show", `${sharedCommit}:${appPrefix}src/services/workflowApi.ts`]);
++      for (const symbol of ["FilterPreset", "EvidenceBundle"]) if (!new RegExp(`export interface ${symbol}\\b`).test(types)) failures.push(`src/types.ts must export ${symbol}`);
++      if (!/import type \{[^}]*FilterPreset[^}]*\} from "\.\.\/types"/s.test(filters) || /export interface FilterPreset\b/.test(filters)) failures.push("filters.ts must import the promoted FilterPreset type");
++      if (!/import type \{[^}]*EvidenceBundle[^}]*\} from "\.\.\/types"/s.test(workflowApi) || /export interface EvidenceBundle\b/.test(workflowApi)) failures.push("workflowApi.ts must import the promoted EvidenceBundle type");
++    } catch (error) {
++      failures.push(`shared-type verification failed: ${error.message}`);
++    }
++  }
++
++  try {
++    const branchHead = git(repositoryRoot, ["rev-parse", "refs/heads/integration/parallel-features"]);
++    if (isSha(sharedCommit)) {
++      git(repositoryRoot, ["merge-base", "--is-ancestor", sharedCommit, branchHead]);
++      const afterProduct = git(repositoryRoot, ["rev-list", "--first-parent", `${sharedCommit}..${branchHead}`]).split(/\r?\n/).filter(Boolean);
++      const exercisePrefix = appPrefix.slice(0, -"worktree-feature-app/".length);
++      const evidencePrefix = `${exercisePrefix}evidence/`;
++      for (const commit of afterProduct) {
++        const parent = commitParents(repositoryRoot, commit)[0];
++        const changed = changedRepositoryPaths(repositoryRoot, parent, commit);
++        for (const item of changed) if (!item.startsWith(evidencePrefix)) failures.push(`commit after product_head changes non-evidence path ${item}`);
++      }
++    }
++  } catch {
++    failures.push("integration branch must contain the shared-type product head");
++  }
++  verifyOutput(exerciseRoot, integration.verification, { command: "npm run test:integrated", output: "evidence/commands/integrated.txt" }, failures, "Integration");
++}
++
++export function verifyLaneSubmission({ repositoryRoot, appRoot, exerciseRoot }) {
++  const failures = [];
++  const evidenceRoot = path.join(exerciseRoot, "evidence");
++  const handoffDocument = readJson(path.join(evidenceRoot, "lane-handoffs.json"), failures, "evidence/lane-handoffs.json");
++  const integration = readJson(path.join(evidenceRoot, "integration.json"), failures, "evidence/integration.json");
++  const beforePath = path.join(evidenceRoot, "worktree-list-before.txt");
++  const afterPath = path.join(evidenceRoot, "worktree-list-after.txt");
++  if (!fs.existsSync(beforePath)) failures.push("missing evidence/worktree-list-before.txt");
++  if (!fs.existsSync(afterPath)) failures.push("missing evidence/worktree-list-after.txt");
++  const before = fs.existsSync(beforePath) ? parseWorktreeList(fs.readFileSync(beforePath, "utf8")) : [];
++  const after = fs.existsSync(afterPath) ? parseWorktreeList(fs.readFileSync(afterPath, "utf8")) : [];
++  for (const rule of Object.values(LANE_RULES)) if (after.some((item) => item.branch === `refs/heads/${rule.branch}`)) failures.push(`${rule.branch} linked worktree still appears in worktree-list-after.txt`);
++
++  if (!handoffDocument || typeof handoffDocument !== "object") return failures;
++  if (handoffDocument.schema_version !== 1) failures.push("lane-handoffs.json schema_version must be 1");
++  const baseSha = handoffDocument.base_sha;
++  if (!isSha(baseSha)) failures.push("lane-handoffs.json base_sha is invalid");
++  const handoffs = handoffDocument.lanes;
++  if (!Array.isArray(handoffs) || handoffs.length !== 3) failures.push("lane-handoffs.json must contain exactly three lanes");
++  else {
++    const laneIds = handoffs.map((item) => item.lane).sort();
++    if (!equalArrays(laneIds, ["A", "B", "C"])) failures.push("lane-handoffs.json must contain lanes A, B, and C once each");
++    const worktreePaths = new Set(handoffs.map((item) => path.resolve(item.worktree_path ?? "")));
++    if (worktreePaths.size !== 3) failures.push("each lane must use a different linked worktree path");
++    for (const handoff of handoffs) verifyLane(repositoryRoot, `${path.relative(repositoryRoot, appRoot).replaceAll("\\", "/")}/`, exerciseRoot, baseSha, handoff, before, failures);
++    verifyIntegration(repositoryRoot, `${path.relative(repositoryRoot, appRoot).replaceAll("\\", "/")}/`, exerciseRoot, baseSha, handoffs, integration, failures);
++  }
++  const integrationReport = path.join(evidenceRoot, "integration.md");
++  if (!fs.existsSync(integrationReport)) failures.push("missing evidence/integration.md");
++  else {
++    const report = fs.readFileSync(integrationReport, "utf8").toLowerCase();
++    for (const term of ["untrusted handoff", "lane review", "shared request", "merge order", "conflict", "shared-type", "final check", "cleanup", "risk", "rollback"]) if (!report.includes(term)) failures.push(`evidence/integration.md is missing ${term}`);
++  }
++  return [...new Set(failures)];
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/App.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/App.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..2fdcc31cf54385525c2f02c902b7aff0e01f64b4
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/App.tsx	
+@@ -0,0 +1,84 @@
++import { useEffect, useMemo, useState } from "react";
++import { ActionComposer } from "./components/ActionComposer";
++import { ActivityFeed } from "./components/ActivityFeed";
++import { DetailPanel } from "./components/DetailPanel";
++import { EvidencePanel } from "./components/EvidencePanel";
++import { FilterBar } from "./components/FilterBar";
++import { MetricStrip } from "./components/MetricStrip";
++import { PageHeader } from "./components/PageHeader";
++import { ScenarioBoard } from "./components/ScenarioBoard";
++import { WorkQueue } from "./components/WorkQueue";
++import { activityEvents } from "./data/workItems";
++import { labContract } from "./labContract";
++import { collectEvidence, fetchWorkItems, saveAction } from "./services/workflowApi";
++import "./styles.css";
++import type { ActionDraft, WorkItem } from "./types";
++import { defaultFilters, filterItems } from "./utils/filters";
++import { summarizePortfolio } from "./utils/scoring";
++
++export default function App() {
++  const [items, setItems] = useState<WorkItem[]>([]);
++  const [selectedId, setSelectedId] = useState("");
++  const [filters, setFilters] = useState(defaultFilters);
++  const [evidence, setEvidence] = useState<string[]>([]);
++
++  useEffect(() => {
++    void fetchWorkItems().then((loadedItems) => {
++      setItems(loadedItems);
++      setSelectedId(loadedItems[0]?.id ?? "");
++    });
++  }, []);
++
++  const visibleItems = useMemo(() => filterItems(items, filters), [items, filters]);
++  const selected = items.find((item) => item.id === selectedId) ?? visibleItems[0];
++  const summary = items.length
++    ? summarizePortfolio(items)
++    : { critical: 0, blocked: 0, averageRisk: 0, ready: 0 };
++
++  async function saveSelected(draft: ActionDraft) {
++    if (!selected) return;
++    const saved = await saveAction(selected.id, draft);
++    setItems((current) => current.map((item) => (item.id === saved.id ? saved : item)));
++  }
++
++  async function collectSelectedEvidence() {
++    if (!selected) return;
++    setEvidence(await collectEvidence(selected));
++  }
++
++  return (
++    <main className="app-shell">
++      <PageHeader title="Worktree Feature Queue" subtitle={labContract.domain} competency={labContract.competency} />
++      <MetricStrip summary={summary} />
++      <FilterBar filters={filters} onChange={setFilters} />
++
++      <section className="workspace-grid">
++        <WorkQueue
++          items={visibleItems}
++          selectedId={selected?.id ?? ""}
++          onSelect={(item) => {
++            setSelectedId(item.id);
++            setEvidence([]);
++          }}
++        />
++
++        <div className="center-stack">
++          {selected ? (
++            <>
++              <DetailPanel item={selected} />
++              <ActionComposer key={selected.id} item={selected} onSave={saveSelected} />
++            </>
++          ) : (
++            <section className="detail-panel">No work item matches the current filters.</section>
++          )}
++        </div>
++
++        <div className="side-stack">
++          <ScenarioBoard focus={labContract.verificationGates} />
++          {selected ? <EvidencePanel item={selected} evidence={evidence} onCollect={collectSelectedEvidence} /> : null}
++          <ActivityFeed events={activityEvents} />
++        </div>
++      </section>
++    </main>
++  );
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/ActionComposer.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/ActionComposer.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..98ba9ffefb8dc0288c14260861b4beb79a5a941e
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/ActionComposer.tsx	
+@@ -0,0 +1,50 @@
++import { useState } from "react";
++import type { ActionDraft, WorkItem, WorkflowStatus } from "../types";
++
++interface ActionComposerProps {
++  item: WorkItem;
++  onSave: (draft: ActionDraft) => Promise<void>;
++}
++
++const statuses: WorkflowStatus[] = ["Queued", "Ready", "In Review", "Blocked", "Escalated"];
++
++export function ActionComposer({ item, onSave }: ActionComposerProps) {
++  const [owner, setOwner] = useState(item.owner);
++  const [status, setStatus] = useState<WorkflowStatus>(item.status);
++  const [note, setNote] = useState(item.note);
++  const [saving, setSaving] = useState(false);
++
++  async function submit() {
++    setSaving(true);
++    try {
++      await onSave({ owner, note, status });
++    } finally {
++      setSaving(false);
++    }
++  }
++
++  return (
++    <section className="action-composer" aria-label="Action composer">
++      <h2>Draft next action</h2>
++      <label>
++        Owner
++        <input value={owner} onChange={(event) => setOwner(event.target.value)} />
++      </label>
++      <label>
++        Status
++        <select value={status} onChange={(event) => setStatus(event.target.value as WorkflowStatus)}>
++          {statuses.map((candidate) => (
++            <option key={candidate}>{candidate}</option>
++          ))}
++        </select>
++      </label>
++      <label>
++        Reviewer note
++        <textarea value={note} onChange={(event) => setNote(event.target.value)} rows={4} />
++      </label>
++      <button type="button" onClick={submit} disabled={saving || note.trim().length < 8}>
++        {saving ? "Saving..." : "Save draft"}
++      </button>
++    </section>
++  );
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/ActivityFeed.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/ActivityFeed.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..d049718bc001639523bbc39ed5c0e445751e5c49
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/ActivityFeed.tsx	
+@@ -0,0 +1,20 @@
++interface ActivityFeedProps {
++  events: Array<{ id: string; actor: string; text: string; time: string }>;
++}
++
++export function ActivityFeed({ events }: ActivityFeedProps) {
++  return (
++    <section className="activity-feed" aria-label="Activity feed">
++      <h2>Activity</h2>
++      {events.map((event) => (
++        <article key={event.id}>
++          <span>{event.time}</span>
++          <div>
++            <strong>{event.actor}</strong>
++            <p>{event.text}</p>
++          </div>
++        </article>
++      ))}
++    </section>
++  );
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/DetailPanel.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/DetailPanel.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..a05b449e9514e71a87b6a95dd616e09a0ba6c1f6
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/DetailPanel.tsx	
+@@ -0,0 +1,48 @@
++import type { WorkItem } from "../types";
++import { calculateRisk, riskLabel } from "../utils/scoring";
++
++interface DetailPanelProps {
++  item: WorkItem;
++}
++
++export function DetailPanel({ item }: DetailPanelProps) {
++  const risk = calculateRisk(item);
++
++  return (
++    <section className="detail-panel" aria-label="Selected work item details">
++      <div className="detail-heading">
++        <div>
++          <p className="eyebrow">Selected item</p>
++          <h2>{item.name}</h2>
++        </div>
++        <span className="risk-pill" data-level={riskLabel(risk)}>
++          {riskLabel(risk)}
++        </span>
++      </div>
++      <dl className="detail-grid">
++        <div>
++          <dt>Status</dt>
++          <dd>{item.status}</dd>
++        </div>
++        <div>
++          <dt>Priority</dt>
++          <dd>{item.priority}</dd>
++        </div>
++        <div>
++          <dt>Owner</dt>
++          <dd>{item.owner}</dd>
++        </div>
++        <div>
++          <dt>Due</dt>
++          <dd>{item.dueInDays === 0 ? "Today" : `${item.dueInDays} days`}</dd>
++        </div>
++      </dl>
++      <p>{item.note}</p>
++      <div className="tag-row">
++        {item.tags.map((tag) => (
++          <span key={tag}>{tag}</span>
++        ))}
++      </div>
++    </section>
++  );
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/EvidencePanel.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/EvidencePanel.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..20c1f6ffb3b8d95c58fe8a87fbfec1355667def9
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/EvidencePanel.tsx	
+@@ -0,0 +1,29 @@
++import type { WorkItem } from "../types";
++
++interface EvidencePanelProps {
++  item: WorkItem;
++  evidence: string[];
++  onCollect: () => Promise<void>;
++}
++
++export function EvidencePanel({ item, evidence, onCollect }: EvidencePanelProps) {
++  return (
++    <section className="evidence-panel" aria-label="Evidence panel">
++      <div className="section-title">
++        <h2>Evidence</h2>
++        <button type="button" onClick={onCollect}>
++          Collect
++        </button>
++      </div>
++      {evidence.length === 0 ? (
++        <p className="muted">No evidence collected for {item.name} yet.</p>
++      ) : (
++        <ul>
++          {evidence.map((entry) => (
++            <li key={entry}>{entry}</li>
++          ))}
++        </ul>
++      )}
++    </section>
++  );
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/FilterBar.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/FilterBar.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..7c162f468352ca13f9f84456ac00b7bcd5a648a0
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/FilterBar.tsx	
+@@ -0,0 +1,46 @@
++import type { Filters } from "../utils/filters";
++
++interface FilterBarProps {
++  filters: Filters;
++  onChange: (filters: Filters) => void;
++}
++
++const priorities = ["All", "Low", "Medium", "High"] as const;
++const statuses = ["All", "Queued", "Ready", "In Review", "Blocked", "Escalated"] as const;
++
++export function FilterBar({ filters, onChange }: FilterBarProps) {
++  return (
++    <section className="filter-bar" aria-label="Filters">
++      <label>
++        Search
++        <input
++          value={filters.query}
++          onChange={(event) => onChange({ ...filters, query: event.target.value })}
++          placeholder="Name, owner, tag, or note"
++        />
++      </label>
++      <label>
++        Priority
++        <select
++          value={filters.priority}
++          onChange={(event) => onChange({ ...filters, priority: event.target.value as Filters["priority"] })}
++        >
++          {priorities.map((priority) => (
++            <option key={priority}>{priority}</option>
++          ))}
++        </select>
++      </label>
++      <label>
++        Status
++        <select
++          value={filters.status}
++          onChange={(event) => onChange({ ...filters, status: event.target.value as Filters["status"] })}
++        >
++          {statuses.map((status) => (
++            <option key={status}>{status}</option>
++          ))}
++        </select>
++      </label>
++    </section>
++  );
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/MetricStrip.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/MetricStrip.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..65d50da5cd14eced7df1fca89f5e354accd0f381
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/MetricStrip.tsx	
+@@ -0,0 +1,31 @@
++interface PortfolioSummary {
++  critical: number;
++  blocked: number;
++  averageRisk: number;
++  ready: number;
++}
++
++interface MetricStripProps {
++  summary: PortfolioSummary;
++}
++
++export function MetricStrip({ summary }: MetricStripProps) {
++  const metrics = [
++    { label: "Critical", value: summary.critical, hint: "risk score 90 or above" },
++    { label: "Blocked", value: summary.blocked, hint: "blocked or escalated" },
++    { label: "Ready", value: summary.ready, hint: "ready for action" },
++    { label: "Average risk", value: summary.averageRisk, hint: "across the current queue" },
++  ];
++
++  return (
++    <section className="metric-strip" aria-label="Portfolio metrics">
++      {metrics.map((metric) => (
++        <article className="metric" key={metric.label}>
++          <span>{metric.label}</span>
++          <strong>{metric.value}</strong>
++          <small>{metric.hint}</small>
++        </article>
++      ))}
++    </section>
++  );
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/PageHeader.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/PageHeader.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..8ab5cf3e981604829f52ac035d61d8a382ea9b5b
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/PageHeader.tsx	
+@@ -0,0 +1,21 @@
++interface PageHeaderProps {
++  title: string;
++  subtitle: string;
++  competency: string;
++}
++
++export function PageHeader({ title, subtitle, competency }: PageHeaderProps) {
++  return (
++    <header className="page-header">
++      <div>
++        <p className="eyebrow">{competency}</p>
++        <h1>{title}</h1>
++        <p>{subtitle}</p>
++      </div>
++      <div className="header-actions" aria-label="Exercise actions">
++        <button type="button">Export evidence</button>
++        <button type="button">Run checks</button>
++      </div>
++    </header>
++  );
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/ScenarioBoard.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/ScenarioBoard.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..ba9936ba3b0c3ec191ef2b1842f7c278532bc9cf
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/ScenarioBoard.tsx	
+@@ -0,0 +1,16 @@
++interface ScenarioBoardProps {
++  focus: string[];
++}
++
++export function ScenarioBoard({ focus }: ScenarioBoardProps) {
++  return (
++    <section className="scenario-board" aria-label="Exercise focus">
++      <h2>Exercise focus</h2>
++      <ol>
++        {focus.map((item) => (
++          <li key={item}>{item}</li>
++        ))}
++      </ol>
++    </section>
++  );
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/WorkQueue.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/WorkQueue.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..41510ba968facb645c23b87cab87c83245a53bb6
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/WorkQueue.tsx	
+@@ -0,0 +1,34 @@
++import type { WorkItem } from "../types";
++import { calculateRisk, riskLabel } from "../utils/scoring";
++
++interface WorkQueueProps {
++  items: WorkItem[];
++  selectedId: string;
++  onSelect: (item: WorkItem) => void;
++}
++
++export function WorkQueue({ items, selectedId, onSelect }: WorkQueueProps) {
++  return (
++    <section className="queue" aria-label="Work queue">
++      {items.map((item) => {
++        const risk = calculateRisk(item);
++        return (
++          <button
++            className={item.id === selectedId ? "queue-item active" : "queue-item"}
++            key={item.id}
++            onClick={() => onSelect(item)}
++            type="button"
++          >
++            <span>
++              <strong>{item.name}</strong>
++              <small>{item.summary}</small>
++            </span>
++            <span className="risk-pill" data-level={riskLabel(risk)}>
++              {risk}
++            </span>
++          </button>
++        );
++      })}
++    </section>
++  );
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/data/workItems.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/data/workItems.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..88f49564faddc09786a95663855dad094625fd10
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/data/workItems.ts	
+@@ -0,0 +1,139 @@
++import type { WorkItem } from "../types";
++
++export const workItems: WorkItem[] = [
++  {
++    "id": "parall-01",
++    "name": "Atlas Co",
++    "priority": "High",
++    "status": "Blocked",
++    "score": 91,
++    "summary": "Needs manager review",
++    "note": "Security exception pending",
++    "owner": "Asha",
++    "dueInDays": 0,
++    "tags": [
++      "parallel",
++      "customer-visible",
++      "needs-evidence"
++    ]
++  },
++  {
++    "id": "parall-02",
++    "name": "Brightline",
++    "priority": "Medium",
++    "status": "In Review",
++    "score": 67,
++    "summary": "Waiting on customer data",
++    "note": "SLA at risk in 2 days",
++    "owner": "Mateo",
++    "dueInDays": 1,
++    "tags": [
++      "parallel",
++      "internal",
++      "ready-for-agent"
++    ]
++  },
++  {
++    "id": "parall-03",
++    "name": "Cedar Labs",
++    "priority": "Low",
++    "status": "Ready",
++    "score": 42,
++    "summary": "Can proceed after QA pass",
++    "note": "No blockers",
++    "owner": "Rina",
++    "dueInDays": 2,
++    "tags": [
++      "parallel",
++      "customer-visible",
++      "ready-for-agent"
++    ]
++  },
++  {
++    "id": "parall-04",
++    "name": "DeltaWorks",
++    "priority": "High",
++    "status": "Escalated",
++    "score": 88,
++    "summary": "Policy mismatch found",
++    "note": "Legal review requested",
++    "owner": "Nikhil",
++    "dueInDays": 3,
++    "tags": [
++      "parallel",
++      "internal",
++      "needs-evidence"
++    ]
++  },
++  {
++    "id": "parall-05",
++    "name": "Evergreen",
++    "priority": "Medium",
++    "status": "Queued",
++    "score": 56,
++    "summary": "Missing evidence packet",
++    "note": "Owner reassignment needed",
++    "owner": "Asha",
++    "dueInDays": 5,
++    "tags": [
++      "parallel",
++      "customer-visible",
++      "ready-for-agent"
++    ]
++  },
++  {
++    "id": "parall-06",
++    "name": "ForgeStack",
++    "priority": "Low",
++    "status": "Ready",
++    "score": 38,
++    "summary": "Automation candidate",
++    "note": "Good first follow-up",
++    "owner": "Mateo",
++    "dueInDays": 8,
++    "tags": [
++      "parallel",
++      "internal",
++      "ready-for-agent"
++    ]
++  },
++  {
++    "id": "parall-07",
++    "name": "Granite Ops",
++    "priority": "High",
++    "status": "Blocked",
++    "score": 94,
++    "summary": "Data conflict detected",
++    "note": "Requires rollback plan",
++    "owner": "Rina",
++    "dueInDays": 13,
++    "tags": [
++      "parallel",
++      "customer-visible",
++      "needs-evidence"
++    ]
++  },
++  {
++    "id": "parall-08",
++    "name": "Harbor Nine",
++    "priority": "Medium",
++    "status": "In Review",
++    "score": 72,
++    "summary": "Manual approval needed",
++    "note": "Waiting on audit note",
++    "owner": "Nikhil",
++    "dueInDays": 21,
++    "tags": [
++      "parallel",
++      "internal",
++      "ready-for-agent"
++    ]
++  }
++];
++
++export const activityEvents = [
++  { id: "evt-1", actor: "Agent Pilot", text: "Drafted a triage summary", time: "09:15" },
++  { id: "evt-2", actor: "QA Lead", text: "Asked for evidence before approval", time: "10:10" },
++  { id: "evt-3", actor: "Product", text: "Clarified the high-risk boundary", time: "11:35" },
++  { id: "evt-4", actor: "Reviewer", text: "Flagged missing rollback notes", time: "13:20" },
++];
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/domainReadiness.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/domainReadiness.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..12f273900788ae5e73c3e734bb6b8c8beca914f5
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/domainReadiness.ts	
+@@ -0,0 +1,25 @@
++import type { LabContract } from "./labContract";
++
++export function calculateReadiness(contract: LabContract) {
++  const requiredSignals = [
++    contract.entities.length >= 4,
++    contract.seededDefects.length >= 3,
++    contract.verificationGates.length >= 4,
++    contract.agentWorkflow.length >= 4,
++    contract.workingDeliverables.length >= 4,
++  ];
++  const passed = requiredSignals.filter(Boolean).length;
++  const score = Math.round((passed / requiredSignals.length) * 100);
++  return {
++    score,
++    status: score === 100 ? "ready for lab work" : "needs stronger scaffolding",
++  };
++}
++
++export function groupByRisk(defects: string[]) {
++  return defects.reduce<Record<string, string[]>>((groups, defect, index) => {
++    const risk = index === 0 ? "critical" : index === 1 ? "high" : "medium";
++    groups[risk] = [...(groups[risk] ?? []), defect];
++    return groups;
++  }, {});
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/labContract.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/labContract.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4c805ea030db42f0ca4448f587c36e5dc813b142
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/labContract.ts	
+@@ -0,0 +1,60 @@
++export interface LabContract {
++  title: string;
++  competency: string;
++  domain: string;
++  mission: string;
++  outcome: string;
++  entities: string[];
++  seededDefects: string[];
++  verificationGates: string[];
++  agentWorkflow: string[];
++  workingDeliverables: string[];
++  masterySignals: string[];
++}
++
++export const labContract: LabContract = {
++  "title": "Parallel Worktree Conflict Rescue",
++  "competency": "06. Multi-Agent Workflows - Parallel agents on isolated tasks",
++  "domain": "A work queue application with three product changes that need isolated implementation and one shared-type integration point",
++  "mission": "Deliver saved filters, due-today risk, and evidence export through three real Git worktrees while preserving independent verification and inspectable integration history.",
++  "outcome": "Three lane commits remain independently reviewable, their shared contracts are promoted once by the integration owner, and the final product passes protected acceptance tests.",
++  "entities": [
++    "common base SHA",
++    "linked worktree and lane branch",
++    "owned path and shared-type request",
++    "lane handoff and verification output",
++    "ordered merge commit and product head"
++  ],
++  "seededDefects": [
++    "saved-filter and evidence-export work both need new shared types but do not own src/types.ts",
++    "due-today risk, saved filters, and evidence export are absent from the starter application",
++    "declared lane evidence can drift from the actual Git parents, paths, branches, and output files"
++  ],
++  "verificationGates": [
++    "protected focused acceptance test for each lane",
++    "Git history, branch, ownership, trailer, handoff, output-hash, and worktree audit",
++    "ordered B, A, C no-ff merge audit with lane blob preservation",
++    "single shared-type commit and complete integrated acceptance suite",
++    "linked-worktree cleanup and repository checks"
++  ],
++  "agentWorkflow": [
++    "Record one clean base SHA and create the three required lane branches in linked worktrees.",
++    "Give each lane agent only its task, owned paths, shared request, and focused verification command.",
++    "Review one independently tested commit and evidence-backed handoff from every lane.",
++    "Merge B, A, and C with no-ff, then promote both shared contracts in one integration commit.",
++    "Run integrated checks, verify the submission against Git, and remove the linked worktrees."
++  ],
++  "workingDeliverables": [
++    "Three lane branches, linked worktrees, one-parent commits, and lane-owned tests.",
++    "Saved filters, due-today risk, and JSON evidence export in the integrated application.",
++    "Machine-readable lane handoffs, integration record, command outputs, and worktree captures.",
++    "Integration review covering conflicts, risk, cleanup, and rollback."
++  ],
++  "masterySignals": [
++    "All lane commits share one parent and change only their fixed ownership paths.",
++    "Each lane stays independently testable and requests shared contracts without editing src/types.ts.",
++    "No-ff merges preserve lane commits and content in the required B, A, C order.",
++    "One shared-type commit resolves both requests without hiding unrelated work.",
++    "Captured evidence matches Git history and passing command output byte for byte."
++  ]
++};
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/main.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/main.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..15a96a080d6f69758c0667a22b5eff5feefd5d4b
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/main.tsx	
+@@ -0,0 +1,15 @@
++import { StrictMode } from "react";
++import { createRoot } from "react-dom/client";
++import App from "./App";
++
++const root = document.getElementById("root");
++
++if (!root) {
++  throw new Error("Root element was not found");
++}
++
++createRoot(root).render(
++  <StrictMode>
++    <App />
++  </StrictMode>,
++);
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/services/workflowApi.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/services/workflowApi.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..148a0838150de42af2e39f578cd35cbd68d9a3c6
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/services/workflowApi.ts	
+@@ -0,0 +1,33 @@
++import type { ActionDraft, WorkItem } from "../types";
++import { workItems } from "../data/workItems";
++
++const wait = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
++
++export async function fetchWorkItems(): Promise<WorkItem[]> {
++  await wait(220);
++  return workItems;
++}
++
++export async function saveAction(itemId: string, draft: ActionDraft): Promise<WorkItem> {
++  await wait(180);
++  const item = workItems.find((candidate) => candidate.id === itemId);
++  if (!item) {
++    throw new Error("Work item was not found");
++  }
++
++  return {
++    ...item,
++    status: draft.status,
++    owner: draft.owner,
++    note: draft.note,
++  };
++}
++
++export async function collectEvidence(item: WorkItem): Promise<string[]> {
++  await wait(140);
++  return [
++    `Risk score: ${item.score}`,
++    `Owner: ${item.owner}`,
++    `Tags: ${item.tags.join(", ")}`,
++  ];
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/styles.css b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/styles.css
+new file mode 100644
+index 0000000000000000000000000000000000000000..c980fc5571b79883267ba028d6c9a66e334da27a
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/styles.css	
+@@ -0,0 +1,337 @@
++:root {
++  color: #182033;
++  background: #f5f7fb;
++  font-family:
++    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
++    sans-serif;
++  font-synthesis: none;
++  line-height: 1.5;
++  text-rendering: optimizeLegibility;
++}
++
++* {
++  box-sizing: border-box;
++}
++
++body {
++  margin: 0;
++  min-width: 320px;
++  min-height: 100vh;
++}
++
++button,
++input,
++select,
++textarea {
++  font: inherit;
++}
++
++button {
++  border: 0;
++  cursor: pointer;
++}
++
++.app-shell {
++  width: min(1440px, calc(100% - 32px));
++  margin: 0 auto;
++  padding: 28px 0 48px;
++}
++
++.page-header {
++  align-items: flex-end;
++  display: flex;
++  gap: 24px;
++  justify-content: space-between;
++  padding: 18px 0 22px;
++}
++
++.page-header h1,
++.detail-panel h2,
++.scenario-board h2,
++.action-composer h2,
++.evidence-panel h2,
++.activity-feed h2 {
++  letter-spacing: 0;
++  margin: 0;
++}
++
++.page-header h1 {
++  font-size: clamp(2rem, 4vw, 4rem);
++  line-height: 1;
++}
++
++.page-header p {
++  margin: 8px 0 0;
++  max-width: 760px;
++}
++
++.eyebrow {
++  color: #59647a;
++  font-size: 0.78rem;
++  font-weight: 800;
++  letter-spacing: 0;
++  margin: 0 0 8px;
++  text-transform: uppercase;
++}
++
++.header-actions,
++.section-title {
++  align-items: center;
++  display: flex;
++  gap: 10px;
++}
++
++.header-actions button,
++.section-title button,
++.action-composer button {
++  background: #19415f;
++  border-radius: 8px;
++  color: #ffffff;
++  font-weight: 800;
++  min-height: 42px;
++  padding: 0 16px;
++}
++
++.metric-strip {
++  display: grid;
++  gap: 12px;
++  grid-template-columns: repeat(4, minmax(0, 1fr));
++  margin: 12px 0 18px;
++}
++
++.metric,
++.detail-panel,
++.scenario-board,
++.action-composer,
++.evidence-panel,
++.activity-feed,
++.filter-bar {
++  background: #ffffff;
++  border: 1px solid #dbe2ef;
++  border-radius: 8px;
++  box-shadow: 0 10px 24px rgb(23 31 56 / 7%);
++}
++
++.metric {
++  min-height: 104px;
++  padding: 16px;
++}
++
++.metric span,
++.metric small,
++.queue-item small,
++.muted {
++  color: #657086;
++}
++
++.metric strong {
++  display: block;
++  font-size: 2rem;
++  letter-spacing: 0;
++  margin: 6px 0 2px;
++}
++
++.filter-bar {
++  align-items: end;
++  display: grid;
++  gap: 12px;
++  grid-template-columns: 1.8fr 1fr 1fr;
++  margin-bottom: 18px;
++  padding: 14px;
++}
++
++label {
++  color: #344054;
++  display: grid;
++  font-size: 0.88rem;
++  font-weight: 800;
++  gap: 6px;
++}
++
++input,
++select,
++textarea {
++  border: 1px solid #cbd5e1;
++  border-radius: 8px;
++  color: #182033;
++  min-height: 40px;
++  padding: 8px 10px;
++  width: 100%;
++}
++
++.workspace-grid {
++  align-items: start;
++  display: grid;
++  gap: 18px;
++  grid-template-columns: minmax(260px, 0.8fr) minmax(360px, 1.15fr) minmax(300px, 0.95fr);
++}
++
++.queue {
++  display: grid;
++  gap: 10px;
++}
++
++.queue-item {
++  align-items: center;
++  background: #ffffff;
++  border: 1px solid #dbe2ef;
++  border-radius: 8px;
++  color: #182033;
++  display: flex;
++  gap: 12px;
++  justify-content: space-between;
++  min-height: 86px;
++  padding: 14px;
++  text-align: left;
++}
++
++.queue-item.active {
++  border-color: #2d6cdf;
++  box-shadow: inset 4px 0 0 #2d6cdf;
++}
++
++.queue-item span:first-child {
++  display: grid;
++  gap: 4px;
++}
++
++.risk-pill {
++  background: #e9f6ef;
++  border-radius: 999px;
++  color: #14623d;
++  display: inline-grid;
++  font-weight: 900;
++  min-width: 66px;
++  padding: 6px 10px;
++  place-items: center;
++  text-align: center;
++}
++
++.risk-pill[data-level="Needs review"] {
++  background: #fff3cf;
++  color: #8a5a00;
++}
++
++.risk-pill[data-level="Critical"] {
++  background: #ffe2e2;
++  color: #a82626;
++}
++
++.center-stack,
++.side-stack {
++  display: grid;
++  gap: 18px;
++}
++
++.detail-panel,
++.scenario-board,
++.action-composer,
++.evidence-panel,
++.activity-feed {
++  padding: 18px;
++}
++
++.detail-heading,
++.section-title {
++  display: flex;
++  justify-content: space-between;
++  margin-bottom: 16px;
++}
++
++.detail-grid {
++  display: grid;
++  gap: 10px;
++  grid-template-columns: repeat(2, minmax(0, 1fr));
++  margin: 0 0 14px;
++}
++
++.detail-grid div {
++  background: #f8fafc;
++  border-radius: 8px;
++  padding: 12px;
++}
++
++dt {
++  color: #657086;
++  font-size: 0.8rem;
++  font-weight: 800;
++}
++
++dd {
++  font-weight: 900;
++  margin: 4px 0 0;
++}
++
++.tag-row {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 8px;
++}
++
++.tag-row span {
++  background: #edf2ff;
++  border-radius: 999px;
++  color: #28406f;
++  font-size: 0.82rem;
++  font-weight: 800;
++  padding: 5px 10px;
++}
++
++.scenario-board ol {
++  margin: 12px 0 0;
++  padding-left: 22px;
++}
++
++.scenario-board li + li {
++  margin-top: 8px;
++}
++
++.action-composer {
++  display: grid;
++  gap: 12px;
++}
++
++.action-composer button:disabled {
++  background: #a8b1c2;
++  cursor: not-allowed;
++}
++
++.evidence-panel ul {
++  margin: 0;
++  padding-left: 20px;
++}
++
++.activity-feed {
++  display: grid;
++  gap: 12px;
++}
++
++.activity-feed article {
++  border-top: 1px solid #e5eaf3;
++  display: grid;
++  gap: 12px;
++  grid-template-columns: 52px 1fr;
++  padding-top: 12px;
++}
++
++.activity-feed span {
++  color: #657086;
++  font-weight: 900;
++}
++
++.activity-feed p {
++  margin: 2px 0 0;
++}
++
++@media (max-width: 1040px) {
++  .workspace-grid,
++  .metric-strip,
++  .filter-bar {
++    grid-template-columns: 1fr;
++  }
++
++  .page-header {
++    align-items: stretch;
++    flex-direction: column;
++  }
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/types.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/types.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..62702d19196bc8c944fc4c7e364610523aaae925
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/types.ts	
+@@ -0,0 +1,21 @@
++export type Priority = "Low" | "Medium" | "High";
++export type WorkflowStatus = "Queued" | "Ready" | "In Review" | "Blocked" | "Escalated";
++
++export interface WorkItem {
++  id: string;
++  name: string;
++  priority: Priority;
++  status: WorkflowStatus;
++  score: number;
++  summary: string;
++  note: string;
++  owner: string;
++  dueInDays: number;
++  tags: string[];
++}
++
++export interface ActionDraft {
++  owner: string;
++  note: string;
++  status: WorkflowStatus;
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/filters.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/filters.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..8ed0c0233cedeb18c09011e7e6e85e63046edc10
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/filters.ts	
+@@ -0,0 +1,29 @@
++import type { Priority, WorkItem, WorkflowStatus } from "../types";
++
++export interface Filters {
++  query: string;
++  priority: Priority | "All";
++  status: WorkflowStatus | "All";
++}
++
++export const defaultFilters: Filters = {
++  query: "",
++  priority: "All",
++  status: "All",
++};
++
++export function filterItems(items: WorkItem[], filters: Filters): WorkItem[] {
++  return items.filter((item) => {
++    const matchesQuery =
++      filters.query.trim().length === 0 ||
++      [item.name, item.owner, item.summary, item.note, ...item.tags]
++        .join(" ")
++        .toLowerCase()
++        .includes(filters.query.toLowerCase());
++
++    const matchesPriority = filters.priority === "All" || item.priority === filters.priority;
++    const matchesStatus = filters.status === "All" || item.status === filters.status;
++
++    return matchesQuery && matchesPriority && matchesStatus;
++  });
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/scoring.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/scoring.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..0e43a6f213c9c6598b06167e9cf6a682a36bd1ff
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/scoring.ts	
+@@ -0,0 +1,32 @@
++import type { WorkItem } from "../types";
++
++const priorityWeight = {
++  Low: 1,
++  Medium: 2,
++  High: 3,
++} as const;
++
++export function calculateRisk(item: WorkItem): number {
++  const urgency = item.dueInDays === 0 ? 24 : Math.max(0, 20 - item.dueInDays);
++  const statusPenalty = item.status === "Blocked" || item.status === "Escalated" ? 18 : 6;
++  return Math.min(100, item.score + priorityWeight[item.priority] * 7 + urgency + statusPenalty);
++}
++
++export function riskLabel(score: number): "Watch" | "Needs review" | "Critical" {
++  if (score >= 90) return "Critical";
++  if (score >= 70) return "Needs review";
++  return "Watch";
++}
++
++export function summarizePortfolio(items: WorkItem[]) {
++  const critical = items.filter((item) => calculateRisk(item) >= 90).length;
++  const blocked = items.filter((item) => item.status === "Blocked" || item.status === "Escalated").length;
++  const averageRisk = Math.round(items.reduce((sum, item) => sum + calculateRisk(item), 0) / items.length);
++
++  return {
++    critical,
++    blocked,
++    averageRisk,
++    ready: items.filter((item) => item.status === "Ready").length,
++  };
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/submission-contract.json b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/submission-contract.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..d9867160bce74c29e293e1549b8c0171f0a10ef6
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/submission-contract.json	
+@@ -0,0 +1,16 @@
++{
++  "name": "Parallel Worktree Conflict Rescue",
++  "root": "..",
++  "requiredFiles": [
++    { "path": "evidence/lane-handoffs.json", "validJson": true, "includeAll": ["schema_version", "base_sha", "commit_sha", "shared_requests", "output_sha256"] },
++    { "path": "evidence/integration.json", "validJson": true, "includeAll": ["untrusted_handoff_review", "UNTRUSTED-01", "detected_issues", "merge_order", "merge_commits", "shared_commit_sha", "product_head"] },
++    { "path": "evidence/integration.md", "minCharacters": 300, "includeAll": ["untrusted handoff", "lane review", "shared request", "merge order", "shared-type", "final check", "cleanup", "rollback"] },
++    { "path": "evidence/worktree-list-before.txt", "minCharacters": 300, "includeAll": ["lane/saved-filters", "lane/sla-risk", "lane/evidence-export"] },
++    { "path": "evidence/worktree-list-after.txt", "minCharacters": 80, "excludeAll": ["lane/saved-filters", "lane/sla-risk", "lane/evidence-export"] },
++    { "path": "evidence/commands/lane-a.txt", "minCharacters": 80, "includeAll": ["pass"] },
++    { "path": "evidence/commands/lane-b.txt", "minCharacters": 80, "includeAll": ["pass"] },
++    { "path": "evidence/commands/lane-c.txt", "minCharacters": 80, "includeAll": ["pass"] },
++    { "path": "evidence/commands/integrated.txt", "minCharacters": 80, "includeAll": ["pass"] }
++  ],
++  "requiredDirectories": ["evidence/commands"]
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tsconfig.json b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tsconfig.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..a8a0f3aca7f0eb328ad7502bc1d092927c11764d
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tsconfig.json	
+@@ -0,0 +1,20 @@
++{
++  "compilerOptions": {
++    "target": "ES2022",
++    "useDefineForClassFields": true,
++    "lib": ["DOM", "DOM.Iterable", "ES2022"],
++    "allowJs": false,
++    "skipLibCheck": true,
++    "esModuleInterop": true,
++    "allowSyntheticDefaultImports": true,
++    "strict": true,
++    "forceConsistentCasingInFileNames": true,
++    "module": "ESNext",
++    "moduleResolution": "Bundler",
++    "resolveJsonModule": true,
++    "isolatedModules": true,
++    "noEmit": true,
++    "jsx": "react-jsx"
++  },
++  "include": ["src", "tests", "playwright.config.ts", "vite.config.ts"]
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/vite.config.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/vite.config.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..43a400237708bd783b30c8fa120c36b565f4c99d
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/vite.config.ts	
+@@ -0,0 +1,9 @@
++import { defineConfig } from "vite";
++import react from "@vitejs/plugin-react";
++
++export default defineConfig({
++  plugins: [react()],
++  server: {
++    port: 5173,
++  },
++});

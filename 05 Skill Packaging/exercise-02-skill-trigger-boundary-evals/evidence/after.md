@@ -9,9 +9,9 @@
 - Runtime: `codex exec --ephemeral` target-only router
 - Settings: temperature at runtime default; read-only permissions
 - Description SHA-256: 5602079fb8faf9cb4292c3f3403ecf6b08c216418aba9720bac8817f01ee34d6
-- Decisions: 60 (20 protected requests × 3 first-attempt runs)
+- Decisions: 60 (20 protected requests × 3 independent first-attempt sessions)
 - Result: `evidence/after-results.json`
 
-The only routing input changed was the `change-review` description. All raw responses, selected-skill lists, UTC timestamps, observations, and response SHA-256 values are preserved.
+The only routing input changed was the `change-review` description. Each request ran in its own read-only `codex exec --ephemeral` process between `2026-09-09T10:49:21.210Z` and `2026-09-09T10:51:21.361Z`. All 60 distinct threads are listed in `evidence/routing-run-log.json`; complete final JSON responses are retained under `evidence/routing-responses/after/` and bound to their selected-skill lists and SHA-256 values in the result file.
 
 Scoring: training 12/12; held-out 8/8; held-out precision, recall, and specificity 1.00; unanimous rate 1.00. No false positives or false negatives remained.

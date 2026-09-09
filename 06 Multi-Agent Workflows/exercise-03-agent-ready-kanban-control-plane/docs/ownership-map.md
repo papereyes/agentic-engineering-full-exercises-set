@@ -1,10 +1,12 @@
-# Ownership Map Seed
+# Ownership Map
 
-| Requested path | Active reservation | Waiting card | Required action |
+There are no active reservations after integration.
+
+| Card | Requested paths retained for history | Active reservation | Reason |
 |---|---|---|---|
-| `src/utils/scoring.ts` | ESC-120 and ESC-122 | ESC-122 | Keep ESC-120 only; release ESC-122. |
-| `src/components/SeverityBadge.tsx` | ESC-120 | ESC-122 | Release after ESC-120 integration. |
-| `src/services/workflowApi.ts` | ESC-118 | ESC-118 | Release until reproduction exists. |
-| `src/services/exportApi.ts` | ESC-121 | none | Release because the card is cancelled. |
+| ESC-118 | `src/services/workflowApi.ts` | none | Needs `REPRO-118` before assignment |
+| ESC-120 | scoring, SeverityBadge, and ESC-120 tests | none | Lane merged and ownership released |
+| ESC-122 | scoring and SeverityBadge | none | Still blocked by `RULE-ESC-122` |
+| ESC-121 | `src/services/exportApi.ts` | none | Card remains cancelled |
 
-After integration, no card owns an active reservation. ESC-122 still requests the scoring paths but remains blocked by `RULE-ESC-122`.
+The requested-path history remains auditable, but no waiting, blocked, merged, or cancelled card owns a path. A future ESC-122 lane requires an approved rule and a new collision check.

@@ -1,15 +1,6 @@
-import type { ActionDraft, WorkItem } from "../types";
+import type { ActionDraft, EvidenceBundle, WorkItem } from "../types";
 import { workItems } from "../data/workItems";
 import { calculateRisk } from "../utils/scoring";
-
-export interface EvidenceBundle {
-  id: string;
-  owner: string;
-  status: WorkItem["status"];
-  risk: number;
-  evidence: string[];
-  generatedAt: string;
-}
 
 const wait = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
 

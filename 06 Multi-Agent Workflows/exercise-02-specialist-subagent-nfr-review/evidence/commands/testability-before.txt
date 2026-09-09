@@ -1,5 +1,71 @@
+Rerun: integration-owner detached-worktree command capture
+Reviewed SHA: e83928ed3c4d34fd51039c65b3d86373687cb259
+Detached worktree: /tmp/ex06-02-baseline.3xCFWC
+Working directory: 06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app
+Exact command: npm run review:testability
+Exit code: 1
+Raw output (complete and unedited):
+
+> nfr-swarm-app@0.1.0 review:testability
+> node ./scripts/run-specialist-check.mjs testability
+
 Reviewed SHA: e83928ed3c4d34fd51039c65b3d86373687cb259
 Specialist: testability
-Command: npm run review:testability
-Result: FAIL
-Test Files: 1 failed. Tests: 2 failed. The service referenced window and could not use an injected wait for deterministic approval.
+
+ RUN  v4.1.10 /tmp/ex06-02-baseline.3xCFWC/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app
+
+ ❯ acceptance/testability.review.test.ts (2 tests | 2 failed) 12ms
+     × approves deterministically with an injected wait dependency 5ms
+     × does not reference the browser window in the approval service 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  acceptance/testability.review.test.ts > testability specialist gate > approves deterministically with an injected wait dependency
+ReferenceError: window is not defined
+ ❯ src/services/accessReviewApi.ts:3:72
+      1| import type { AccessReview } from "../data/accessReviews";
+      2|
+      3| const wait = (milliseconds: number) => new Promise((resolve) => window…
+       |                                                                        ^
+      4|
+      5| export async function approveAccessReview(review: AccessReview): Promi…
+ ❯ wait src/services/accessReviewApi.ts:3:40
+ ❯ approveAccessReview src/services/accessReviewApi.ts:6:9
+ ❯ acceptance/testability.review.test.ts:11:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  acceptance/testability.review.test.ts > testability specialist gate > does not reference the browser window in the approval service
+AssertionError: expected 'import type { AccessReview } from "..…' not to contain 'window'
+
+- Expected
++ Received
+
+- window
++ import type { AccessReview } from "../data/accessReviews";
++
++ const wait = (milliseconds: number) => new Promise((resolve) => window.setTimeout(resolve, milliseconds));
++
++ export async function approveAccessReview(review: AccessReview): Promise<AccessReview> {
++   await wait(120);
++   // Seeded boundary defect: the API simulation trusts the UI and does not
++   // reject privileged requests whose evidence is incomplete.
++   return { ...review, status: "approved" };
++ }
++
+
+ ❯ acceptance/testability.review.test.ts:19:32
+     17|   it("does not reference the browser window in the approval service", …
+     18|     const implementation = fs.readFileSync(path.resolve("src/services/…
+     19|     expect(implementation).not.toContain("window");
+       |                                ^
+     20|   });
+     21| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  15:03:44
+   Duration  218ms (transform 31ms, setup 0ms, import 45ms, tests 12ms, environment 0ms)

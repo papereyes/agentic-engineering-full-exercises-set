@@ -1,5 +1,21 @@
+Rerun: integration-owner detached-worktree command capture
+Reviewed SHA: 354692d34864d66324f1af8b9469a3c792f68a9e
+Detached worktree: /tmp/ex06-02-remediation.FUQwgr
+Working directory: 06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app
+Exact command: npm run review:performance
+Exit code: 0
+Raw output (complete and unedited):
+
+> nfr-swarm-app@0.1.0 review:performance
+> node ./scripts/run-specialist-check.mjs performance
+
 Reviewed SHA: 354692d34864d66324f1af8b9469a3c792f68a9e
 Specialist: performance
-Command: npm run review:performance
-Result: PASS
-Test Files: 1 passed. Tests: 2 passed. Single-pass calculation and collection-keyed memoization passed.
+
+ RUN  v4.1.10 /tmp/ex06-02-remediation.FUQwgr/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  15:03:46
+   Duration  167ms (transform 30ms, setup 0ms, import 43ms, tests 4ms, environment 0ms)

@@ -1,0 +1,126 @@
+Capture: current branch before evidence hardening commit
+Branch HEAD: 060b6652af3c36bd862e374a608193a30bc36891
+Working directory: 06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app
+Exact command: npm run verify:exercise
+
+Attempt 1: sandboxed preflight
+Exit code: 1
+Raw output (complete and unedited):
+
+> nfr-swarm-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+
+node:internal/child_process:1127
+    result.error = new ErrnoException(result.error, 'spawnSync ' + options.file);
+                   ^
+
+<ref *1> Error: spawnSync git EPERM
+    at Object.spawnSync (node:internal/child_process:1127:20)
+    at spawnSync (node:child_process:911:24)
+    at execFileSync (node:child_process:954:15)
+    at git (file:///tmp/agentic-exercise-06-02-after/scripts/run-clean-verification.mjs:7:10)
+    at file:///tmp/agentic-exercise-06-02-after/scripts/run-clean-verification.mjs:57:24
+    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)
+    at async node:internal/modules/esm/loader:639:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -1,
+  code: 'EPERM',
+  syscall: 'spawnSync git',
+  path: 'git',
+  spawnargs: [ 'rev-parse', '--show-toplevel' ],
+  error: [Circular *1],
+  status: 0,
+  signal: null,
+  output: [ null, '/tmp/agentic-exercise-06-02-after\n', '' ],
+  pid: 32,
+  stdout: '/tmp/agentic-exercise-06-02-after\n',
+  stderr: ''
+}
+
+Node.js v25.9.0
+
+Attempt 2: authoritative retry outside the subprocess sandbox
+Exit code: 0
+Raw output (complete and unedited):
+
+> nfr-swarm-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+
+
+> nfr-swarm-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+
+
+> nfr-swarm-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+
+
+> nfr-swarm-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+
+Verified 27 protected challenge inputs.
+
+> nfr-swarm-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+
+lint-check passed
+
+> nfr-swarm-app@0.1.0 test
+> node ./scripts/test-specialist-review-verifier.mjs && node ./scripts/agent-check.mjs
+
+specialist review verifier self-test passed
+agent-check passed for Specialist Review Merge Gate
+
+> nfr-swarm-app@0.1.0 format
+> node ./scripts/format-check.mjs
+
+format-check passed
+
+> nfr-swarm-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+
+
+> nfr-swarm-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 34 modules transformed.
+rendering chunks...
+computing gzip size...
+../../../../exercise-vite-build-ck0QIf/dist/index.html                   0.41 kB │ gzip:  0.28 kB
+../../../../exercise-vite-build-ck0QIf/dist/assets/index-B8NY3R59.css    1.00 kB │ gzip:  0.50 kB
+../../../../exercise-vite-build-ck0QIf/dist/assets/index-BcIXPACF.js   195.72 kB │ gzip: 61.66 kB
+✓ built in 987ms
+
+> nfr-swarm-app@0.1.0 verify:implementation
+> npm run review:all
+
+
+> nfr-swarm-app@0.1.0 review:all
+> vitest run acceptance tests
+
+
+ RUN  v4.1.10 /tmp/agentic-exercise-06-02-after/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app
+
+
+ Test Files  4 passed (4)
+      Tests  8 passed (8)
+   Start at  15:00:15
+   Duration  290ms (transform 148ms, setup 0ms, import 306ms, tests 44ms, environment 1ms)
+
+
+> nfr-swarm-app@0.1.0 verify:submission
+> npm run test:submission
+
+
+> nfr-swarm-app@0.1.0 test:submission
+> npm run reviews:verify && node ../../../scripts/verify-submission-contract.mjs ./submission-contract.json
+
+
+> nfr-swarm-app@0.1.0 reviews:verify
+> node ./scripts/verify-specialist-reviews.mjs
+
+Verified four same-SHA specialist reviews, complete triage, remediation-only source changes, fresh rechecks, and comparable performance evidence.
+Verified Specialist Review Merge Gate: 21 files and 2 directories.
+PASS verify:exercise left tracked files, the Git index, and untracked or ignored paths unchanged

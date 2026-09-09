@@ -1,5 +1,5 @@
 diff --git a/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/App.tsx b/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/App.tsx
-index 08d072e..3837429 100644
+index 08d072e9f50aae868602fd649d4ed2476e886f25..383742982b259b0d7f9cc19c46d88f58e7969eb4 100644
 --- a/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/App.tsx	
 +++ b/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/App.tsx	
 @@ -1,22 +1,24 @@
@@ -32,7 +32,7 @@ index 08d072e..3837429 100644
      } catch (cause) {
        setError(cause instanceof Error ? cause.message : "Approval failed");
 diff --git a/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/components/AccessReviewQueue.tsx b/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/components/AccessReviewQueue.tsx
-index 2e5d28d..d7ea6ca 100644
+index 2e5d28dc8f7431be2b590df906f4bfc411de4f37..d7ea6ca283e2177ba2f265b78dfe5436cbd8cbfd 100644
 --- a/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/components/AccessReviewQueue.tsx	
 +++ b/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/components/AccessReviewQueue.tsx	
 @@ -10,7 +10,9 @@ export function AccessReviewQueue({ reviews, selectedId, onSelect }: AccessRevie
@@ -56,7 +56,7 @@ index 2e5d28d..d7ea6ca 100644
      </section>
    );
 diff --git a/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/components/ReviewNote.tsx b/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/components/ReviewNote.tsx
-index c1feaa5..980318e 100644
+index c1feaa548607bad473d865af467418785626ec64..980318e75ab6e29b9710cf09962672df783d307e 100644
 --- a/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/components/ReviewNote.tsx	
 +++ b/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/components/ReviewNote.tsx	
 @@ -3,5 +3,5 @@ interface ReviewNoteProps {
@@ -67,7 +67,7 @@ index c1feaa5..980318e 100644
 +  return <div className="request-note">{note}</div>;
  }
 diff --git a/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/services/accessReviewApi.ts b/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/services/accessReviewApi.ts
-index 6c5dae2..3ed7be6 100644
+index 6c5dae214bb72636bd2dc9f1f5c18024fda83bb7..3ed7be67f925047a64ac5eab20c96b18c4564af6 100644
 --- a/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/services/accessReviewApi.ts	
 +++ b/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/services/accessReviewApi.ts	
 @@ -1,10 +1,30 @@
@@ -107,7 +107,7 @@ index 6c5dae2..3ed7be6 100644
    return { ...review, status: "approved" };
  }
 diff --git a/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/utils/accessReviewRisk.ts b/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/utils/accessReviewRisk.ts
-index 6aa1576..0f21d7b 100644
+index 6aa1576317a4cd46881f6659ea65752ca4f0fc4b..0f21d7ba19137caf4755489a4867d8a198ef3436 100644
 --- a/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/utils/accessReviewRisk.ts	
 +++ b/06 Multi-Agent Workflows/exercise-02-specialist-subagent-nfr-review/nfr-swarm-app/src/utils/accessReviewRisk.ts	
 @@ -1,9 +1,6 @@

@@ -16,11 +16,11 @@
         "session_id": "fce8758a-b63f-4cb7-aa4a-2466bc4c888d",
         "reviewed_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
         "report_path": "evidence/specialists/security-before.md",
-        "report_sha256": "703562cb69ad966762c09acef11d3fe51e35c7f1dff68374bf252a25898cdfdb",
+        "report_sha256": "ca2360492c139a05010deeaa1002575891c1afc2b9210c5922690928071a1a41",
         "command": "npm run review:security",
         "exit_code": 1,
         "output_path": "evidence/commands/security-before.txt",
-        "output_sha256": "354b6dfbe4577f84b0acad59234986098ff17fb974a84470c35314a51d583354",
+        "output_sha256": "163ec7084b0e373718718761255926718d89a534163e5ac5e68007f110bb6fe2",
         "findings": [
           {
             "id": "SEC-01",
@@ -47,11 +47,11 @@
         "session_id": "security-recheck-354692d-20260909-132212-ist-7f3a",
         "reviewed_sha": "354692d34864d66324f1af8b9469a3c792f68a9e",
         "report_path": "evidence/specialists/security-after.md",
-        "report_sha256": "54e2e1ab5768e73056ee3e4b1c9023bf7bd2f772de464bde02b26cff9afcce26",
+        "report_sha256": "c35a7461ed3fe1d6241198fa299d554629ca7798c8719ce3c1bf9dcde145f720",
         "command": "npm run review:security",
         "exit_code": 0,
         "output_path": "evidence/commands/security-after.txt",
-        "output_sha256": "643effc564298328e88214f6ceb0da52cab7306c4a9423e7ea3f0cc51b247ca9",
+        "output_sha256": "a9c7fc30a271a9f9156c09060f5aaa04a8f9697f38ce1c8b04634b6b8e8d2f88",
         "result": "pass"
       }
     },
@@ -62,11 +62,11 @@
         "session_id": "a11y-06-02-e83928e-146036",
         "reviewed_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
         "report_path": "evidence/specialists/accessibility-before.md",
-        "report_sha256": "636b0b168d8584434126addf60b94e7c8b8bf6da58624c320cb83075a7e67272",
+        "report_sha256": "663b25a86ec6ff482c9d3f0478739fa7870ca545741cad226808f5326f49e7ad",
         "command": "npm run review:accessibility",
         "exit_code": 1,
         "output_path": "evidence/commands/accessibility-before.txt",
-        "output_sha256": "3d0c66d2fc7a77a5aa9eb0a754009813bc8b3de901ad9efdd94749441949145c",
+        "output_sha256": "a15d968be075c8d92f615777e4c8e662dac0a7daedbd74374db2bcc90cd98de4",
         "findings": [
           {
             "id": "A11Y-01",
@@ -84,11 +84,11 @@
         "session_id": "1418b259-3a1a-4d43-ab98-3ff81d7f047a",
         "reviewed_sha": "354692d34864d66324f1af8b9469a3c792f68a9e",
         "report_path": "evidence/specialists/accessibility-after.md",
-        "report_sha256": "2a8bb67e2f34f57bd15512012761251571b723c27a372c00d254134478ef8831",
+        "report_sha256": "37cdf9b85edceabaeb3627e777911bcd29fc069e337daef2463df2525c773411",
         "command": "npm run review:accessibility",
         "exit_code": 0,
         "output_path": "evidence/commands/accessibility-after.txt",
-        "output_sha256": "16bd41ec0a540f02f56be52608752db69da87b481e18f6081e87425074fd5811",
+        "output_sha256": "63e18e48d8a9ead997ed61139530014d2784da264c7d128740af261402b31c4a",
         "result": "pass"
       }
     },
@@ -99,11 +99,11 @@
         "session_id": "perf-before-e83928ed-20260909-a7f3",
         "reviewed_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
         "report_path": "evidence/specialists/performance-before.md",
-        "report_sha256": "b32184a72d55bdffaf4a8fdb64d6aa28ec71978883eda28cdded61e32e3ac9a9",
+        "report_sha256": "c2efdb7fdf509c5754163167e1f76594b1807801400af8df435fbc391c3e5094",
         "command": "npm run review:performance",
         "exit_code": 1,
         "output_path": "evidence/commands/performance-before.txt",
-        "output_sha256": "a51e62ff5938574c92c8a96d8619c600964752f8a24442331f66186c5ab61fbd",
+        "output_sha256": "6a51f91d15a9ccfda215261dfcb3b79b444a5128924d363e0c39e02b98dafde0",
         "findings": [
           {
             "id": "PERF-01",
@@ -130,11 +130,11 @@
         "session_id": "perf-recheck-20260909-132233-354692d",
         "reviewed_sha": "354692d34864d66324f1af8b9469a3c792f68a9e",
         "report_path": "evidence/specialists/performance-after.md",
-        "report_sha256": "7af35b6f44d4775e70c27a683553a7048611c99037cb44b31b219c5b5c51d394",
+        "report_sha256": "bf3a30ed9b1afed8bcf9a0ee6f111f487864bb18049bc0bad21fc30e805287a1",
         "command": "npm run review:performance",
         "exit_code": 0,
         "output_path": "evidence/commands/performance-after.txt",
-        "output_sha256": "f2914a6c9a920c5c5635fdc88c95688dabd6d6b221c7445f66605df8b73231e0",
+        "output_sha256": "53bec247e89844a6436014f961736c7b9475b1f153492411fbbc13307894e1f6",
         "result": "pass"
       }
     },
@@ -145,11 +145,11 @@
         "session_id": "testability-before-e83928ed-20260909T074907Z",
         "reviewed_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
         "report_path": "evidence/specialists/testability-before.md",
-        "report_sha256": "2c789bccf7b3a673fd367748a8dc08be696e2eff96ef7a1adb22f20e50f2eb38",
+        "report_sha256": "bc89e7be7a4bec8d22d11de0e82f34d3033eee8ce825df1d86424c311f6e0f8e",
         "command": "npm run review:testability",
         "exit_code": 1,
         "output_path": "evidence/commands/testability-before.txt",
-        "output_sha256": "30cecd77f9cff1a8fd99b1e18d4948622290609db7a0b608601f844f102dafb7",
+        "output_sha256": "254760ee71ecabacb2eabbe3b54d63bdb8cf885a9eb2f379b4b8108e6bc834f7",
         "findings": [
           {
             "id": "TEST-01",
@@ -167,11 +167,11 @@
         "session_id": "testability-354692d3-20260909T0001-7f2c9a",
         "reviewed_sha": "354692d34864d66324f1af8b9469a3c792f68a9e",
         "report_path": "evidence/specialists/testability-after.md",
-        "report_sha256": "5185adbc2e34865bef5150ff77191a6065272c3c8e95e69daa5703c0d663738b",
+        "report_sha256": "8cebc6e7abfaf234c2de8ff972302118875a24904dc8e5dfcd81fc273b580533",
         "command": "npm run review:testability",
         "exit_code": 0,
         "output_path": "evidence/commands/testability-after.txt",
-        "output_sha256": "e78708ac943793f0384951b4b4f7fcb68aee94b2476cf2e152ab5041e0a5820b",
+        "output_sha256": "bee6c1eafb57255bf8278a677dc0c5e5315f0d9c1f0f3413616d0d3bf7c44a98",
         "result": "pass"
       }
     }

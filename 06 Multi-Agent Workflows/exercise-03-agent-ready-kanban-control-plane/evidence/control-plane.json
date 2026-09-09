@@ -21,12 +21,12 @@
       "command": "npm run feature:verify",
       "exit_code": 0,
       "output_path": "evidence/commands/esc-120.txt",
-      "output_sha256": "cf7eb81e202dbc85b732a39bab46d2fb90f383e3863b937f402f6655e300fff9"
+      "output_sha256": "fddc7e7dcb7cab1fe0b09d3a25544a77ce5e4060ac291b9e3ff29d04ac0f75fb"
     },
     "reviewer": "risk-owner",
     "review_decision": "accept",
     "review_path": "evidence/completed-lane.md",
-    "review_sha256": "3f052469afae4128e84de2a6808385bf9137188aaeb54f04db477d2e738ec625",
+    "review_sha256": "f15b6d0b4c55ff2c5cccb66271cc198dbb34a66fe92173b01978c41daf04fdca",
     "rollback": "git revert 072944ae351720e9a8636ce6af493b3e71f736c7"
   },
   "integration": {
@@ -37,8 +37,19 @@
       "command": "npm run board:verify",
       "exit_code": 0,
       "output_path": "evidence/commands/board.txt",
-      "output_sha256": "a6b027df024b51a8e9b35ffc1dda034283d35adc232c1afd7ac3b1af50552aa3"
+      "output_sha256": "9ddee8f4c3f528b6744b2618121cb053e7017a51ae8b92af889ecab4d0716359"
     },
     "decision": "accept"
+  },
+  "evidence_hardening": {
+    "before_patch_sha256": "76ab66b707d0e39f9be77024fc68e7160312c0154ab44f233419cf7e42359807",
+    "after_patch_sha256": "bc624308738b29426d0a14d13dad1fb28f87f87e778c0bddc24fd52751b50955",
+    "pre_hardening_sha": "86f7291569f1a2ec280a17fe20e2a05044211a93",
+    "pre_hardening_verification": {
+      "command": "npm run verify:exercise",
+      "exit_code": 0,
+      "output_path": "evidence/commands/verify-exercise.txt",
+      "output_sha256": "45f1b38ab6f817286dba2f86854008b443bb92a735f1d66e8bf241d9e55faece"
+    }
   }
 }

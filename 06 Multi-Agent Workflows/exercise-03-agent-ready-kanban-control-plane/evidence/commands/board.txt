@@ -1,4 +1,11 @@
+Exact command: npm run board:verify
 Reviewed SHA: 69b6dbb9b25b5198a4e21d9e01fac12539bd2b14
-Command: npm run board:verify
-Result: PASS
-Board mirrors, state histories, blockers, reservation releases, ownership, and integration records are consistent.
+Rerun status: PASS
+Exit code: 0
+Raw output (complete and unedited):
+
+> kanban-control-app@0.1.0 board:verify
+> node ./scripts/verify-board.mjs
+
+Reviewed SHA: 69b6dbb9b25b5198a4e21d9e01fac12539bd2b14
+PASS: board mirrors, card histories, blockers, reservation releases, ownership, and integration records are consistent.

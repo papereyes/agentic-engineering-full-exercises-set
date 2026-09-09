@@ -1,5 +1,5 @@
 diff --git a/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/agent-board.json b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/agent-board.json
-index 9815688..1d0dcaa 100644
+index 981568861560736610be42be605b0be4ef69462e..1d0dcaa2fc04f87597196b715868a44dba4478c8 100644
 --- a/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/agent-board.json	
 +++ b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/agent-board.json	
 @@ -10,7 +10,7 @@
@@ -49,7 +49,7 @@ index 9815688..1d0dcaa 100644
        "collisionRule": "Cancelled cards cannot own paths, branches, worktrees, or commits.",
        "verificationCommand": "not run",
 diff --git a/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/agent-board.md b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/agent-board.md
-index dccd57d..88903cb 100644
+index dccd57dd5d95f6c9f5394969aed046927cf37a23..88903cbf8a5686745f4bfbe558656d3e5a2b45ed 100644
 --- a/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/agent-board.md	
 +++ b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/agent-board.md	
 @@ -1,12 +1,12 @@
@@ -75,7 +75,7 @@ index dccd57d..88903cb 100644
 -The final board keeps unsafe work visible, marks ESC-120 merged, releases every reservation, and records the full transition history.
 +ESC-120 retains its full incoming → triaged → ready-for-agent → in-progress → in-review → merged history. The other cards remain visible without inventing missing requirements or deleting terminal history.
 diff --git a/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/integration-log.md b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/integration-log.md
-index 47eec07..146d95d 100644
+index 47eec07502c35b26fa8e4181511a93c38635d68d..146d95d538cdcd14ae73d844bcd62bbdea488623 100644
 --- a/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/integration-log.md	
 +++ b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/integration-log.md	
 @@ -1,10 +1,12 @@
@@ -101,7 +101,7 @@ index 47eec07..146d95d 100644
 +- Decision: accept ESC-120 only and preserve all other card states.
 +- Rollback: revert the control commit first, then `git revert 072944ae351720e9a8636ce6af493b3e71f736c7`.
 diff --git a/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/ownership-map.md b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/ownership-map.md
-index e26b9ad..a794860 100644
+index e26b9ad88d4ccd4e1ef1a5ffd103e9a06dc0072c..a7948608443c800f383c6050dc4d2d376b0a316f 100644
 --- a/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/ownership-map.md	
 +++ b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/docs/ownership-map.md	
 @@ -1,10 +1,12 @@
@@ -125,7 +125,7 @@ index e26b9ad..a794860 100644
 -After integration, no card owns an active reservation. ESC-122 still requests the scoring paths but remains blocked by `RULE-ESC-122`.
 +The requested-path history remains auditable, but no waiting, blocked, merged, or cancelled card owns a path. A future ESC-122 lane requires an approved rule and a new collision check.
 diff --git a/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app/src/components/SeverityBadge.tsx b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app/src/components/SeverityBadge.tsx
-index 978f14e..9862f17 100644
+index 978f14e8c2967dd0aff5a0a59061e6c57ee5cc22..9862f179424b5bf201814cb1c51a44f621ab2aa2 100644
 --- a/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app/src/components/SeverityBadge.tsx	
 +++ b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app/src/components/SeverityBadge.tsx	
 @@ -1,6 +1,8 @@
@@ -140,7 +140,7 @@ index 978f14e..9862f17 100644
 +  return <span className="severity-badge" data-severity={severity}>{severity}</span>;
  }
 diff --git a/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app/src/data/agent-board.json b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app/src/data/agent-board.json
-index 9815688..1d0dcaa 100644
+index 981568861560736610be42be605b0be4ef69462e..1d0dcaa2fc04f87597196b715868a44dba4478c8 100644
 --- a/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app/src/data/agent-board.json	
 +++ b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app/src/data/agent-board.json	
 @@ -10,7 +10,7 @@
@@ -190,7 +190,7 @@ index 9815688..1d0dcaa 100644
        "collisionRule": "Cancelled cards cannot own paths, branches, worktrees, or commits.",
        "verificationCommand": "not run",
 diff --git a/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app/src/utils/scoring.ts b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app/src/utils/scoring.ts
-index d52492d..5864133 100644
+index d52492d89e9ad56daaf4fd0723e7169ab7517312..58641331f5c4cb0001e3673b3a49e96268e7d58e 100644
 --- a/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app/src/utils/scoring.ts	
 +++ b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app/src/utils/scoring.ts	
 @@ -1,6 +1,11 @@
@@ -209,7 +209,7 @@ index d52492d..5864133 100644
  }
 diff --git a/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app/tests/esc-120/inherited.test.tsx b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app/tests/esc-120/inherited.test.tsx
 new file mode 100644
-index 0000000..a23f903
+index 0000000000000000000000000000000000000000..a23f903490ba94899d992f24faa99e47433b35b3
 --- /dev/null
 +++ b/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app/tests/esc-120/inherited.test.tsx	
 @@ -0,0 +1,21 @@

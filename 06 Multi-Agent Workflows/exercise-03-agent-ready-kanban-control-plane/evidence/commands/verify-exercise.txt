@@ -1,0 +1,97 @@
+Exact command: npm run verify:exercise
+Branch SHA before evidence hardening: 86f7291569f1a2ec280a17fe20e2a05044211a93
+Rerun status: PASS
+Exit code: 0
+Raw output (complete and unedited):
+
+> kanban-control-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+
+
+> kanban-control-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+
+
+> kanban-control-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+
+
+> kanban-control-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+
+Verified 23 protected challenge inputs.
+
+> kanban-control-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+
+lint-check passed
+
+> kanban-control-app@0.1.0 test
+> node ./scripts/test-control-plane-verifier.mjs && node ./scripts/agent-check.mjs
+
+Switched to a new branch 'lane/esc-120-inherited-severity'
+Switched to a new branch 'integration/kanban-control'
+kanban control-plane verifier self-test passed
+agent-check passed for Agent Kanban Collision Control
+
+> kanban-control-app@0.1.0 format
+> node ./scripts/format-check.mjs
+
+format-check passed
+
+> kanban-control-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+
+
+> kanban-control-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 33 modules transformed.
+rendering chunks...
+computing gzip size...
+../../../../exercise-vite-build-bb8rdc/dist/index.html                   0.42 kB │ gzip:  0.28 kB
+../../../../exercise-vite-build-bb8rdc/dist/assets/index-BQOUd-21.css    3.17 kB │ gzip:  1.20 kB
+../../../../exercise-vite-build-bb8rdc/dist/assets/index-Bn6MPm-z.js   198.98 kB │ gzip: 62.46 kB
+✓ built in 1.08s
+
+> kanban-control-app@0.1.0 verify:implementation
+> npm run feature:verify && npm run board:verify
+
+
+> kanban-control-app@0.1.0 feature:verify
+> node ./scripts/run-feature-check.mjs
+
+Reviewed SHA: 86f7291569f1a2ec280a17fe20e2a05044211a93
+Card: ESC-120
+
+ RUN  v4.1.10 /tmp/agentic-exercise-06-03-integration/06 Multi-Agent Workflows/exercise-03-agent-ready-kanban-control-plane/kanban-control-app
+
+
+ Test Files  2 passed (2)
+      Tests  3 passed (3)
+   Start at  15:01:13
+   Duration  232ms (transform 74ms, setup 0ms, import 152ms, tests 21ms, environment 0ms)
+
+
+> kanban-control-app@0.1.0 board:verify
+> node ./scripts/verify-board.mjs
+
+Reviewed SHA: 86f7291569f1a2ec280a17fe20e2a05044211a93
+PASS: board mirrors, card histories, blockers, reservation releases, ownership, and integration records are consistent.
+
+> kanban-control-app@0.1.0 verify:submission
+> npm run test:submission
+
+
+> kanban-control-app@0.1.0 test:submission
+> npm run control:verify && node ../../../scripts/verify-submission-contract.mjs ./submission-contract.json
+
+
+> kanban-control-app@0.1.0 control:verify
+> node ./scripts/verify-control-plane.mjs
+
+Verified safe card states, one owned lane commit, exact review, no-ff integration, synchronized control artifacts, and hashed evidence.
+Verified Agent Kanban Collision Control: 8 files and 1 directories.
+PASS verify:exercise left tracked files, the Git index, and untracked or ignored paths unchanged

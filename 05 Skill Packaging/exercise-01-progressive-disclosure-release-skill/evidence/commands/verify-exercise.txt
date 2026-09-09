@@ -1,0 +1,46 @@
+> release-notes-app@0.1.0 verify:exercise
+> node ../../../scripts/run-clean-verification.mjs
+> release-notes-app@0.1.0 verify:exercise:core
+> npm run agent:check && npm run verify:implementation && npm run verify:submission
+> release-notes-app@0.1.0 agent:check
+> npm run test:integrity && npm run lint && npm run test && npm run format && npm run typecheck && npm run build
+> release-notes-app@0.1.0 test:integrity
+> node ../../../scripts/verify-protected-inputs.mjs ./challenge-integrity.json
+Verified 20 protected challenge inputs.
+> release-notes-app@0.1.0 lint
+> node ./scripts/lint-check.mjs
+lint-check passed
+> release-notes-app@0.1.0 test
+> node ./scripts/test-context-measure.mjs && node ./scripts/agent-check.mjs
+context measurement self-test passed
+agent-check passed for Progressive Disclosure Release Skill
+> release-notes-app@0.1.0 format
+> node ./scripts/format-check.mjs
+format-check passed
+> release-notes-app@0.1.0 typecheck
+> node ./node_modules/typescript/bin/tsc --noEmit --pretty false --incremental false
+> release-notes-app@0.1.0 build
+> node ../../../scripts/run-vite-build.mjs
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 31 modules transformed.
+rendering chunks...
+computing gzip size...
+../../../../exercise-vite-build-0p3Znr/dist/index.html                   0.42 kB │ gzip:  0.28 kB
+../../../../exercise-vite-build-0p3Znr/dist/assets/index-BAmIHqwj.css    3.99 kB │ gzip:  1.44 kB
+../../../../exercise-vite-build-0p3Znr/dist/assets/index-ybxzy08l.js   195.78 kB │ gzip: 61.58 kB
+✓ built in 824ms
+> release-notes-app@0.1.0 verify:implementation
+> npm run skill:validate && npm run skill:test-extractor
+> release-notes-app@0.1.0 skill:validate
+> node ./scripts/validate-skill.mjs
+Release skill has valid metadata, conditional progressive disclosure, a reusable extractor, and quality and trigger evals.
+> release-notes-app@0.1.0 skill:test-extractor
+> node ./scripts/verify-extractor.mjs
+Release extractor matches Git for three fixture ranges and an unrelated synthetic repository.
+> release-notes-app@0.1.0 verify:submission
+> npm run test:submission
+> release-notes-app@0.1.0 test:submission
+> node ./scripts/verify-skill-submission.mjs
+Comparable runs, skill provenance, selective resource use, eval results, and verified release notes are present.
+PASS verify:exercise left tracked files, the Git index, and untracked or ignored paths unchanged

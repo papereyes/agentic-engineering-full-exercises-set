@@ -1,0 +1,9 @@
+{
+  "command": "npm run verify:exercise",
+  "working_directory": "05 Skill Packaging/exercise-01-progressive-disclosure-release-skill/release-notes-app",
+  "verified_commit": "a10d6d3cdb3d9b2468150cff91bd403c7d7cf98b",
+  "captured_at": "2026-09-09T10:40:18.153Z",
+  "exit_code": 0,
+  "transcript": "evidence/commands/verify-exercise.txt",
+  "transcript_sha256": "0804c7df0f59d33a7d1a2b4ccbb5264c1207725bd9c311e52f4463a339120a35"
+}

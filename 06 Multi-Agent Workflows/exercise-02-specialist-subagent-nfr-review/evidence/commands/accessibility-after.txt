@@ -1,0 +1,5 @@
+Reviewed SHA: 354692d34864d66324f1af8b9469a3c792f68a9e
+Specialist: accessibility
+Command: npm run review:accessibility
+Result: PASS
+Test Files: 1 passed. Tests: 1 passed. Native buttons and aria-pressed selection state passed the focused gate.

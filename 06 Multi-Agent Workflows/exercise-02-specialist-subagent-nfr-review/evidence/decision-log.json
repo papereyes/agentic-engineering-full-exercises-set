@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "baseline_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
+  "remediation_sha": "354692d34864d66324f1af8b9469a3c792f68a9e",
+  "changed_paths": [
+    "src/App.tsx",
+    "src/components/AccessReviewQueue.tsx",
+    "src/components/ReviewNote.tsx",
+    "src/services/accessReviewApi.ts",
+    "src/utils/accessReviewRisk.ts"
+  ],
+  "decisions": [
+    {
+      "finding_id": "SEC-01",
+      "decision": "fix",
+      "owner": "security-owner",
+      "rationale": "Dynamic HTML was unnecessary and unsafe.",
+      "verification": "npm run review:security confirms hostile notes are escaped.",
+      "residual_risk": "Rich-text rendering remains intentionally unsupported."
+    },
+    {
+      "finding_id": "SEC-02",
+      "decision": "fix",
+      "owner": "security-owner",
+      "rationale": "Authorization and evidence belong at the service boundary.",
+      "verification": "npm run review:security exercises direct service calls and actor checks.",
+      "residual_risk": "Actor identity is an in-memory exercise fixture."
+    },
+    {
+      "finding_id": "A11Y-01",
+      "decision": "fix",
+      "owner": "accessibility-owner",
+      "rationale": "Native controls provide keyboard semantics with less code.",
+      "verification": "npm run review:accessibility checks buttons and aria-pressed.",
+      "residual_risk": "Manual screen-reader coverage remains outside scope."
+    },
+    {
+      "finding_id": "PERF-01",
+      "decision": "fix",
+      "owner": "performance-owner",
+      "rationale": "One reduction produces the intended risk without repeated work.",
+      "verification": "npm run review:performance and the protected measurement pass.",
+      "residual_risk": "Production-scale workload variance remains unmeasured."
+    },
+    {
+      "finding_id": "PERF-02",
+      "decision": "fix",
+      "owner": "performance-owner",
+      "rationale": "Memoization avoids recomputation when reviews are unchanged.",
+      "verification": "npm run review:performance checks useMemo dependency ownership.",
+      "residual_risk": "React profiling outside the protected scenario is not included."
+    },
+    {
+      "finding_id": "TEST-01",
+      "decision": "fix",
+      "owner": "testability-owner",
+      "rationale": "Injected waiting removes browser and real-time nondeterminism.",
+      "verification": "npm run review:testability passes with a fake wait at the service boundary.",
+      "residual_risk": "Network behavior is simulated rather than end-to-end."
+    },
+    {
+      "finding_id": "CLAIM-01",
+      "decision": "dismiss",
+      "owner": "integration-owner",
+      "rationale": "UI-only authorization leaves direct service callers unrestricted.",
+      "verification": "Source and tests prove actor validation is enforced at the service boundary.",
+      "residual_risk": "No residual UI-bypass risk remains in the exercise boundary."
+    }
+  ],
+  "interactions": [
+    {
+      "finding_ids": [
+        "SEC-02",
+        "TEST-01"
+      ],
+      "shared_path": "src/services/accessReviewApi.ts",
+      "resolution": "One service-boundary change accepts an explicit actor and injectable wait while enforcing authorization and evidence before approval.",
+      "verification_commands": [
+        "npm run review:security",
+        "npm run review:testability"
+      ],
+      "residual_risk": "The exercise uses an in-memory actor rather than production identity infrastructure."
+    }
+  ],
+  "merge_decision": "approve",
+  "rollback": "git revert 354692d34864d66324f1af8b9469a3c792f68a9e"
+}

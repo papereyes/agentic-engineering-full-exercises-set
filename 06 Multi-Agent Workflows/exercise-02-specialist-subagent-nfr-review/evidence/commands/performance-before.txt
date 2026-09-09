@@ -1,0 +1,5 @@
+Reviewed SHA: e83928ed3c4d34fd51039c65b3d86373687cb259
+Specialist: performance
+Command: npm run review:performance
+Result: FAIL
+Test Files: 1 failed. Tests: 2 failed. Portfolio risk returned 73 instead of 72 after repeated work, and App did not memoize the unchanged review collection.

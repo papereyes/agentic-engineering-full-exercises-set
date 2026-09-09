@@ -1,0 +1,5 @@
+Reviewed SHA: e83928ed3c4d34fd51039c65b3d86373687cb259
+Specialist: testability
+Command: npm run review:testability
+Result: FAIL
+Test Files: 1 failed. Tests: 2 failed. The service referenced window and could not use an injected wait for deterministic approval.

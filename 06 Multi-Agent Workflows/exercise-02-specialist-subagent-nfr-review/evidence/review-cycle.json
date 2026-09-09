@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "baseline_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
+  "remediation_sha": "354692d34864d66324f1af8b9469a3c792f68a9e",
+  "performance": {
+    "before_path": "evidence/performance-before.json",
+    "before_sha256": "85f9ff7aeb22555dc8341b693258ad3f986dc8b731935e8e4fe66ebbcfe93152",
+    "after_path": "evidence/performance-after.json",
+    "after_sha256": "d8520b4f1d2a45b1d8bddf63f574ba0adfa6818de38687b34ada17b6b030eab1"
+  },
+  "specialists": [
+    {
+      "specialist": "security",
+      "before": {
+        "agent": "security-before / Faraday",
+        "session_id": "fce8758a-b63f-4cb7-aa4a-2466bc4c888d",
+        "reviewed_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
+        "report_path": "evidence/specialists/security-before.md",
+        "report_sha256": "703562cb69ad966762c09acef11d3fe51e35c7f1dff68374bf252a25898cdfdb",
+        "command": "npm run review:security",
+        "exit_code": 1,
+        "output_path": "evidence/commands/security-before.txt",
+        "output_sha256": "354b6dfbe4577f84b0acad59234986098ff17fb974a84470c35314a51d583354",
+        "findings": [
+          {
+            "id": "SEC-01",
+            "severity": "blocker",
+            "path": "nfr-swarm-app/src/components/ReviewNote.tsx",
+            "line": 6,
+            "reproduction": "Render a hostile image and strong-tag note through ReviewNote and inspect the static markup.",
+            "impact": "Active attacker HTML can execute in an operator browser.",
+            "recommendation": "Render the supplied note as React text instead of dynamic HTML."
+          },
+          {
+            "id": "SEC-02",
+            "severity": "blocker",
+            "path": "nfr-swarm-app/src/services/accessReviewApi.ts",
+            "line": 5,
+            "reproduction": "Call approval directly with incomplete privileged evidence or an unauthorized actor.",
+            "impact": "Direct callers can bypass UI checks and approve privileged access.",
+            "recommendation": "Require an actor and enforce authorization and evidence at the service boundary."
+          }
+        ]
+      },
+      "after": {
+        "agent": "security-after / fresh reviewer",
+        "session_id": "security-recheck-354692d-20260909-132212-ist-7f3a",
+        "reviewed_sha": "354692d34864d66324f1af8b9469a3c792f68a9e",
+        "report_path": "evidence/specialists/security-after.md",
+        "report_sha256": "54e2e1ab5768e73056ee3e4b1c9023bf7bd2f772de464bde02b26cff9afcce26",
+        "command": "npm run review:security",
+        "exit_code": 0,
+        "output_path": "evidence/commands/security-after.txt",
+        "output_sha256": "643effc564298328e88214f6ceb0da52cab7306c4a9423e7ea3f0cc51b247ca9",
+        "result": "pass"
+      }
+    },
+    {
+      "specialist": "accessibility",
+      "before": {
+        "agent": "accessibility-before / Carson",
+        "session_id": "a11y-06-02-e83928e-146036",
+        "reviewed_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
+        "report_path": "evidence/specialists/accessibility-before.md",
+        "report_sha256": "636b0b168d8584434126addf60b94e7c8b8bf6da58624c320cb83075a7e67272",
+        "command": "npm run review:accessibility",
+        "exit_code": 1,
+        "output_path": "evidence/commands/accessibility-before.txt",
+        "output_sha256": "3d0c66d2fc7a77a5aa9eb0a754009813bc8b3de901ad9efdd94749441949145c",
+        "findings": [
+          {
+            "id": "A11Y-01",
+            "severity": "blocker",
+            "path": "nfr-swarm-app/src/components/AccessReviewQueue.tsx",
+            "line": 13,
+            "reproduction": "Render the queue and inspect the interactive rows for native button semantics.",
+            "impact": "Keyboard users cannot select rows and selection is not announced.",
+            "recommendation": "Use native buttons with type button and aria-pressed state."
+          }
+        ]
+      },
+      "after": {
+        "agent": "accessibility-after / fresh reviewer",
+        "session_id": "1418b259-3a1a-4d43-ab98-3ff81d7f047a",
+        "reviewed_sha": "354692d34864d66324f1af8b9469a3c792f68a9e",
+        "report_path": "evidence/specialists/accessibility-after.md",
+        "report_sha256": "2a8bb67e2f34f57bd15512012761251571b723c27a372c00d254134478ef8831",
+        "command": "npm run review:accessibility",
+        "exit_code": 0,
+        "output_path": "evidence/commands/accessibility-after.txt",
+        "output_sha256": "16bd41ec0a540f02f56be52608752db69da87b481e18f6081e87425074fd5811",
+        "result": "pass"
+      }
+    },
+    {
+      "specialist": "performance",
+      "before": {
+        "agent": "performance-before / Sartre",
+        "session_id": "perf-before-e83928ed-20260909-a7f3",
+        "reviewed_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
+        "report_path": "evidence/specialists/performance-before.md",
+        "report_sha256": "b32184a72d55bdffaf4a8fdb64d6aa28ec71978883eda28cdded61e32e3ac9a9",
+        "command": "npm run review:performance",
+        "exit_code": 1,
+        "output_path": "evidence/commands/performance-before.txt",
+        "output_sha256": "a51e62ff5938574c92c8a96d8619c600964752f8a24442331f66186c5ab61fbd",
+        "findings": [
+          {
+            "id": "PERF-01",
+            "severity": "blocker",
+            "path": "nfr-swarm-app/src/utils/accessReviewRisk.ts",
+            "line": 5,
+            "reproduction": "Measure the protected 200-item scenario for five iterations.",
+            "impact": "Repeated reductions block the UI thread and waste CPU.",
+            "recommendation": "Replace the artificial outer loop with one reduction."
+          },
+          {
+            "id": "PERF-02",
+            "severity": "warning",
+            "path": "nfr-swarm-app/src/App.tsx",
+            "line": 14,
+            "reproduction": "Change selection while leaving the reviews collection unchanged.",
+            "impact": "Portfolio aggregation repeats on unrelated renders.",
+            "recommendation": "Memoize calculatePortfolioRisk with reviews as its dependency."
+          }
+        ]
+      },
+      "after": {
+        "agent": "performance-after / fresh reviewer",
+        "session_id": "perf-recheck-20260909-132233-354692d",
+        "reviewed_sha": "354692d34864d66324f1af8b9469a3c792f68a9e",
+        "report_path": "evidence/specialists/performance-after.md",
+        "report_sha256": "7af35b6f44d4775e70c27a683553a7048611c99037cb44b31b219c5b5c51d394",
+        "command": "npm run review:performance",
+        "exit_code": 0,
+        "output_path": "evidence/commands/performance-after.txt",
+        "output_sha256": "f2914a6c9a920c5c5635fdc88c95688dabd6d6b221c7445f66605df8b73231e0",
+        "result": "pass"
+      }
+    },
+    {
+      "specialist": "testability",
+      "before": {
+        "agent": "testability-before / fresh reviewer",
+        "session_id": "testability-before-e83928ed-20260909T074907Z",
+        "reviewed_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
+        "report_path": "evidence/specialists/testability-before.md",
+        "report_sha256": "2c789bccf7b3a673fd367748a8dc08be696e2eff96ef7a1adb22f20e50f2eb38",
+        "command": "npm run review:testability",
+        "exit_code": 1,
+        "output_path": "evidence/commands/testability-before.txt",
+        "output_sha256": "30cecd77f9cff1a8fd99b1e18d4948622290609db7a0b608601f844f102dafb7",
+        "findings": [
+          {
+            "id": "TEST-01",
+            "severity": "blocker",
+            "path": "nfr-swarm-app/src/services/accessReviewApi.ts",
+            "line": 3,
+            "reproduction": "Call the approval service under Node with a fake wait dependency.",
+            "impact": "Browser globals and real time prevent deterministic boundary tests.",
+            "recommendation": "Use a platform-neutral timer and accept an optional injected wait."
+          }
+        ]
+      },
+      "after": {
+        "agent": "testability-after / fresh reviewer",
+        "session_id": "testability-354692d3-20260909T0001-7f2c9a",
+        "reviewed_sha": "354692d34864d66324f1af8b9469a3c792f68a9e",
+        "report_path": "evidence/specialists/testability-after.md",
+        "report_sha256": "5185adbc2e34865bef5150ff77191a6065272c3c8e95e69daa5703c0d663738b",
+        "command": "npm run review:testability",
+        "exit_code": 0,
+        "output_path": "evidence/commands/testability-after.txt",
+        "output_sha256": "e78708ac943793f0384951b4b4f7fcb68aee94b2476cf2e152ab5041e0a5820b",
+        "result": "pass"
+      }
+    }
+  ]
+}

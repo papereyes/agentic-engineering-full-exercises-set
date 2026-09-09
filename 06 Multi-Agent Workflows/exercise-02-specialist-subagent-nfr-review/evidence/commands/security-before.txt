@@ -1,0 +1,5 @@
+Reviewed SHA: e83928ed3c4d34fd51039c65b3d86373687cb259
+Specialist: security
+Command: npm run review:security
+Result: FAIL
+Test Files: 1 failed. Tests: 3 failed. Failures reproduce active untrusted HTML, missing evidence enforcement, and missing actor authorization at the service boundary.

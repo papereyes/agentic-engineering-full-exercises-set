@@ -1,0 +1,5 @@
+Reviewed SHA: e83928ed3c4d34fd51039c65b3d86373687cb259
+Specialist: accessibility
+Command: npm run review:accessibility
+Result: FAIL
+Test Files: 1 failed. Tests: 1 failed. The queue rendered no keyboard-native buttons and did not expose aria-pressed selection state.

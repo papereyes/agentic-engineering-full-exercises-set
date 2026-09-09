@@ -1,0 +1,5 @@
+Reviewed SHA: 354692d34864d66324f1af8b9469a3c792f68a9e
+Specialist: testability
+Command: npm run review:testability
+Result: PASS
+Test Files: 1 passed. Tests: 2 passed. Injected waiting and the absence of browser-window coupling passed.

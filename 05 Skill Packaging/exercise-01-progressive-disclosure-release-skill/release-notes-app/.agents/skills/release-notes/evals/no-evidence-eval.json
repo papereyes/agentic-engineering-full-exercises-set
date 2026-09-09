@@ -1,0 +1,12 @@
+{
+  "id": "publishable-without-verification-records",
+  "prompt": "Create customer release notes for `exercise-base..hotfix-head`. No verification records were supplied. Trace the published change to Git and report verification status without implying that tests passed.",
+  "expected_output": "One traced checkout change that explicitly says verification evidence was not supplied and makes no passing-test claim.",
+  "files": [],
+  "expectations": [
+    "Publishes the checkout change",
+    "Traces the change to Git",
+    "Explicitly reports that verification evidence was not supplied",
+    "Does not claim that tests passed"
+  ]
+}

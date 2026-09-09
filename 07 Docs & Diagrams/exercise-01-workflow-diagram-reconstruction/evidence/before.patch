@@ -1,0 +1,167 @@
+.../diagrams/access-approval-sequence.mmd          | 27 ++++++++++++++++++++++
+ .../diagrams/access-failure-sequence.mmd           | 16 +++++++++++++
+ .../diagrams/access-state.mmd                      | 22 ++++++++++++++++++
+ 3 files changed, 65 insertions(+)
+
+diff --git a/07 Docs & Diagrams/exercise-01-workflow-diagram-reconstruction/diagrams/access-approval-sequence.mmd b/07 Docs & Diagrams/exercise-01-workflow-diagram-reconstruction/diagrams/access-approval-sequence.mmd
+new file mode 100644
+index 0000000000000000000000000000000000000000..05c3aca5c293118a8fba2a24aa9add30d2a3d57f
+--- /dev/null
++++ b/07 Docs & Diagrams/exercise-01-workflow-diagram-reconstruction/diagrams/access-approval-sequence.mmd	
+@@ -0,0 +1,27 @@
++sequenceDiagram
++    autonumber
++    actor Requester
++    participant App as Access Application
++    actor Manager
++    actor Owner as Data Owner
++    participant Security as External Security Review
++    participant Provisioner as Provisioning Service
++
++    Requester->>App: Submit access request
++
++    alt Normal request
++        App->>Manager: Request approval
++        Manager-->>App: Approve
++        App->>Owner: Request approval directly
++        Owner-->>App: Approve
++    else High-risk request
++        App->>Manager: Request approval
++        Manager-->>App: Approve
++        App->>Owner: Request approval directly
++        Owner-->>App: Approve
++        Note over App,Security: Security review is external and does not affect routing
++    end
++
++    App->>Provisioner: Provision approved access
++    Provisioner-->>App: Access granted
++    App-->>Requester: Request provisioned
+diff --git a/07 Docs & Diagrams/exercise-01-workflow-diagram-reconstruction/diagrams/access-failure-sequence.mmd b/07 Docs & Diagrams/exercise-01-workflow-diagram-reconstruction/diagrams/access-failure-sequence.mmd
+new file mode 100644
+index 0000000000000000000000000000000000000000..81cfe0e6c3eca8447c14cbb2b5cabfeb26424ba0
+--- /dev/null
++++ b/07 Docs & Diagrams/exercise-01-workflow-diagram-reconstruction/diagrams/access-failure-sequence.mmd	
+@@ -0,0 +1,16 @@
++sequenceDiagram
++    autonumber
++    participant App as Access Application
++    participant Provisioner as Provisioning Service
++    participant IdentityAdmin as External Identity Administrator
++
++    App->>Provisioner: Provision approved access
++
++    loop Retry automatically until access is granted
++        Provisioner-->>App: Provisioning failed
++        Note over App,IdentityAdmin: Rollback and identity-administrator actions are outside the application
++        App->>Provisioner: Retry provisioning
++    end
++
++    Provisioner-->>App: Access granted
++    Note right of App: Provisioned is the only completed workflow state
+diff --git a/07 Docs & Diagrams/exercise-01-workflow-diagram-reconstruction/diagrams/access-state.mmd b/07 Docs & Diagrams/exercise-01-workflow-diagram-reconstruction/diagrams/access-state.mmd
+new file mode 100644
+index 0000000000000000000000000000000000000000..93c8c0d95d26fcee3e21fb456c26ed190b8e70e3
+--- /dev/null
++++ b/07 Docs & Diagrams/exercise-01-workflow-diagram-reconstruction/diagrams/access-state.mmd	
+@@ -0,0 +1,22 @@
++stateDiagram-v2
++    [*] --> Draft
++    Draft --> ManagerApproval: Submit request
++    ManagerApproval --> DataOwnerApproval: Manager approves
++    DataOwnerApproval --> Provisioning: Data owner approves
++    Provisioning --> Provisioning: Provisioning fails / retry automatically
++    Provisioning --> Provisioned: Access granted
++    Provisioned --> [*]
++
++    note right of DataOwnerApproval
++        Security review occurs outside the application
++        and does not affect routing.
++    end note
++
++    note right of Provisioning
++        Rollback and identity-administrator actions
++        occur outside the application.
++    end note
++
++    note right of Provisioned
++        Sole completed workflow state
++    end note
+
+Changes:
+
+07 Docs & Diagrams/exercise-01-workflow-diagram-reconstruction/diagrams/access-approval-sequence.mmd
+  @@ -0,0 +1,27 @@
+  +sequenceDiagram
+  +    autonumber
+  +    actor Requester
+  +    participant App as Access Application
+  +    actor Manager
+  +    actor Owner as Data Owner
+  +    participant Security as External Security Review
+  +    participant Provisioner as Provisioning Service
+  +
+  +    Requester->>App: Submit access request
+  +
+  +    alt Normal request
+  +        App->>Manager: Request approval
+  +        Manager-->>App: Approve
+  +        App->>Owner: Request approval directly
+  +        Owner-->>App: Approve
+  +    else High-risk request
+  +        App->>Manager: Request approval
+  +        Manager-->>App: Approve
+  +        App->>Owner: Request approval directly
+  +        Owner-->>App: Approve
+  +        Note over App,Security: Security review is external and does not affect routing
+  +    end
+  +
+  +    App->>Provisioner: Provision approved access
+  +    Provisioner-->>App: Access granted
+  +    App-->>Requester: Request provisioned
+  +27 -0
+
+07 Docs & Diagrams/exercise-01-workflow-diagram-reconstruction/diagrams/access-failure-sequence.mmd
+  @@ -0,0 +1,16 @@
+  +sequenceDiagram
+  +    autonumber
+  +    participant App as Access Application
+  +    participant Provisioner as Provisioning Service
+  +    participant IdentityAdmin as External Identity Administrator
+  +
+  +    App->>Provisioner: Provision approved access
+  +
+  +    loop Retry automatically until access is granted
+  +        Provisioner-->>App: Provisioning failed
+  +        Note over App,IdentityAdmin: Rollback and identity-administrator actions are outside the application
+  +        App->>Provisioner: Retry provisioning
+  +    end
+  +
+  +    Provisioner-->>App: Access granted
+  +    Note right of App: Provisioned is the only completed workflow state
+  +16 -0
+
+07 Docs & Diagrams/exercise-01-workflow-diagram-reconstruction/diagrams/access-state.mmd
+  @@ -0,0 +1,22 @@
+  +stateDiagram-v2
+  +    [*] --> Draft
+  +    Draft --> ManagerApproval: Submit request
+  +    ManagerApproval --> DataOwnerApproval: Manager approves
+  +    DataOwnerApproval --> Provisioning: Data owner approves
+  +    Provisioning --> Provisioning: Provisioning fails / retry automatically
+  +    Provisioning --> Provisioned: Access granted
+  +    Provisioned --> [*]
+  +
+  +    note right of DataOwnerApproval
+  +        Security review occurs outside the application
+  +        and does not affect routing.
+  +    end note
+  +
+  +    note right of Provisioning
+  +        Rollback and identity-administrator actions
+  +        occur outside the application.
+  +    end note
+  +
+  +    note right of Provisioned
+  +        Sole completed workflow state
+  +    end note
+  +22 -0

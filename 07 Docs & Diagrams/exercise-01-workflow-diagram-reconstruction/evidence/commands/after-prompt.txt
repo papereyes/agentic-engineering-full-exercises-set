@@ -1,0 +1,7 @@
+Create the verified Exercise 7.1 Mermaid diagrams:
+
+- `diagrams/access-state.mmd`
+- `diagrams/access-approval-sequence.mmd`
+- `diagrams/access-failure-sequence.mmd`
+
+This is a fresh first attempt. Treat implementation and protected trace output as authoritative, not the legacy description. Read `README.md`, `docs/diagram-contract.md`, `workflow-reconstruction-app/src/workflow.tsx`, `workflow-reconstruction-app/src/data/accessRequests.tsx`, relevant UI actions, and the protected workflow trace. Run the trace from the app directory. Require every important transition to come from an exact `EDGE: WF-*` source marker or protected trace output. Include every required `%% EDGE: WF-*` diagram comment, use the contract aliases exactly, show normal versus high-risk routing, and show provisioning failure through rollback completion. Do not edit application source, tests, verifier scripts, contracts, or evidence files. Do not ask follow-up questions or retry. Write only the three requested diagram files.

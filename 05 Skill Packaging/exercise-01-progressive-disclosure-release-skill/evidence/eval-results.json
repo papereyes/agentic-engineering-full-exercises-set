@@ -3,10 +3,10 @@
     {
       "id": "full-release",
       "configuration": "without_skill",
-      "passed": 3,
+      "passed": 5,
       "total": 5,
       "output": "evidence/before-output.md",
-      "evidence": ["Names the two intended customer changes in its summary.", "Does not include the promised Git hashes in the saved response.", "Names the invoiceTotal to total migration.", "Reports both missing verification artifacts.", "Mentions internal telemetry instead of fully excluding it."]
+      "evidence": ["The original RELEASE_NOTES.md contains exactly the billing-export and checkout customer changes.", "The Git traceability section contains the exact range commit for each customer change, although not in the verifier's required item-local format.", "The billing item names the invoiceTotal to total migration.", "The deliverable reports the missing browser screenshot and migration dry run.", "No telemetry change appears in the release-note deliverable."]
     },
     {
       "id": "full-release",

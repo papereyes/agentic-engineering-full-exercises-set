@@ -13,7 +13,7 @@
 - Attempt: 1
 - Release-notes skill: enabled
 - Input context: `.agents/skills/release-notes/SKILL.md` with conditionally routed references
-- Context bytes: 2887
+- Context bytes: 2916
 - Output: `evidence/after-output.md`
 
 ## Observations
@@ -23,4 +23,4 @@
 - Verification: `npm run release:verify -- /tmp/exercise-05-01-full-fixture-finalproof /tmp/exercise-05-01-full-output-finalproof.md` passed 11 of 11 checks (score 100).
 - Exit code: the agent session exited 0; release verification exited 0.
 
-The full-release run used 2887 UTF-8 bytes of skill context, measured with `npm run context:measure` against the four files actually read.
+The current full-release route uses 2916 UTF-8 bytes of skill context, measured with `npm run context:measure` against the four files read. The post-review instruction change is recorded separately in `evidence/no-evidence.md`; the original after output remains unchanged.

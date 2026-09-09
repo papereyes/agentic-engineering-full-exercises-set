@@ -14,13 +14,15 @@
 - Release-notes skill: disabled
 - Input context: `docs/monolithic-skill-draft.md`, `docs/pr-descriptions.md`, and `docs/ci-evidence.md`
 - Context bytes: 2934
-- Output: `evidence/before-output.md`
+- Output: `evidence/before-output.md` (the original `RELEASE_NOTES.md` deliverable)
 
 ## Observations
 
 - Files read: the three supplied task files, fixture Git history and diffs, and the automatically available system `skill-creator/SKILL.md`. The candidate `.agents/skills/release-notes/SKILL.md` was absent.
 - Commands executed: inspected the exact Git range; initialized an unrelated global skill package; wrote `RELEASE_NOTES.md` in the disposable fixture; ran direct checkout and billing behavior checks plus structural YAML checks.
-- Verification: `npm run release:verify -- /tmp/exercise-05-01-before-fixture-final /tmp/exercise-05-01-before-output-final.md` scored 1 of 11 checks (9) because the final response linked to its artifact instead of containing the required release-note structure.
+- Verification: `npm run release:verify -- /tmp/exercise-05-01-before-fixture-final /tmp/exercise-05-01-before-fixture-final/RELEASE_NOTES.md` scored the actual deliverable at 1 of 11 checks (9%). It contained the two customer changes, breaking migration, evidence gaps, Git SHAs, and no telemetry item, but failed the required `## Customer-facing changes` / `###` item structure and item-local `- Trace:` contract.
 - Exit code: the agent session exited 0; release verification exited 1.
+
+The final chat response that linked to the deliverable is retained separately as `evidence/before-chat-response.md`; it is not used as the scored release-note output.
 
 `npm run context:measure -- ../docs/monolithic-skill-draft.md` measured the monolithic instruction context at exactly 2934 UTF-8 bytes. PR descriptions and CI evidence were task data supplied equally to both primary runs, not skill-instruction context.

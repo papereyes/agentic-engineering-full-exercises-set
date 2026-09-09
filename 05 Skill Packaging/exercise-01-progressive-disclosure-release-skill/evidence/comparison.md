@@ -6,16 +6,16 @@ Both primary runs used the same prompt, same agent (Codex CLI 0.153.4), same mod
 
 ## Before
 
-The broad draft triggered a skill-packaging detour. Its final response summarized and linked an artifact instead of returning the required release notes, so verification scored 1/11 (9%). It asserted Git tracing without including trace values in the saved output, mentioned internal telemetry, and loaded 2934 bytes of monolithic instructions.
+The broad draft triggered a skill-packaging detour. Its actual `RELEASE_NOTES.md` contained both customer changes, the breaking migration, both evidence gaps, and exact Git SHAs while excluding telemetry, so the qualitative eval is 5/5. The strict release verifier still scored it 1/11 (9%) because it lacked the required customer section, `###` item structure, and item-local `- Trace:` lines. The separate chat response is retained but is not the scored deliverable. The run loaded 2934 bytes of monolithic instructions.
 
 ## After
 
-The trigger selected the customer release workflow and the extractor used the exact Git range. The response published two customer items, gave real Git traces, labeled the billing rename breaking, explained the migration from `invoiceTotal` to `total`, preserved missing evidence for the screenshot and migration dry run, and excluded internal work. Verification scored 11/11 (100%).
+The trigger selected the customer release workflow and the extractor used the exact Git range. The response preserved the same factual coverage, including missing evidence, while placing it in the required auditable structure. Verification scored 11/11 (100%). A post-review policy correction now loads evidence guidance for every publishable change, including when no verification records are supplied; the separate no-evidence scenario proves that route.
 
 ## Proof
 
-The reusable script ran once in each skill-backed scenario. Resource logs show selective loading: full release used publication, evidence, and migration resources (2887 bytes); hotfix used publication and evidence only (2446 bytes); internal-only used publication only (1898 bytes). The full path saved 47 context bytes versus the monolith while improving the verified output by 91 percentage points. Hotfix and internal outputs prove unrelated resources were not read.
+The reusable script ran once in each primary skill-backed scenario. Current resource measurements show selective loading: full release uses publication, evidence, and migration resources (2916 bytes); hotfix uses publication and evidence only (2475 bytes); internal-only uses publication only (1927 bytes). The full path remains 18 bytes smaller than the monolith. The strict score improves by 91 percentage points through structure and trace placement; factual completeness is not claimed as an improvement. Hotfix and internal outputs prove unrelated resources remain unloaded.
 
 ## Conclusion
 
-Progressive disclosure improved the deliverable and trigger boundary without adding irrelevant context. Git extraction stayed deterministic and reusable, customer classification stayed policy-driven, and context cost fell for every evaluated route.
+Progressive disclosure improved format compliance, trace locality, and policy routing without losing the baseline's factual coverage. Git extraction stayed deterministic and reusable, customer classification stayed policy-driven, and context cost remained below the monolith for the full route.

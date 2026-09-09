@@ -1,0 +1,108 @@
+worktree /home/papereyes/Work/leadwalnut/agentic-engineering-full-exercises-set
+HEAD 6415b8c17ae851296d5c7ca3313169f38769708e
+branch refs/heads/exercise-02-01-after
+
+worktree /tmp/agentic-exercise-02-02-final
+HEAD eddc4e77dc0ecb1e5b65c45d4bb7f1f097662ae3
+branch refs/heads/exercise-02-02-review-final
+
+worktree /tmp/agentic-exercise-02-02-rerun
+HEAD 0a0b47fb7481d7feeb2f802a2b914f071ce606f0
+branch refs/heads/exercise-02-02-review-rerun
+
+worktree /tmp/agentic-exercise-02-02-review
+HEAD eddc4e77dc0ecb1e5b65c45d4bb7f1f097662ae3
+branch refs/heads/exercise-02-02-after
+
+worktree /tmp/agentic-exercise-03-01-after
+HEAD 6ecdb13eddb9737b8e9e2eec11b8798b1cebf22d
+branch refs/heads/exercise-03-01-after
+
+worktree /tmp/agentic-exercise-03-02-after
+HEAD 76ee5077250a2aa9734c825223620712df1ef7bd
+branch refs/heads/exercise-03-02-after
+
+worktree /tmp/agentic-exercise-03-03-after
+HEAD bc5e3f7e8f4229bfe019b28ef15bbbcb03c0e331
+branch refs/heads/exercise-03-03-after
+
+worktree /tmp/agentic-exercise-04-01-after
+HEAD 3405e68a72c060e8c76ff49e7dacc9aa66825472
+branch refs/heads/exercise-04-01-after
+
+worktree /tmp/agentic-exercise-04-01-before
+HEAD 588171fc51ea4454bfa7b05def0acff86b550bf9
+branch refs/heads/exercise-04-01-before
+
+worktree /tmp/agentic-exercise-04-02-after
+HEAD f066f9f802ebd9733524d42c684da87bb77a8c62
+branch refs/heads/exercise-04-02-after
+
+worktree /tmp/agentic-exercise-04-02-before
+HEAD 86a80ab4e61b05cc3208f361a26e1ba5a65b2add
+branch refs/heads/exercise-04-02-before
+
+worktree /tmp/agentic-exercise-04-03-after
+HEAD 0e5e2ba9bbd970755fa9021d0638893588de2c5a
+branch refs/heads/exercise-04-03-after
+
+worktree /tmp/agentic-exercise-04-03-before
+HEAD dbc78db31371e70ed769310ea07da541c5667c4c
+branch refs/heads/exercise-04-03-before
+
+worktree /tmp/agentic-exercise-05-01-after
+HEAD 4af1e9c5b29578a889e2f83b0a49e40783c6137f
+branch refs/heads/exercise-05-01-after
+
+worktree /tmp/agentic-exercise-05-01-before
+HEAD 0964363c0212fb98d6853487466c25b33c5cac0e
+branch refs/heads/exercise-05-01-before
+
+worktree /tmp/agentic-exercise-05-02-after
+HEAD 86cef5fccfa1a75478d18d8c0ed8083662daf665
+branch refs/heads/exercise-05-02-after
+
+worktree /tmp/agentic-exercise-05-02-before
+HEAD 20465b20de7333e57e9aa2ec056780fa3122fcaa
+branch refs/heads/exercise-05-02-before
+
+worktree /tmp/agentic-exercise-05-03-after
+HEAD 534f7906065dca55b27aa24b8fc4a66f7ffb51b0
+branch refs/heads/exercise-05-03-after
+
+worktree /tmp/agentic-exercise-05-03-before
+HEAD 640aa91c9168260f654d2c85e1be7484a0513189
+branch refs/heads/exercise-05-03-before
+
+worktree /tmp/agentic-exercise-06-01-final
+HEAD a19966b482a23d9867f7553c404da881a064bfd6
+branch refs/heads/integration/parallel-features
+
+worktree /tmp/agentic-exercise-06-02-after
+HEAD e83928ed3c4d34fd51039c65b3d86373687cb259
+branch refs/heads/exercise-06-02-after
+
+worktree /tmp/agentic-exercise-06-03-integration
+HEAD e83928ed3c4d34fd51039c65b3d86373687cb259
+branch refs/heads/integration/kanban-control
+
+worktree /tmp/exercise-02-01-final-verify
+HEAD 6415b8c17ae851296d5c7ca3313169f38769708e
+detached
+
+worktree /tmp/exercise-04-01-review-fresh
+HEAD 9da7df86eb65e873862219a25e26d0e7b279874b
+detached
+
+worktree /tmp/exercise-04-01-review-green
+HEAD 9da7df86eb65e873862219a25e26d0e7b279874b
+detached
+
+worktree /tmp/exercise-04-03-review-fresh
+HEAD 7b002440d5f5209e4d9aa49b8c9afc5c944dbe59
+detached
+
+worktree /tmp/exercise-04-03-review-green
+HEAD 7b002440d5f5209e4d9aa49b8c9afc5c944dbe59
+detached
+

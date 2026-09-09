@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "base_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
+  "integration_branch": "integration/parallel-features",
+  "merge_order": ["B", "A", "C"],
+  "merge_commits": {
+    "B": "f46c3e5d5933a270bfc87a361eb09253ddacef8f",
+    "A": "8bbb3af507abc043cb63f649a5593d764373698b",
+    "C": "32a26da5b14c1aa27ba545ab4e0f379e8552698f"
+  },
+  "shared_commit_sha": "a19966b482a23d9867f7553c404da881a064bfd6",
+  "product_head": "a19966b482a23d9867f7553c404da881a064bfd6",
+  "verification": {
+    "command": "npm run test:integrated",
+    "exit_code": 0,
+    "output_path": "evidence/commands/integrated.txt",
+    "output_sha256": "e4b9706a92cab81cbdb30ceb3d49a0eefc795a592e48cf81880cb5d6e6e72958"
+  },
+  "untrusted_handoff_review": {
+    "handoff_id": "UNTRUSTED-01",
+    "resolved_commit_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
+    "decision": "reject",
+    "detected_issues": ["changed-paths", "commit-parent", "verification-output"],
+    "proof": "At e83928ed3c4d34fd51039c65b3d86373687cb259, Git shows the claimed commit has merge parents rather than the claimed single parent, its Module 6 changed-path set is empty instead of the three claimed files, and evidence/commands/untrusted-lane-a.txt does not exist."
+  }
+}

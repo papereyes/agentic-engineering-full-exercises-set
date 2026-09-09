@@ -1,0 +1,232 @@
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/EvidencePanel.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/EvidencePanel.tsx
+index 20c1f6f..591c03f 100644
+--- a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/EvidencePanel.tsx	
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/EvidencePanel.tsx	
+@@ -1,4 +1,5 @@
+ import type { WorkItem } from "../types";
++import { createEvidenceBundle, serializeEvidenceBundle } from "../services/workflowApi";
+ 
+ interface EvidencePanelProps {
+   item: WorkItem;
+@@ -7,6 +8,15 @@ interface EvidencePanelProps {
+ }
+ 
+ export function EvidencePanel({ item, evidence, onCollect }: EvidencePanelProps) {
++  function exportEvidence() {
++    const json = serializeEvidenceBundle(createEvidenceBundle(item, evidence, new Date().toISOString()));
++    const download = document.createElement("a");
++    download.href = URL.createObjectURL(new Blob([json], { type: "application/json" }));
++    download.download = `${item.id}-evidence.json`;
++    download.click();
++    URL.revokeObjectURL(download.href);
++  }
++
+   return (
+     <section className="evidence-panel" aria-label="Evidence panel">
+       <div className="section-title">
+@@ -14,6 +24,11 @@ export function EvidencePanel({ item, evidence, onCollect }: EvidencePanelProps)
+         <button type="button" onClick={onCollect}>
+           Collect
+         </button>
++        {evidence.length > 0 ? (
++          <button type="button" onClick={exportEvidence}>
++            Export JSON
++          </button>
++        ) : null}
+       </div>
+       {evidence.length === 0 ? (
+         <p className="muted">No evidence collected for {item.name} yet.</p>
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/FilterBar.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/FilterBar.tsx
+index 7c162f4..4ea6551 100644
+--- a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/FilterBar.tsx	
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/FilterBar.tsx	
+@@ -1,4 +1,4 @@
+-import type { Filters } from "../utils/filters";
++import { applyFilterPreset, savedFilterPresets, type Filters } from "../utils/filters";
+ 
+ interface FilterBarProps {
+   filters: Filters;
+@@ -41,6 +41,11 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
+           ))}
+         </select>
+       </label>
++      {savedFilterPresets.map((preset) => (
++        <button key={preset.id} type="button" onClick={() => onChange(applyFilterPreset(filters, preset))}>
++          {preset.name}
++        </button>
++      ))}
+     </section>
+   );
+ }
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/MetricStrip.tsx b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/MetricStrip.tsx
+index 65d50da..b6282bf 100644
+--- a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/MetricStrip.tsx	
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/components/MetricStrip.tsx	
+@@ -2,6 +2,7 @@ interface PortfolioSummary {
+   critical: number;
+   blocked: number;
+   averageRisk: number;
++  dueToday?: number;
+   ready: number;
+ }
+ 
+@@ -13,6 +14,7 @@ export function MetricStrip({ summary }: MetricStripProps) {
+   const metrics = [
+     { label: "Critical", value: summary.critical, hint: "risk score 90 or above" },
+     { label: "Blocked", value: summary.blocked, hint: "blocked or escalated" },
++    { label: "Due today", value: summary.dueToday ?? 0, hint: "due today" },
+     { label: "Ready", value: summary.ready, hint: "ready for action" },
+     { label: "Average risk", value: summary.averageRisk, hint: "across the current queue" },
+   ];
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/services/workflowApi.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/services/workflowApi.ts
+index 148a083..df392fd 100644
+--- a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/services/workflowApi.ts	
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/services/workflowApi.ts	
+@@ -1,5 +1,6 @@
+-import type { ActionDraft, WorkItem } from "../types";
++import type { ActionDraft, EvidenceBundle, WorkItem } from "../types";
+ import { workItems } from "../data/workItems";
++import { calculateRisk } from "../utils/scoring";
+ 
+ const wait = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
+ 
+@@ -31,3 +32,18 @@ export async function collectEvidence(item: WorkItem): Promise<string[]> {
+     `Tags: ${item.tags.join(", ")}`,
+   ];
+ }
++
++export function createEvidenceBundle(item: WorkItem, evidence: string[], generatedAt: string): EvidenceBundle {
++  return {
++    id: item.id,
++    owner: item.owner,
++    status: item.status,
++    risk: calculateRisk(item),
++    evidence,
++    generatedAt,
++  };
++}
++
++export function serializeEvidenceBundle(bundle: EvidenceBundle): string {
++  return JSON.stringify(bundle);
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/types.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/types.ts
+index 62702d1..abc8a0a 100644
+--- a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/types.ts	
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/types.ts	
+@@ -19,3 +19,19 @@ export interface ActionDraft {
+   note: string;
+   status: WorkflowStatus;
+ }
++
++export interface FilterPreset {
++  id: string;
++  name: string;
++  priority: Priority | "All";
++  status: WorkflowStatus | "All";
++}
++
++export interface EvidenceBundle {
++  id: string;
++  owner: string;
++  status: WorkflowStatus;
++  risk: number;
++  evidence: string[];
++  generatedAt: string;
++}
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/filters.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/filters.ts
+index 8ed0c02..d992073 100644
+--- a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/filters.ts	
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/filters.ts	
+@@ -1,4 +1,4 @@
+-import type { Priority, WorkItem, WorkflowStatus } from "../types";
++import type { FilterPreset, Priority, WorkItem, WorkflowStatus } from "../types";
+ 
+ export interface Filters {
+   query: string;
+@@ -12,6 +12,14 @@ export const defaultFilters: Filters = {
+   status: "All",
+ };
+ 
++export const savedFilterPresets: FilterPreset[] = [
++  { id: "high-priority-blocked", name: "High-priority Blocked", priority: "High", status: "Blocked" },
++];
++
++export function applyFilterPreset(filters: Filters, preset: FilterPreset): Filters {
++  return { ...filters, priority: preset.priority, status: preset.status };
++}
++
+ export function filterItems(items: WorkItem[], filters: Filters): WorkItem[] {
+   return items.filter((item) => {
+     const matchesQuery =
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/scoring.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/scoring.ts
+index 0e43a6f..21e0616 100644
+--- a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/scoring.ts	
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/src/utils/scoring.ts	
+@@ -27,6 +27,7 @@ export function summarizePortfolio(items: WorkItem[]) {
+     critical,
+     blocked,
+     averageRisk,
++    dueToday: items.filter((item) => item.dueInDays === 0).length,
+     ready: items.filter((item) => item.status === "Ready").length,
+   };
+ }
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-a/saved-filters.test.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-a/saved-filters.test.ts
+new file mode 100644
+index 0000000..0e17621
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-a/saved-filters.test.ts	
+@@ -0,0 +1,14 @@
++import { describe, expect, it } from "vitest";
++import { applyFilterPreset, defaultFilters, savedFilterPresets } from "../../src/utils/filters";
++
++describe("saved filters", () => {
++  it("applies High-priority Blocked without replacing the search query", () => {
++    const preset = savedFilterPresets.find((candidate) => candidate.id === "high-priority-blocked");
++
++    expect(applyFilterPreset({ ...defaultFilters, query: "atlas" }, preset!)).toEqual({
++      query: "atlas",
++      priority: "High",
++      status: "Blocked",
++    });
++  });
++});
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-b/due-today.test.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-b/due-today.test.ts
+new file mode 100644
+index 0000000..d0407d7
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-b/due-today.test.ts	
+@@ -0,0 +1,15 @@
++import { describe, expect, it } from "vitest";
++import { workItems } from "../../src/data/workItems";
++import { summarizePortfolio } from "../../src/utils/scoring";
++
++describe("summarizePortfolio", () => {
++  it("counts every item due exactly today", () => {
++    expect(
++      summarizePortfolio([
++        ...workItems,
++        { ...workItems[1], id: "due-today-ready", dueInDays: 0 },
++        { ...workItems[2], id: "overdue", dueInDays: -1 },
++      ]).dueToday,
++    ).toBe(2);
++  });
++});
+diff --git a/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-c/evidence-bundle.test.ts b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-c/evidence-bundle.test.ts
+new file mode 100644
+index 0000000..928dc79
+--- /dev/null
++++ b/06 Multi-Agent Workflows/exercise-01-parallel-worktree-feature-split/worktree-feature-app/tests/lane-c/evidence-bundle.test.ts	
+@@ -0,0 +1,13 @@
++import { describe, expect, it } from "vitest";
++import { workItems } from "../../src/data/workItems";
++import { createEvidenceBundle, serializeEvidenceBundle } from "../../src/services/workflowApi";
++
++describe("evidence bundles", () => {
++  it("serializes caller-timestamped evidence in a stable field order", () => {
++    const bundle = createEvidenceBundle(workItems[0], ["Policy approval attached"], "2026-08-13T09:00:00.000Z");
++
++    expect(serializeEvidenceBundle(bundle)).toBe(
++      '{"id":"parall-01","owner":"Asha","status":"Blocked","risk":100,"evidence":["Policy approval attached"],"generatedAt":"2026-08-13T09:00:00.000Z"}',
++    );
++  });
++});

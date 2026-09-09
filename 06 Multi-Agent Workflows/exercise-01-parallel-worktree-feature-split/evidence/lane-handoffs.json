@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "base_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
+  "lanes": [
+    {
+      "lane": "A",
+      "agent": "Faraday / exercise_06_01_lane_a",
+      "branch": "lane/saved-filters",
+      "worktree_path": "/tmp/agentic-exercise-06-01-lane-a",
+      "status": "ready",
+      "base_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
+      "commit_sha": "cb2fc176ea2c27f40e34e6959e35b36c557199cd",
+      "owned_paths": ["src/components/FilterBar.tsx", "src/utils/filters.ts", "tests/lane-a/"],
+      "changed_paths": ["src/components/FilterBar.tsx", "src/utils/filters.ts", "tests/lane-a/saved-filters.test.ts"],
+      "shared_requests": [{"path": "src/types.ts", "symbol": "FilterPreset", "reason": "Promote the lane-local contract for shared ownership after all lane merges."}],
+      "verification": {"command": "npm run test:lane-a", "exit_code": 0, "output_path": "evidence/commands/lane-a.txt", "output_sha256": "9708e77c0ddf354ab8b748bf6f55bf057b49df3df90404c9b82d020e7c6846c5"},
+      "rollback": "git revert cb2fc176ea2c27f40e34e6959e35b36c557199cd",
+      "risks": "None beyond the integration-owned type promotion."
+    },
+    {
+      "lane": "B",
+      "agent": "Carson / exercise_06_01_lane_b",
+      "branch": "lane/sla-risk",
+      "worktree_path": "/tmp/agentic-exercise-06-01-lane-b",
+      "status": "ready",
+      "base_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
+      "commit_sha": "1ac6bbdd195cdda94c08b00c5c6e49ac63a6736d",
+      "owned_paths": ["src/components/MetricStrip.tsx", "src/utils/scoring.ts", "tests/lane-b/"],
+      "changed_paths": ["src/components/MetricStrip.tsx", "src/utils/scoring.ts", "tests/lane-b/due-today.test.ts"],
+      "shared_requests": [],
+      "verification": {"command": "npm run test:lane-b", "exit_code": 0, "output_path": "evidence/commands/lane-b.txt", "output_sha256": "55143a2b96a3458241127fa101015576647723e8052e72dc9eae2845a768ee9a"},
+      "rollback": "git revert 1ac6bbdd195cdda94c08b00c5c6e49ac63a6736d",
+      "risks": "None; missing loading-state data renders as zero."
+    },
+    {
+      "lane": "C",
+      "agent": "Sartre / exercise_06_01_lane_c",
+      "branch": "lane/evidence-export",
+      "worktree_path": "/tmp/agentic-exercise-06-01-lane-c",
+      "status": "ready",
+      "base_sha": "e83928ed3c4d34fd51039c65b3d86373687cb259",
+      "commit_sha": "93adf67a1d20d19151d91d129d54e75c49738c81",
+      "owned_paths": ["src/components/EvidencePanel.tsx", "src/services/workflowApi.ts", "tests/lane-c/"],
+      "changed_paths": ["src/components/EvidencePanel.tsx", "src/services/workflowApi.ts", "tests/lane-c/evidence-bundle.test.ts"],
+      "shared_requests": [{"path": "src/types.ts", "symbol": "EvidenceBundle", "reason": "Promote the lane-local export contract after all lane merges."}],
+      "verification": {"command": "npm run test:lane-c", "exit_code": 0, "output_path": "evidence/commands/lane-c.txt", "output_sha256": "584c4ede2715506ad8ed12fa17fe833edbe8e2c63dc8c7b7b6f964ce62bc8bf1"},
+      "rollback": "git revert 93adf67a1d20d19151d91d129d54e75c49738c81",
+      "risks": "Browser download behavior remains covered by protected acceptance tests."
+    }
+  ]
+}

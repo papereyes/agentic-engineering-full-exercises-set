@@ -1,5 +1,15 @@
 import type { ActionDraft, WorkItem } from "../types";
 import { workItems } from "../data/workItems";
+import { calculateRisk } from "../utils/scoring";
+
+export interface EvidenceBundle {
+  id: string;
+  owner: string;
+  status: WorkItem["status"];
+  risk: number;
+  evidence: string[];
+  generatedAt: string;
+}
 
 const wait = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
@@ -30,4 +40,19 @@ export async function collectEvidence(item: WorkItem): Promise<string[]> {
     `Owner: ${item.owner}`,
     `Tags: ${item.tags.join(", ")}`,
   ];
+}
+
+export function createEvidenceBundle(item: WorkItem, evidence: string[], generatedAt: string): EvidenceBundle {
+  return {
+    id: item.id,
+    owner: item.owner,
+    status: item.status,
+    risk: calculateRisk(item),
+    evidence,
+    generatedAt,
+  };
+}
+
+export function serializeEvidenceBundle(bundle: EvidenceBundle): string {
+  return JSON.stringify(bundle);
 }

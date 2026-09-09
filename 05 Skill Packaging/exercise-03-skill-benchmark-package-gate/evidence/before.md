@@ -15,4 +15,4 @@
 
 The no-skill lane scored 0% training quality and 16.7% held-out quality, with 16.7% held-out critical accuracy and 0.373 held-out variance. Mean overall use was 36,911 tokens and 26.5 seconds. The starter scored 0% training, held-out, and critical quality with zero variance; mean use was 32,981 tokens and 28.0 seconds.
 
-Both training lanes omitted source citations and exact output headings, and failed to preserve recovery, uncertainty, and follow-up state. All outputs, timing records, token counts, and generated grades are under `benchmark-workspace/`.
+Both training lanes omitted required source citations and exact output headings. Those grading failures do not by themselves prove factual loss: for example, `eval-1/starter_skill/run-1` correctly keeps recovery at 09:24 and the alerting follow-up proposed, while `eval-2/starter_skill/run-1` preserves both unresolved cause hypotheses and the open follow-up. The retained outputs support a citation-and-format compliance gap; this evidence does not make a blanket claim that baseline facts were lost. All outputs, timing records, token counts, and generated grades are under `benchmark-workspace/`.

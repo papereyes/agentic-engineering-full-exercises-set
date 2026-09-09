@@ -2,7 +2,7 @@
 
 ## Training failures
 
-No-skill and starter training runs initially passed 0/5 assertions for both tasks. They omitted bracketed source attribution, used non-contract headings, repeated a superseded recovery claim near an early mitigation time, and did not reliably preserve uncertainty or open follow-up state. The candidate added only generic rules for exact sections, source citations, fact/inference separation, recovery boundaries, conflicting-source preservation, impact units, and follow-up state.
+No-skill and starter training runs initially passed 0/5 assertions for both tasks. The consistent defects were missing bracketed source attribution and non-contract headings. The saved prose often retained the underlying facts despite failing those checks: `eval-1/starter_skill/run-1` places recovery at 09:24 and leaves alerting proposed, and `eval-2/starter_skill/run-1` keeps both conflicting causes unresolved and the follow-up open. Some automated recovery-boundary failures also match sentences that explicitly reject the superseded 09:11 recovery claim, so they are not treated as factual errors. The candidate added generic rules for exact sections, source citations, fact/inference separation, recovery boundaries, conflicting-source preservation, impact units, and follow-up state; the measured gain is assertion and output-contract compliance, not proven wholesale factual recovery.
 
 ## Held-out and gate
 

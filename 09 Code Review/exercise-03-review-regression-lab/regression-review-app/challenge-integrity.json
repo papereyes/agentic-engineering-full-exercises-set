@@ -13,7 +13,7 @@
     "../docs/review-diff.md": "6f6ef0b5f9a9fbc9b5491fa97fea88fb289fb8007f38a2d23e602a8de6647979",
     "../docs/skill-contract.md": "dd45011e88f930dbdbec657d7b954ba3b69a8b75c52cf6bfed93de0f75fa378a",
     "../pr/review-target.diff": "83391f617530739746e3531ff8e19e4e6aace87642ac1aae09ab7c6bc7d5f411",
-    "eval/cases.json": "dc8b5f8b12230bcec571b08a47111f8de5228c28d23e6cae087353e38cf299d5",
+    "eval/cases.json": "337633acfde43abdcdfde3e3c1cf7b011d88545c46eaec7a1c1c797127d6f4db",
     "eval/diffs/clean-control.diff": "e1174e035b729cc9ddb3c6debcbeb8e3632d0ab253dfbc5d69825ae4baa74fe8",
     "eval/diffs/multi-bug.diff": "a27c7948209137b5fc0633eaeb0e7305a17f1275ba75518985afeee5465d3fd6",
     "eval/verify-catalog.mjs": "f60c249cdd5d6aa2aac3fe3c83ab3c80820134f1c6a58a962463e7a7070cbcd3",

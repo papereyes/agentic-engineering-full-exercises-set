@@ -1,0 +1,230 @@
+diff --git a/10 Token Economics/exercise-01-token-budget-refactor/evidence/context-plan.json b/10 Token Economics/exercise-01-token-budget-refactor/evidence/context-plan.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..e05c54db6a1e62ae4e21d64332d091245dc8a1ec
+--- /dev/null
++++ b/10 Token Economics/exercise-01-token-budget-refactor/evidence/context-plan.json	
+@@ -0,0 +1,23 @@
++{
++  "schemaVersion": 1,
++  "task": {
++    "summary": "Refactor the current session adapter without changing its public behavior.",
++    "tags": ["adapter", "session"],
++    "questionTags": ["errors"]
++  },
++  "openQuestions": [
++    {
++      "tag": "errors",
++      "question": "Which error class, codes, messages, and validation order are part of the compatibility contract?"
++    }
++  ],
++  "maximumBytes": 2000,
++  "mandatoryIds": ["repository-rules"],
++  "expectedSelectedIds": [
++    "repository-rules",
++    "current-adapter-contract",
++    "current-error-contract"
++  ],
++  "selectionPolicy": "Choose mandatory current authority first, then current sources matching task or question tags by descending priority and stable ID.",
++  "expectedBytes": 1867
++}
+diff --git a/10 Token Economics/exercise-01-token-budget-refactor/evidence/context-plan.md b/10 Token Economics/exercise-01-token-budget-refactor/evidence/context-plan.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..fe319910d602611ef48ad0942c175c83331ae768
+--- /dev/null
++++ b/10 Token Economics/exercise-01-token-budget-refactor/evidence/context-plan.md	
+@@ -0,0 +1,9 @@
++# Context budget plan
++
++This plan is committed before selector or adapter source changes. The full before lane costs 2,885 UTF-8 bytes and includes stale and unrelated material. The selected lane has a maximum of 2,000 bytes and must never exceed it.
++
++`repository-rules` is mandatory because it establishes compatibility, testing, scope, and evidence constraints. `current-adapter-contract` is the primary current authority for the adapter and session tags. It defines output shape, first-occurrence role deduplication, synchronous behavior, validation, and serialization.
++
++One open question remains after the primary contract: which exact error codes, messages, and validation order are public behavior? That question adds the `errors` question tag, selecting `current-error-contract`. The expected selected order is therefore `repository-rules`, `current-adapter-contract`, then `current-error-contract`, totaling 1,867 bytes.
++
++The stale `legacy-migration-notes` source is excluded regardless of its higher numeric priority because current authority wins. The UI style guide and audit retention policy are excluded as irrelevant to this server-side compatibility refactor. If mandatory context alone cannot fit, selection must fail instead of silently dropping repository rules. If a relevant source cannot fit, it must be recorded as skipped for budget and its tags reported unresolved.
+diff --git a/10 Token Economics/exercise-01-token-budget-refactor/token-budget-app/src/budget/selectContext.mjs b/10 Token Economics/exercise-01-token-budget-refactor/token-budget-app/src/budget/selectContext.mjs
+index cf001a07bb1f2cbc6000ec1539401b26cbc5c154..d4898f301e4efafa348526e54185be6ba92d1df5 100644
+--- a/10 Token Economics/exercise-01-token-budget-refactor/token-budget-app/src/budget/selectContext.mjs	
++++ b/10 Token Economics/exercise-01-token-budget-refactor/token-budget-app/src/budget/selectContext.mjs	
+@@ -1,4 +1,30 @@
+-/** Seeded selector: it ignores task relevance, authority, and budget. */
+-export function selectContext(catalog, _task, _maximumBytes) {
+-  return { selected: [...catalog], totalBytes: catalog.reduce((total, item) => total + item.bytes, 0) };
++export function selectContext(catalog, task = {}, maximumBytes) {
++  if (!Number.isInteger(maximumBytes) || maximumBytes <= 0) throw new Error("Context budget must be a positive integer");
++  if (new Set(catalog.map((item) => item.id)).size !== catalog.length) throw new Error("Duplicate context id");
++
++  const taskTags = [...new Set(task.tags ?? [])].sort();
++  const questionTags = [...new Set(task.questions ?? [])].sort();
++  const requestedTags = [...new Set([...taskTags, ...questionTags])].sort();
++  const ordered = [...catalog].sort((left, right) => Number(right.mandatory) - Number(left.mandatory) || right.priority - left.priority || left.id.localeCompare(right.id));
++  const selected = [];
++  const skipped = [];
++  let totalBytes = 0;
++
++  for (const item of ordered) {
++    const current = item.authority === "current";
++    const matchingTags = item.tags.filter((tag) => requestedTags.includes(tag));
++    if (!current) skipped.push({ ...item, reason: "stale" });
++    else if (!item.mandatory && matchingTags.length === 0) skipped.push({ ...item, reason: "irrelevant" });
++    else if (totalBytes + item.bytes > maximumBytes) {
++      if (item.mandatory) throw new Error("Budget cannot fit mandatory context");
++      skipped.push({ ...item, reason: "budget" });
++    } else {
++      const reason = item.mandatory ? "mandatory" : matchingTags.some((tag) => questionTags.includes(tag)) ? "question" : "task";
++      selected.push({ ...item, reason });
++      totalBytes += item.bytes;
++    }
++  }
++
++  const covered = new Set(selected.flatMap((item) => item.tags));
++  return { selected, skipped, totalBytes, remainingBytes: maximumBytes - totalBytes, maximumBytes, requestedTags, unresolvedTags: requestedTags.filter((tag) => !covered.has(tag)) };
+ }
+diff --git a/10 Token Economics/exercise-01-token-budget-refactor/token-budget-app/src/session/adaptSession.mjs b/10 Token Economics/exercise-01-token-budget-refactor/token-budget-app/src/session/adaptSession.mjs
+index 03957bd339baf42b3e737a12dcd4beb2c5f9f92b..0cc4353c508eb4c34b1a3a290b4a2866e82b3ea2 100644
+--- a/10 Token Economics/exercise-01-token-budget-refactor/token-budget-app/src/session/adaptSession.mjs	
++++ b/10 Token Economics/exercise-01-token-budget-refactor/token-budget-app/src/session/adaptSession.mjs	
+@@ -6,25 +6,47 @@ export class SessionAdapterError extends Error {
+   }
+ }
+ 
+-function validIsoTimestamp(value) {
++function isValidIsoTimestamp(value) {
+   if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(value)) return false;
+   const parsed = Date.parse(value);
+   const canonical = value.includes(".") ? value : value.replace("Z", ".000Z");
+   return Number.isFinite(parsed) && new Date(parsed).toISOString() === canonical;
+ }
+ 
+-/** Working but deliberately monolithic legacy adapter for the refactor task. */
+-export function adaptSession(input) {
++function validateUserId(input) {
+   if (!input || typeof input.userId !== "string" || input.userId.trim() === "") {
+     throw new SessionAdapterError("SESSION_USER_REQUIRED", "Session userId is required");
+   }
+-  if (!validIsoTimestamp(input.expiresAt)) {
++}
++
++function validateExpiresAt(expiresAt) {
++  if (!isValidIsoTimestamp(expiresAt)) {
+     throw new SessionAdapterError("SESSION_EXPIRY_INVALID", "Session expiresAt must be an ISO timestamp");
+   }
+-  if (!Array.isArray(input.roles) || input.roles.some((role) => typeof role !== "string" || role.trim() === "")) {
++}
++
++function normalizeRoles(roles) {
++  if (!Array.isArray(roles)) {
+     throw new SessionAdapterError("SESSION_ROLES_INVALID", "Session roles must be an array of non-empty strings");
+   }
+-  const roles = [];
+-  for (const role of input.roles) if (!roles.includes(role)) roles.push(role);
++
++  const normalized = [];
++  const seen = new Set();
++  for (const role of roles) {
++    if (typeof role !== "string" || role.trim() === "") {
++      throw new SessionAdapterError("SESSION_ROLES_INVALID", "Session roles must be an array of non-empty strings");
++    }
++    if (!seen.has(role)) {
++      seen.add(role);
++      normalized.push(role);
++    }
++  }
++  return normalized;
++}
++
++export function adaptSession(input) {
++  validateUserId(input);
++  validateExpiresAt(input.expiresAt);
++  const roles = normalizeRoles(input.roles);
+   return { userId: input.userId, roles, expiresAt: input.expiresAt };
+ }
+diff --git a/10 Token Economics/exercise-01-token-budget-refactor/token-budget-app/tests/context-selector.test.mjs b/10 Token Economics/exercise-01-token-budget-refactor/token-budget-app/tests/context-selector.test.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..f6ca892de9f6efaf2ac7785b3b70229b16153df6
+--- /dev/null
++++ b/10 Token Economics/exercise-01-token-budget-refactor/token-budget-app/tests/context-selector.test.mjs	
+@@ -0,0 +1,32 @@
++import assert from "node:assert/strict";
++import fs from "node:fs";
++import path from "node:path";
++import { selectContext } from "../src/budget/selectContext.mjs";
++
++const catalog = JSON.parse(fs.readFileSync(path.resolve(import.meta.dirname, "..", "..", "docs", "context-catalog.json"), "utf8"));
++const ids = (entries) => entries.map((entry) => entry.id);
++const task = { tags: ["adapter", "session"], questions: ["errors"] };
++
++const selected = selectContext(catalog, task, 2000);
++assert.deepEqual(ids(selected.selected), ["repository-rules", "current-adapter-contract", "current-error-contract"], "question tags expand current context after task tags");
++assert.equal(selected.totalBytes, 1867);
++assert.equal(selected.remainingBytes, 133);
++assert.deepEqual(selected.requestedTags, ["adapter", "errors", "session"]);
++assert.deepEqual(selected.unresolvedTags, []);
++assert.equal(selected.skipped.find((entry) => entry.id === "legacy-migration-notes")?.reason, "stale", "stale context never wins on priority or size");
++assert.equal(selected.skipped.find((entry) => entry.id === "ui-style-guide")?.reason, "irrelevant");
++
++const reversed = selectContext([...catalog].reverse(), { tags: ["session", "adapter"], questions: ["errors"] }, 2000);
++assert.deepEqual(reversed, selected, "deterministic selection must not depend on catalog or tag order");
++
++const tight = selectContext(catalog, { tags: ["session", "adapter"] }, 1200);
++assert.deepEqual(ids(tight.selected), ["repository-rules"], "mandatory rules are selected before relevant context");
++assert.equal(tight.skipped.find((entry) => entry.id === "current-adapter-contract")?.reason, "budget");
++assert.deepEqual(tight.unresolvedTags, ["adapter", "session"], "budget omissions expose unresolved task tags");
++
++assert.throws(() => selectContext(catalog, task, 488), /mandatory context/i);
++assert.throws(() => selectContext([...catalog, catalog[0]], task, 2000), /duplicate context id/i);
++assert.throws(() => selectContext(catalog, task, -1), /positive integer/i);
++assert.equal(new Set([...selected.selected, ...selected.skipped].map((entry) => entry.id)).size, catalog.length);
++
++console.log("PASS learner deterministic authority, budget, stale, duplicate, and question selection cases");
+diff --git a/10 Token Economics/exercise-01-token-budget-refactor/token-budget-app/tests/session-adapter.test.mjs b/10 Token Economics/exercise-01-token-budget-refactor/token-budget-app/tests/session-adapter.test.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..0d89691a81bc76ef17ba0d95576fbfec910ded73
+--- /dev/null
++++ b/10 Token Economics/exercise-01-token-budget-refactor/token-budget-app/tests/session-adapter.test.mjs	
+@@ -0,0 +1,45 @@
++import assert from "node:assert/strict";
++import { adaptSession, SessionAdapterError } from "../src/session/adaptSession.mjs";
++
++const expiresAt = "2026-08-14T10:30:00Z";
++const adapted = adaptSession({ userId: "user-20", roles: ["admin", "reader", "admin"], expiresAt, ignored: true });
++assert.deepEqual(adapted, { userId: "user-20", roles: ["admin", "reader"], expiresAt }, "duplicate roles keep their first occurrence and unknown fields are ignored");
++assert.deepEqual(adaptSession({ userId: "user-20", roles: [], expiresAt }).roles, [], "empty roles remain valid");
++
++function expectError(input, code, message) {
++  let synchronous = false;
++  assert.throws(
++    () => {
++      adaptSession(input);
++      synchronous = true;
++    },
++    (error) => error instanceof SessionAdapterError && error.code === code && error.message === message,
++  );
++  assert.equal(synchronous, false, `${code} throws synchronously before returning`);
++}
++
++expectError(
++  { roles: ["admin"], expiresAt: "invalid" },
++  "SESSION_USER_REQUIRED",
++  "Session userId is required",
++);
++expectError(
++  { userId: "user-20", roles: "admin", expiresAt: "invalid" },
++  "SESSION_EXPIRY_INVALID",
++  "Session expiresAt must be an ISO timestamp",
++);
++expectError(
++  { userId: "user-20", roles: ["admin", ""], expiresAt },
++  "SESSION_ROLES_INVALID",
++  "Session roles must be an array of non-empty strings",
++);
++
++const sparseRoles = new Array(1);
++
++expectError(
++  { userId: "user-20", roles: sparseRoles, expiresAt },
++  "SESSION_ROLES_INVALID",
++  "Session roles must be an array of non-empty strings",
++);
++
++console.log("PASS adapter output, duplicate normalization, validation order, synchronous errors, and sparse roles");

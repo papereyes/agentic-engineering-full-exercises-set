@@ -1,0 +1,9 @@
+Plan SHA: 417060e7cd813a45febbb5904ce3b3e8036948f2
+Source SHA: ef46d735d3bdcbe197040ed9687e22cb6528406b
+Selected bytes: 1867/2000
+Context reduction: 1018 bytes
+PASS pre-change budget plan precedes implementation
+PASS ledger exactly matches deterministic selector output and real source costs
+PASS every context source has a selected or skipped reason
+PASS focused selector history and evidence-only follow-up verified
+exit code: 0

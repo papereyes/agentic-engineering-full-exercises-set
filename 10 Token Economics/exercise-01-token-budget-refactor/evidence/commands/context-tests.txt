@@ -1,0 +1,14 @@
+Command: npm run evidence:verify
+Repository commit: ef46d735d3bdcbe197040ed9687e22cb6528406b
+Started at: 2026-09-10T10:00:54.478Z
+Finished at: 2026-09-10T10:00:54.809Z
+Duration ms: 331
+
+PASS protected session adapter contract
+PASS real UTF-8 source costs match the protected catalog
+PASS mandatory, current, relevant, priority, and expansion rules
+PASS deterministic tight-budget and mandatory-overflow behavior
+PASS every source has an auditable selected or skipped reason
+PASS learner deterministic authority, budget, stale, duplicate, and question selection cases
+
+exit code: 0

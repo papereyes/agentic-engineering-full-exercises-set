@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "planSha": "417060e7cd813a45febbb5904ce3b3e8036948f2",
+  "sourceSha": "ef46d735d3bdcbe197040ed9687e22cb6528406b",
+  "task": {
+    "summary": "Refactor the current session adapter without changing its public behavior.",
+    "tags": ["adapter", "session"],
+    "questionTags": ["errors"]
+  },
+  "maximumBytes": 2000,
+  "result": {
+    "selected": [
+      {
+        "id": "repository-rules",
+        "path": "docs/context-sources/AGENTS.md",
+        "bytes": 489,
+        "tags": ["mandatory"],
+        "authority": "current",
+        "priority": 1000,
+        "mandatory": true,
+        "reason": "mandatory"
+      },
+      {
+        "id": "current-adapter-contract",
+        "path": "docs/context-sources/current-adapter-contract.md",
+        "bytes": 838,
+        "tags": ["adapter", "session", "api"],
+        "authority": "current",
+        "priority": 100,
+        "reason": "task"
+      },
+      {
+        "id": "current-error-contract",
+        "path": "docs/context-sources/current-error-contract.md",
+        "bytes": 540,
+        "tags": ["errors", "validation"],
+        "authority": "current",
+        "priority": 90,
+        "reason": "question"
+      }
+    ],
+    "skipped": [
+      {
+        "id": "legacy-migration-notes",
+        "path": "docs/context-sources/legacy-migration-notes.md",
+        "bytes": 412,
+        "tags": ["adapter", "session", "api"],
+        "authority": "stale",
+        "priority": 200,
+        "reason": "stale"
+      },
+      {
+        "id": "ui-style-guide",
+        "path": "docs/context-sources/ui-style-guide.md",
+        "bytes": 310,
+        "tags": ["ui", "css", "accessibility"],
+        "authority": "current",
+        "priority": 80,
+        "reason": "irrelevant"
+      },
+      {
+        "id": "audit-retention",
+        "path": "docs/context-sources/audit-retention.md",
+        "bytes": 296,
+        "tags": ["audit", "retention", "privacy"],
+        "authority": "current",
+        "priority": 70,
+        "reason": "irrelevant"
+      }
+    ],
+    "totalBytes": 1867,
+    "remainingBytes": 133,
+    "maximumBytes": 2000,
+    "requestedTags": ["adapter", "errors", "session"],
+    "unresolvedTags": []
+  }
+}

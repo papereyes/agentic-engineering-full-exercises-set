@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "requestedBehavior": "Map only the export action to ds-secondary while preserving all legacy action variants.",
+  "maximumFiles": 2,
+  "maximumChangedLines": 30,
+  "allowedSourceFiles": [
+    "minimal-diff-app/src/migration/exportButton.mjs",
+    "minimal-diff-app/tests/export-button.test.mjs"
+  ],
+  "excludedPaths": [
+    "src/migration/actionButtons.mjs",
+    "src/components",
+    "src/styles.css",
+    "package.json",
+    "package-lock.json"
+  ],
+  "baselineCommand": "npm run test:migration",
+  "implementation": "Add the export-specific branch to the existing variant helper and one focused regression test covering export, checkout, delete, and unknown actions.",
+  "scopeExpansion": "none",
+  "rationale": "The existing shared helper is already the single behavior boundary. A one-branch change fixes export without restructuring consumers or changing legacy behavior."
+}

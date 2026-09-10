@@ -1,0 +1,17 @@
+Create a first-attempt notification dependency diagram and fallback sequence from the stale graph snapshot below:
+
+- `diagrams/notification-dependencies.mmd`
+- `diagrams/fallback-sequence.mmd`
+
+Use only the supplied snapshot as the architectural authority. Do not inspect application source, tests, the current routing contract, graph tools, protected contracts, or existing diagrams. Do not fix application code, ask follow-up questions, or retry. Write only the two requested Mermaid files.
+
+# Stale Notification Graph Snapshot
+
+- `selectNotificationRoute -> pushAvailable`
+- `selectNotificationRoute -> smsAvailable`
+- `selectNotificationRoute -> immediateRoute` for every available provider
+- `smsAvailable -> hasSmsConsent`
+- `emailAvailable -> hasSmsConsent`
+- `immediateRoute -> durableQueueRoute` after provider failure
+
+Some entries are accurate, some assign responsibility to the wrong component, and some do not exist in source.

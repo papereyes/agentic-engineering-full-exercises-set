@@ -8,7 +8,7 @@ Tools and permissions: Codex CLI shell and workspace-write filesystem access
 Time limit: 75 minutes
 Human hints: 0
 Retries: 0
-Patch SHA-256: 49b03002d710ccea3772b645e62c7673ffe2ab5635ec25de80b081d473632f80
+Patch SHA-256: 8e1d1a280879a53a8c0010698d839fdbfcdf78ff6652f3e4cb48ee6ea224f354
 
 ## Input and isolation
 

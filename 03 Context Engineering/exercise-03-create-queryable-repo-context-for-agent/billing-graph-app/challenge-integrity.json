@@ -5,7 +5,7 @@
     "../../../scripts/run-vite-build.mjs": "b7901ed4f770e6537e80f864392c8c1de841b5c97fa8993246c5df7a86d5d415",
     "../../../scripts/verify-protected-inputs.mjs": "d99346d9a84651bcb654d07d1b5d131d39d5f3b703ee9614db4eafc86cb4d96c",
     "../../../scripts/verify-submission-contract.mjs": "5c34aab86313eeb825b19c6ceabc8afbaf65cce3d1cde325bdea7a9739e23ca4",
-    "../README.md": "c283fb1f1a4f0e78a1d25f5cf7dcdc1c7144f496e292f3fe5832dd938bbf9e93",
+    "../README.md": "b6f590b445b350df6dc840b16b2affe460535a8edda51f02acf74a75e23a533c",
     "../docs/current-metric-contract.md": "b95bec46ee644998883b909e5abf55aa8e72f725709b01c9e2adb764c9c44112",
     "../docs/evidence-template.md": "a4da9ccb6332507dc99bcb5328c06e1ff157e0a67e552912b8805b0c5f13b7c9",
     "../docs/graph-extract.md": "28a60a32d18227daf3072bcc6912636e00b093781eac7e508679ca21265727ee",

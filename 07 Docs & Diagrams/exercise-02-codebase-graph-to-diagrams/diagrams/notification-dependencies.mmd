@@ -1,0 +1,17 @@
+flowchart LR
+    selectNotificationRoute["selectNotificationRoute"]
+    pushAvailable["pushAvailable"]
+    smsAvailable["smsAvailable"]
+    emailAvailable["emailAvailable"]
+    hasSmsConsent["hasSmsConsent"]
+    immediateRoute["immediateRoute"]
+    durableQueueRoute["durableQueueRoute"]
+
+    selectNotificationRoute --> pushAvailable
+    selectNotificationRoute --> smsAvailable
+    selectNotificationRoute -->|available push provider| immediateRoute
+    selectNotificationRoute -->|available SMS provider| immediateRoute
+    selectNotificationRoute -->|available email provider| immediateRoute
+    smsAvailable --> hasSmsConsent
+    emailAvailable --> hasSmsConsent
+    immediateRoute -->|provider failure| durableQueueRoute

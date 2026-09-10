@@ -1,0 +1,20 @@
+sequenceDiagram
+    participant S as selectNotificationRoute
+    participant P as pushAvailable
+    participant M as smsAvailable
+    participant E as emailAvailable
+    participant C as hasSmsConsent
+    participant I as immediateRoute
+    participant D as durableQueueRoute
+
+    S->>P: Check push availability
+    S->>M: Check SMS availability
+    M->>C: Check SMS consent
+    E->>C: Check SMS consent
+
+    loop Every available provider
+        S->>I: Select immediate route
+        alt Provider failure
+            I->>D: Select durable queue route
+        end
+    end

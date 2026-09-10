@@ -1,0 +1,17 @@
+Create a first-attempt visualization of the payment feature described by the legacy brief below:
+
+- `diagrams/payment-architecture.mmd`
+- `diagrams/webhook-reconciliation-state.mmd`
+- `diagrams/payment-sequence.mmd`
+- `diagrams/payment-data.mmd`
+
+Use only the supplied legacy brief as behavioral authority. Do not inspect application source, tests, incident reports, diagram contracts, protected contracts, or existing diagrams. Do not fix application code, ask follow-up questions, or retry. Write only the four requested Mermaid files.
+
+# Legacy Payment Feature Brief
+
+1. The checkout application calls an external gateway service directly.
+2. A declined authorization is retried once before the order fails.
+3. Any correctly signed capture webhook belongs to a known payment.
+4. Every valid capture delivery creates a new ledger entry.
+
+The feature includes checkout, payment orchestration, authorization, capture, ledger records, receipt status, and webhook reconciliation.

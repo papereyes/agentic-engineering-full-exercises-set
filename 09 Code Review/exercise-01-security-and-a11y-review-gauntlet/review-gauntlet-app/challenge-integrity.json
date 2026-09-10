@@ -27,7 +27,7 @@
     "scripts/run-protected-semgrep.mjs": "d9e5c27d96038975cdac3ede56d8610caa90f7d03f1a671bb88e25842d2b5101",
     "scripts/test-review-verifier.mjs": "1bbf0fd8e4a67e1ad77d712d4d8f7f1f7539320e8e38de2bd332deb35e7e31a8",
     "scripts/verify-review-submission.mjs": "537f9266a5aa1227f243efff0aae89e21bd71f27c90cf5fa26c5c82d3b03a067",
-    "semgrep.yml": "cbc26d9ca6122aa3a3fc12c5ea35120f6e07d577f23f5d91b563a9e7b5183eea",
+    "semgrep.yml": "7402ae53a9a41220f1cc7ba377499049721ff7e0a7b52ae65f1e6179c2814a1b",
     "src/App.tsx": "0bda1df47b87944966d5f2a5d499a54bd4cc79db030c97af74b822c33bc40388",
     "src/components/ActivityFeed.tsx": "24f0c79d26291c2367cad3e73fa390c00b2db01c37ba9020442c5e53ee8041f7",
     "src/components/DetailPanel.tsx": "e1e871a5c88d4417367482d0ef9f5e1dd38e6a08974b290f735ad70599d091df",

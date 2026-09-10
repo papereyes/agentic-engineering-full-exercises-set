@@ -4,4 +4,4 @@ rules:
     severity: WARNING
     languages: [typescript]
     patterns:
-      - pattern: <... dangerouslySetInnerHTML={{ __html: $SOURCE }} ... />
+      - pattern: '<$TAG ... dangerouslySetInnerHTML={{ __html: $SOURCE }} ... />'

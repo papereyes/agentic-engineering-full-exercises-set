@@ -1,0 +1,139 @@
+{
+  "version": "1.174.0",
+  "results": [
+    {
+      "check_id": "tmp.agentic-exercise-09-01-after.09CodeReview.exercise-01-security-and-a11y-review-gauntlet.review-gauntlet-app.react-dangerous-html-review",
+      "path": "src/components/ActionComposer.tsx",
+      "start": {
+        "line": 31,
+        "col": 7,
+        "offset": 1005
+      },
+      "end": {
+        "line": 31,
+        "col": 84,
+        "offset": 1082
+      },
+      "extra": {
+        "message": "Review HTML source before using dangerouslySetInnerHTML",
+        "metadata": {},
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "tmp.agentic-exercise-09-01-after.09CodeReview.exercise-01-security-and-a11y-review-gauntlet.review-gauntlet-app.react-dangerous-html-review",
+      "path": "src/components/SafeAnnouncement.tsx",
+      "start": {
+        "line": 4,
+        "col": 10,
+        "offset": 138
+      },
+      "end": {
+        "line": 4,
+        "col": 77,
+        "offset": 205
+      },
+      "extra": {
+        "message": "Review HTML source before using dangerouslySetInnerHTML",
+        "metadata": {},
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    }
+  ],
+  "errors": [],
+  "paths": {
+    "scanned": [
+      "src/components/ActionComposer.tsx",
+      "src/components/ActivityFeed.tsx",
+      "src/components/DetailPanel.tsx",
+      "src/components/EvidencePanel.tsx",
+      "src/components/FilterBar.tsx",
+      "src/components/MetricStrip.tsx",
+      "src/components/PageHeader.tsx",
+      "src/components/SafeAnnouncement.tsx",
+      "src/components/ScenarioBoard.tsx",
+      "src/components/WorkQueue.tsx"
+    ]
+  },
+  "time": {
+    "rules": [],
+    "rules_parse_time": 0.0004000663757324219,
+    "profiling_times": {
+      "config_time": 0.11015677452087402,
+      "core_time": 0.21190142631530762,
+      "ignores_time": 0.00005793571472167969,
+      "total_time": 0.3302123546600342
+    },
+    "parsing_time": {
+      "total_time": 0,
+      "per_file_time": {
+        "mean": 0,
+        "std_dev": 0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0,
+        "count_ratio": 0
+      },
+      "very_slow_files": []
+    },
+    "scanning_time": {
+      "total_time": 0.023787260055541992,
+      "per_file_time": {
+        "mean": 0.0023787260055541993,
+        "std_dev": 0.0000197338998810892
+      },
+      "very_slow_stats": {
+        "time_ratio": 0,
+        "count_ratio": 0
+      },
+      "very_slow_files": []
+    },
+    "matching_time": {
+      "total_time": 0,
+      "per_file_and_rule_time": {
+        "mean": 0,
+        "std_dev": 0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0,
+        "count_ratio": 0
+      },
+      "very_slow_rules_on_files": []
+    },
+    "tainting_time": {
+      "total_time": 0,
+      "per_def_and_rule_time": {
+        "mean": 0,
+        "std_dev": 0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0,
+        "count_ratio": 0
+      },
+      "very_slow_rules_on_defs": []
+    },
+    "fixpoint_timeouts": [],
+    "prefiltering": {
+      "project_level_time": 0,
+      "file_level_time": 0,
+      "rules_with_project_prefilters_ratio": 0,
+      "rules_with_file_prefilters_ratio": 1,
+      "rules_selected_ratio": 0.2,
+      "rules_matched_ratio": 0.2
+    },
+    "targets": [],
+    "total_bytes": 0,
+    "max_memory_bytes": 113469696
+  },
+  "engine_requested": "OSS",
+  "skipped_rules": [],
+  "profiling_results": []
+}

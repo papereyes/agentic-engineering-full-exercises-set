@@ -1,0 +1,9 @@
+Executed: npm run review:verify
+Source SHA: 039b4443dc2850aebc9e3f7b5ac9fc525feaed6f
+PASS exact protected base-to-head review range verified
+PASS every reported finding uses an exact protected-source code anchor and reproducible evidence
+PASS every Semgrep result is triaged without exposing an answer key or requiring exact line numbers
+PASS learner regression proof is bound to every confirmed finding
+PASS Git source binding and evidence-only follow-up history verified
+
+The verification was run from review-gauntlet-app after the protected fixture, Semgrep replay, and before/after regression replay had all completed successfully.

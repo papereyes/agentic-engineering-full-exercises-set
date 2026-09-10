@@ -1,0 +1,3 @@
+Executed: npm run review:semgrep:check
+PASS Semgrep 1.174.0 result details reproduced from protected head 9283dc1e539af1ab72c6b618c197d7870d1217dc.
+The replay returned exactly two triaged paths: src/components/ActionComposer.tsx and src/components/SafeAnnouncement.tsx.

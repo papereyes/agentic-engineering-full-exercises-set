@@ -22,7 +22,7 @@ try {
   const adapterSha = sha256("one adapter implementation");
 
   for (const [caseIndex, item] of cases.entries()) {
-    const anchors = [...item.acceptanceRules.map((_, index) => `changedCall${index + 1}()`), "neutralLine()"];
+    const anchors = [...item.acceptanceRules.map((_, index) => index === 0 ? `changedCall${index + 1}("quoted")` : `changedCall${index + 1}()`), "neutralLine()"];
     const diffPath = path.resolve(app, "eval", item.diff);
     const diff = `diff --git a/src/example.ts b/src/example.ts\n--- a/src/example.ts\n+++ b/src/example.ts\n@@ -1 +1,${anchors.length} @@\n${anchors.map((anchor) => `+${anchor}`).join("\n")}\n`;
     fs.writeFileSync(diffPath, diff);

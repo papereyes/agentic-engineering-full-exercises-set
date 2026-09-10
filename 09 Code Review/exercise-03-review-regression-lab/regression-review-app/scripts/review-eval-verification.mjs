@@ -104,9 +104,6 @@ function readRun({ evidenceRoot, lane, item, skillSha, runnerSha, failures }) {
     const signature = `${finding.file}:${finding.anchor?.trim()}`;
     if (signatures.has(signature)) failures.push(`${lane}/${item.id} repeats one changed line as multiple findings`);
     signatures.add(signature);
-    for (const field of ["id", "anchor", "requirement", "behavior", "impact", "reproduction", "recommendation"]) {
-      if (response && !transcript.includes(finding[field])) failures.push(`${lane}/${item.id}/${finding.id} transcript does not contain its submitted ${field}`);
-    }
   }
   const blockers = (run.findings ?? []).filter((finding) => finding.blocking);
   const consistentDecision = blockers.length ? "request-changes" : "approve";

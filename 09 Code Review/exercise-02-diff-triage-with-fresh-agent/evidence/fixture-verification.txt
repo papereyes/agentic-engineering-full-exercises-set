@@ -1,0 +1,5 @@
+Command: node scripts/verify-review-fixture.mjs
+Fresh-review fixture verified: review-base..review-head
+Base SHA: 8911d1064f74bdc7f0d4e88a2e57f122830ef6f2
+Head SHA: 8242a84ad8735d1a9c5051e1916d86c1c95101af
+exit code: 0

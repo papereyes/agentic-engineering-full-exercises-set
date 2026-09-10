@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "baseSha": "8911d1064f74bdc7f0d4e88a2e57f122830ef6f2",
+  "headSha": "8242a84ad8735d1a9c5051e1916d86c1c95101af",
+  "comparison": "review-base..review-head",
+  "sourceSha": "67529fe614240f569c16a0f2ee03e848442b3d43",
+  "reviewerSessionId": "codex-fresh-01a08a36-79c4-77b2",
+  "mergeDecision": "request-changes",
+  "findings": [
+    {
+      "id": "CACHE-LIFECYCLE",
+      "classification": "blocker",
+      "severity": "high",
+      "decision": "fix",
+      "confidence": "high",
+      "file": "src/App.tsx",
+      "anchor": "clearCachedWorkflowItems();",
+      "scenario": "A reviewer saves a changed owner, status, or note and then changes a visible priority or status filter before reloading the workspace.",
+      "impact": "The filter effect deletes the workflow cache, while saveAction never refreshes it, so legitimate saved work disappears on the next load.",
+      "evidence": "The protected component reproduction observes cache deletion on mount and filter changes; the service reproduction observes the saved draft missing from the next fetch.",
+      "fix": "Remove cache deletion from filtering and persist an updated copied item list when saveAction succeeds.",
+      "testPath": "tests/cache-regressions.test.ts"
+    },
+    {
+      "id": "CACHE-VALIDATION",
+      "classification": "blocker",
+      "severity": "high",
+      "decision": "fix",
+      "confidence": "high",
+      "file": "src/services/workflowApi.ts",
+      "anchor": "return JSON.parse(cached) as WorkItem[];",
+      "scenario": "Browser storage contains malformed JSON or a valid JSON object instead of the WorkItem array required by the application.",
+      "impact": "Parsing rejects or returns the wrong runtime shape, preventing the workspace from reaching a usable loaded state.",
+      "evidence": "Focused tests reproduce both the thrown parse and non-array result; a type assertion provides no runtime validation.",
+      "fix": "Parse defensively, accept only arrays, remove invalid cache data, and fall back to source items.",
+      "testPath": "tests/cache-regressions.test.ts"
+    },
+    {
+      "id": "CACHE-MUTATION",
+      "classification": "blocker",
+      "severity": "medium",
+      "decision": "fix",
+      "confidence": "high",
+      "file": "src/services/workflowApi.ts",
+      "anchor": "return workItems.sort((left, right) => left.dueInDays - right.dueInDays);",
+      "scenario": "The default fetch path sorts results when no cached workflow state exists and another consumer later reads the imported fixture.",
+      "impact": "Array.sort mutates the shared fixture, so later sessions and consumers observe reordered source data.",
+      "evidence": "The regression reverses the fixture, fetches defaults, and proves the vulnerable implementation changes the fixture order in place.",
+      "fix": "Sort a shallow copy of the imported fixture and return that ordered copy.",
+      "testPath": "tests/cache-regressions.test.ts"
+    },
+    {
+      "id": "CACHE-EVIDENCE",
+      "classification": "blocker",
+      "severity": "high",
+      "decision": "fix",
+      "confidence": "high",
+      "file": "src/services/workflowApi.ts",
+      "anchor": "window.localStorage.setItem(\"workflow-items\", JSON.stringify(workItems));",
+      "scenario": "A reviewer collects evidence while browser storage contains workflow edits that differ from the source fixture.",
+      "impact": "A read-only operation overwrites saved workflow state with stale fixture values and silently loses user changes.",
+      "evidence": "The focused reproduction places a sentinel cache value, calls collectEvidence, and observes the vulnerable code replace it.",
+      "fix": "Remove the storage write so evidence collection only returns evidence.",
+      "testPath": "tests/cache-regressions.test.ts"
+    },
+    {
+      "id": "CLAIM-MUTATION",
+      "classification": "unsupported",
+      "severity": "info",
+      "decision": "dismiss",
+      "confidence": "high",
+      "file": "src/services/workflowApi.ts",
+      "anchor": "export async function saveAction(itemId: string, draft: ActionDraft): Promise<WorkItem> {",
+      "scenario": "The seeded claim alleges that calling saveAction permanently mutates the imported workItems fixture.",
+      "impact": "Accepting the unsupported claim would direct remediation at the wrong boundary and obscure the real persistence defect.",
+      "evidence": "Inspection and reproduction show saveAction returns a newly spread object and performs no assignment, splice, or property write against workItems.",
+      "dismissalProof": "The inspected saveAction path finds an item and returns a new object; fixture values remain byte-for-byte unchanged after a save reproduction."
+    }
+  ]
+}

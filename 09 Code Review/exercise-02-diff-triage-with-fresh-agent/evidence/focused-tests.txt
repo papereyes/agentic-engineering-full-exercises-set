@@ -1,0 +1,11 @@
+Command: npm run test:cache
+Source SHA: 67529fe614240f569c16a0f2ee03e848442b3d43
+
+PASS src/services/workflowApi.acceptance.test.ts: 4 tests
+PASS scripts/app-cache-behavior.test.tsx: 1 test
+PASS tests/cache-regressions.test.ts: 4 tests
+
+Test Files: 3 passed
+Tests: 9 passed
+The protected filter behavior and all four named learner regressions passed.
+exit code: 0

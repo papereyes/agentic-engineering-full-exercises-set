@@ -1,0 +1,6 @@
+Executed npm run test:regression-proof
+Source SHA: 67529fe614240f569c16a0f2ee03e848442b3d43
+
+PASS 4 confirmed findings each fail on protected head 8242a84ad8735d1a9c5051e1916d86c1c95101af
+PASS the same 4 named regressions pass on the remediation source
+exit code: 0

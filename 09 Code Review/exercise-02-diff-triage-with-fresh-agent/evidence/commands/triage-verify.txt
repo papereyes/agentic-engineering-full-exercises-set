@@ -1,0 +1,10 @@
+Executed npm run triage:verify
+Source SHA: 67529fe614240f569c16a0f2ee03e848442b3d43
+
+PASS fresh reviewer context and exact prompt binding verified
+PASS exact protected base-to-head comparison verified
+PASS supported blockers and the supplied claim are triaged with code anchors and reproduction evidence
+PASS learner regression tests fail on the risky head and pass after remediation
+PASS focused fixes and learner regression tests bound to source SHA
+PASS later history contains evidence only
+exit code: 0

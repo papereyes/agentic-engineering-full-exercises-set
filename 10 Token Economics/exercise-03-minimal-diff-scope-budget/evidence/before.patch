@@ -1,0 +1,36 @@
+diff --git a/10 Token Economics/exercise-03-minimal-diff-scope-budget/minimal-diff-app/src/migration/exportButton.mjs b/10 Token Economics/exercise-03-minimal-diff-scope-budget/minimal-diff-app/src/migration/exportButton.mjs
+index aa82d112694bcafc234023a6d51dd94e8094354a..a8e14928d9b125d71494c91b5489a9e19af4b0b8 100644
+--- a/10 Token Economics/exercise-03-minimal-diff-scope-budget/minimal-diff-app/src/migration/exportButton.mjs	
++++ b/10 Token Economics/exercise-03-minimal-diff-scope-budget/minimal-diff-app/src/migration/exportButton.mjs	
+@@ -1,5 +1,6 @@
+ /** Seeded implementation: export has not yet crossed the design-system boundary. */
+ export function buttonVariantFor(action) {
++  if (action === "export") return "ds-secondary";
+   if (action === "delete") return "legacy-danger";
+   return "legacy-primary";
+ }
+diff --git a/10 Token Economics/exercise-03-minimal-diff-scope-budget/minimal-diff-app/tests/export-button.test.mjs b/10 Token Economics/exercise-03-minimal-diff-scope-budget/minimal-diff-app/tests/export-button.test.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..d2874da281cbd261833ea7f110d4ed5cbd4d6db9
+--- /dev/null
++++ b/10 Token Economics/exercise-03-minimal-diff-scope-budget/minimal-diff-app/tests/export-button.test.mjs	
+@@ -0,0 +1,19 @@
++import assert from "node:assert/strict";
++import { checkoutButton, deleteButton, exportButton, legacyActionButton } from "../src/migration/actionButtons.mjs";
++import { buttonVariantFor } from "../src/migration/exportButton.mjs";
++
++assert.equal(buttonVariantFor("export"), "ds-secondary", "export uses the design-system secondary variant");
++assert.equal(buttonVariantFor("checkout"), "legacy-primary", "checkout keeps the legacy primary variant");
++assert.equal(buttonVariantFor("delete"), "legacy-danger", "delete keeps the legacy danger variant");
++assert.equal(buttonVariantFor("unknown"), "legacy-primary", "unknown actions keep the legacy fallback");
++
++assert.deepEqual(exportButton(), { action: "export", label: "Export report", variant: "ds-secondary" });
++assert.deepEqual(checkoutButton(), { action: "checkout", label: "Continue to checkout", variant: "legacy-primary" });
++assert.deepEqual(deleteButton(), { action: "delete", label: "Delete record", variant: "legacy-danger" });
++assert.deepEqual(legacyActionButton("unknown", "Unknown"), {
++  action: "unknown",
++  label: "Unknown",
++  variant: "legacy-primary",
++});
++
++console.log("PASS export button variant regression coverage");

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "planSha": "0eb79817aa66011beb9994512060563980bb46b8",
+  "sourceSha": "6a8d21e82609e71729b5a7d2a5d75d6ce6780635",
+  "planned": {
+    "files": 2,
+    "changedLines": 30,
+    "allowedSourceFiles": [
+      "minimal-diff-app/src/migration/exportButton.mjs",
+      "minimal-diff-app/tests/export-button.test.mjs"
+    ],
+    "excludedPaths": [
+      "src/migration/actionButtons.mjs",
+      "src/components",
+      "src/styles.css",
+      "package.json",
+      "package-lock.json"
+    ]
+  },
+  "actual": {
+    "files": 2,
+    "additions": 18,
+    "deletions": 0,
+    "changedLines": 18,
+    "paths": [
+      "minimal-diff-app/src/migration/exportButton.mjs",
+      "minimal-diff-app/tests/export-button.test.mjs"
+    ]
+  },
+  "remaining": {
+    "files": 0,
+    "changedLines": 12
+  },
+  "verificationCommands": [
+    "npm run test:migration",
+    "npm run typecheck",
+    "npm run format",
+    "npm run test:before",
+    "npm run test:scope"
+  ],
+  "scopeExpansion": "none",
+  "lineJustification": "Not required because the source commit uses 18 changed lines, below the 20-line justification threshold."
+}

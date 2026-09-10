@@ -1,0 +1,8 @@
+Plan SHA: 0eb79817aa66011beb9994512060563980bb46b8
+Source SHA: 6a8d21e82609e71729b5a7d2a5d75d6ce6780635
+Actual scope: 2 files, 18 changed lines
+PASS scope budget was committed before implementation
+PASS actual Git numstat matches the final ledger and protected budget
+PASS source commit contains only export helper and learner test
+PASS later history contains evidence only
+exit code: 0

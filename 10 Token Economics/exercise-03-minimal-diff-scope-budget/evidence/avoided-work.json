@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "sourceSha": "6a8d21e82609e71729b5a7d2a5d75d6ce6780635",
+  "entries": [
+    {
+      "path": "minimal-diff-app/src/migration/actionButtons.mjs",
+      "temptation": "Rewrite every action-button consumer around a new shared design-system abstraction.",
+      "reason": "The existing consumers already delegate variant choice to the helper, so changing call sites would enlarge review scope without changing the requested export result.",
+      "status": "unchanged"
+    },
+    {
+      "path": "minimal-diff-app/src/components",
+      "temptation": "Propagate the migration through shared React presentation components for consistency.",
+      "reason": "The task is a migration-boundary behavior change and the protected consumers prove no shared component edit is necessary for correctness.",
+      "status": "unchanged"
+    },
+    {
+      "path": "minimal-diff-app/src/styles.css",
+      "temptation": "Add or rename CSS rules to visually represent the new design-system variant.",
+      "reason": "The requested contract concerns the returned variant token; styling is outside the declared source budget and is not needed by the behavior checks.",
+      "status": "unchanged"
+    },
+    {
+      "path": "minimal-diff-app/package.json",
+      "temptation": "Introduce a design-system dependency or add scripts for a one-branch migration.",
+      "reason": "The repository already models the target token as a string and its installed test tooling is sufficient, so a dependency change would add cost without value.",
+      "status": "unchanged"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+diff --git a/10 Token Economics/exercise-02-risk-based-model-routing-cost-gate/model-routing-app/src/routing/routeTask.mjs b/10 Token Economics/exercise-02-risk-based-model-routing-cost-gate/model-routing-app/src/routing/routeTask.mjs
+index 08e61a514fead2da503cf81867eac979afc16187..a4a12cf0def4f285666533d5ef131dc3397c2426 100644
+--- a/10 Token Economics/exercise-02-risk-based-model-routing-cost-gate/model-routing-app/src/routing/routeTask.mjs	
++++ b/10 Token Economics/exercise-02-risk-based-model-routing-cost-gate/model-routing-app/src/routing/routeTask.mjs	
+@@ -1,4 +1,9 @@
+-/** Seeded cost policy: every task is sent to the most expensive tier. */
+-export function routeTask(_task) {
+-  return "reasoning";
++export function routeTask(task = {}) {
++  const { risk, ambiguity, scope } = task;
++  if (!["low", "medium", "high"].includes(risk) || !["low", "medium", "high"].includes(ambiguity) || !["one-file", "three-files", "mechanical", "cross-boundary"].includes(scope)) return "clarify";
++  if (ambiguity === "high") return "clarify";
++  if (risk === "high" || scope === "cross-boundary") return "reasoning";
++  if (risk === "medium" || scope === "three-files") return "balanced";
++  if (risk === "low" && ambiguity === "low" && ["one-file", "mechanical"].includes(scope)) return "fast";
++  return "clarify";
+ }
+diff --git a/10 Token Economics/exercise-02-risk-based-model-routing-cost-gate/model-routing-app/tests/route-task.test.mjs b/10 Token Economics/exercise-02-risk-based-model-routing-cost-gate/model-routing-app/tests/route-task.test.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..30e1df25b153acab8306d23e38e3d986b8be1d5e
+--- /dev/null
++++ b/10 Token Economics/exercise-02-risk-based-model-routing-cost-gate/model-routing-app/tests/route-task.test.mjs	
+@@ -0,0 +1,32 @@
++import assert from "node:assert/strict";
++import { routeTask } from "../src/routing/routeTask.mjs";
++
++const cases = [
++  [{ risk: "unknown", ambiguity: "low", scope: "one-file" }, "clarify"],
++  [{ risk: "low", ambiguity: "high", scope: "one-file" }, "clarify"],
++  [{ risk: "low", ambiguity: "low", scope: "unknown" }, "clarify"],
++  [{ risk: "high", ambiguity: "low", scope: "one-file" }, "reasoning"],
++  [{ risk: "low", ambiguity: "low", scope: "cross-boundary" }, "reasoning"],
++  [{ risk: "medium", ambiguity: "low", scope: "one-file" }, "balanced"],
++  [{ risk: "low", ambiguity: "low", scope: "three-files" }, "balanced"],
++  [{ risk: "low", ambiguity: "low", scope: "one-file" }, "fast"],
++  [{ risk: "low", ambiguity: "low", scope: "mechanical" }, "fast"],
++];
++
++for (const [task, expected] of cases) {
++  assert.equal(routeTask({ id: `renamed-case-${expected}`, ...task }), expected, `${JSON.stringify(task)} must route to ${expected}`);
++}
++
++for (const task of [
++  { ambiguity: "low", scope: "one-file" },
++  { risk: "low", ambiguity: "low" },
++  { risk: "urgent", ambiguity: "low", scope: "one-file" },
++  { risk: "low", ambiguity: "medium", scope: "one-file" },
++  { risk: "low", ambiguity: "low", scope: "six-files" },
++]) assert.equal(routeTask(task), "clarify", `unknown or incomplete field combination must clarify: ${JSON.stringify(task)}`);
++
++assert.equal(routeTask({ id: "authorization-boundary", risk: "low", ambiguity: "low", scope: "one-file" }), "fast", "case IDs must not influence routing");
++assert.equal(routeTask({ risk: "high", ambiguity: "high", scope: "cross-boundary" }), "clarify", "clarification must win the tie-break over reasoning");
++assert.equal(routeTask({ risk: "medium", ambiguity: "low", scope: "cross-boundary" }), "reasoning", "cross-boundary scope must win over balanced");
++
++console.log("PASS learner route precedence and field-validation matrix");

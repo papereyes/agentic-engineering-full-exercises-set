@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "packId": "routing-measurements-v1",
+  "packSha256": "a854cf95252f93d1338ed1223ab6d9ae926c4d812a6951b18f5856c4a62ebe9e",
+  "runsPerLane": 3,
+  "scorerVersion": 1,
+  "sourceSha": "60ba3f0e70855e325c43e36c646062ca2edadcf0",
+  "sourceKind": "deterministic-benchmark-fixture",
+  "provenance": "36 protected offline synthetic observations; not production-provider telemetry",
+  "conditions": "Every eligible case-tier lane uses three recorded runs and protected pricing."
+}

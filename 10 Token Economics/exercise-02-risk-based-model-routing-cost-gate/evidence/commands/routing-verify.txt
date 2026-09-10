@@ -1,0 +1,7 @@
+Source SHA: 60ba3f0e70855e325c43e36c646062ca2edadcf0
+PASS 36 protected offline measurements and response hashes verified
+PASS selected-route quality, safety, latency, and variance recomputed
+PASS single-retry escalation costs reconcile to protected tokens and pricing
+PASS policy savings beat the all-reasoning baseline threshold
+PASS focused router source and evidence-only history verified without an API key
+exit code: 0

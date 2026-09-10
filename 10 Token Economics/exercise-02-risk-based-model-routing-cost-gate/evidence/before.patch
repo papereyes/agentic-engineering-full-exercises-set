@@ -1,0 +1,15 @@
+diff --git a/10 Token Economics/exercise-02-risk-based-model-routing-cost-gate/model-routing-app/tests/all-reasoning-baseline.test.mjs b/10 Token Economics/exercise-02-risk-based-model-routing-cost-gate/model-routing-app/tests/all-reasoning-baseline.test.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..29af8aa5bde77da223c55bd2b61c7eec5b1a2cf8
+--- /dev/null
++++ b/10 Token Economics/exercise-02-risk-based-model-routing-cost-gate/model-routing-app/tests/all-reasoning-baseline.test.mjs	
+@@ -0,0 +1,9 @@
++import assert from "node:assert/strict";
++import fs from "node:fs";
++import path from "node:path";
++import { routeTask } from "../src/routing/routeTask.mjs";
++
++const cases = JSON.parse(fs.readFileSync(path.resolve(import.meta.dirname, "..", "..", "evals", "routing-cases.json"), "utf8"));
++for (const task of cases) assert.equal(routeTask(task), "reasoning");
++
++console.log(`PASS all-reasoning baseline routes ${cases.length} protected cases to reasoning`);

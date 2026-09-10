@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 3,
+  "lane": "before",
+  "caseId": "security-regression",
+  "sessionId": "codex-before-0ade532a-21ac-4b55-abdb-6e7320135521",
+  "agent": "Codex",
+  "model": "gpt-5.6-sol",
+  "tools": "read-only",
+  "permissions": "read-only",
+  "promptSha256": "d6ec2e59a5c75aeb1382c4f64043d5ebea3cf42720f39a8bfb5e897de568342c",
+  "promptPath": "prompts/before/security-regression.md",
+  "startedAt": "2026-09-10T08:59:38.430Z",
+  "durationMs": 37869,
+  "timeLimitMinutes": 9,
+  "sourceSha": "5c099d27fa4c530dee5a76190aff64e6975f7441",
+  "diffSha256": "a27c7948209137b5fc0633eaeb0e7305a17f1275ba75518985afeee5465d3fd6",
+  "transcriptPath": "transcripts/before-security-regression.json",
+  "transcriptSha256": "d8319a98df077a8a960ce970539ce2a36ec1cdf2e048d1c3c6a157c4b6d61c60",
+  "skillSha256": null,
+  "runNonce": "487fbd81-3605-4358-9a3d-51009e334a63",
+  "runnerSha256": "8b612cb4ac227704b0b05e4b8179926dc378ce76b817a5d822e11011e62cbaae",
+  "adapterSha256": "2f442cda98505c4d2e1f5d0914504d3cce4e75bb20adc81b4d11f97b03cd32ff",
+  "runnerCommand": "node exercise-09-review-adapter.mjs",
+  "runnerExitCode": 0,
+  "mergeDecision": "request-changes",
+  "findings": [
+    {
+      "id": "SESSION-001",
+      "severity": "high",
+      "file": "src/session.ts",
+      "anchor": "return JSON.parse(window.localStorage.getItem(\"session\")!);",
+      "requirement": "Stored sessions tolerate missing or damaged browser state.",
+      "behavior": "Malformed session data is passed directly to JSON.parse, which throws a SyntaxError instead of recovering safely. The non-null assertion only affects TypeScript and provides no runtime protection.",
+      "impact": "A damaged localStorage session can prevent session loading and crash the application path that calls loadSession.",
+      "reproduction": "Set localStorage.session to an invalid JSON value such as \"{\" and call loadSession(); JSON.parse throws a SyntaxError.",
+      "recommendation": "Restore a defensive session parser or wrap storage access and parsing in error handling that returns a safe empty/default session for missing, inaccessible, or malformed state.",
+      "blocking": true
+    },
+    {
+      "id": "AUTH-001",
+      "severity": "critical",
+      "file": "src/session.ts",
+      "anchor": "return request.note.toLowerCase().includes(\"approved\");",
+      "requirement": "Approval requires an approver role and complete evidence; note text is not authorization.",
+      "behavior": "Approval is granted solely when the request note contains the word \"approved\"; the user's approver role and request.evidenceComplete are no longer checked.",
+      "impact": "Any user can authorize a request with incomplete evidence by placing \"approved\" anywhere in its note, creating a direct authorization bypass.",
+      "reproduction": "Call canApprove({ roles: [] }, { evidenceComplete: false, note: \"not approved yet\" }); it returns true despite the missing approver role and incomplete evidence.",
+      "recommendation": "Require both user.roles.includes(\"approver\") and request.evidenceComplete; treat request.note only as descriptive text and never as an authorization signal.",
+      "blocking": true
+    }
+  ]
+}

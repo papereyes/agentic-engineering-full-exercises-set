@@ -1,0 +1,7 @@
+Executed: npm run eval:verify
+PASS six runner-captured review sessions use matching conditions and unique nonces
+PASS every run is bound to its prompt, protected diff, source commit, and transcript
+PASS skill contains no case answers and requires no API key
+Decision: adopt
+
+The verification covers three Baseline and three Skill-assisted sessions. Each prompt and transcript is stored with its run metadata, and the scorecard is recomputed from those nonce-bound artifacts rather than accepted as a standalone claim.

@@ -1,0 +1,9 @@
+# Baseline run index
+
+Starting commit: `5c099d27fa4c530dee5a76190aff64e6975f7441`
+
+- `historical-regression`: session `codex-before-68727c5b-f5d5-4e71-a248-583903e4d82d`, nonce `d7b3aac4-a37f-457c-bbe0-f07ce66c79d0`
+- `security-regression`: session `codex-before-0ade532a-21ac-4b55-abdb-6e7320135521`, nonce `487fbd81-3605-4358-9a3d-51009e334a63`
+- `clean-control`: session `codex-before-4dd8f39f-f6e8-4bed-be0a-8bebffb52bc7`, nonce `c1a274fd-f8cc-41e5-8815-6484be57d59b`
+
+All three runs used the same Codex adapter, model, permissions, and protected evaluation cases.

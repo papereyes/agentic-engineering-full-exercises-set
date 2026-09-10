@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 3,
+  "skillSha256": "2e732a45d2cc1992d32debf26e697c8b1ac6a8ba9017484574c883136ddd1ad1",
+  "runnerSha256": "8b612cb4ac227704b0b05e4b8179926dc378ce76b817a5d822e11011e62cbaae",
+  "metrics": {
+    "before": {
+      "historicalCoverage": 1,
+      "securityCoverage": 1,
+      "precision": 0.7777777777777778,
+      "cleanControl": 1,
+      "acceptanceRules": 7,
+      "supportedBlockingFindings": 7,
+      "totalBlockingFindings": 9
+    },
+    "after": {
+      "historicalCoverage": 1,
+      "securityCoverage": 1,
+      "precision": 1,
+      "cleanControl": 1,
+      "acceptanceRules": 7,
+      "supportedBlockingFindings": 7,
+      "totalBlockingFindings": 7
+    }
+  },
+  "gates": {
+    "historicalCoverage": true,
+    "securityCoverage": true,
+    "precision": true,
+    "cleanControl": true,
+    "noRegression": true
+  },
+  "decision": "adopt"
+}

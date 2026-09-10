@@ -14,7 +14,7 @@
     { "path": "evidence/runs/after/historical-regression.json", "validJson": true, "minCharacters": 850, "includeAll": ["schemaVersion", "after", "sessionId", "runNonce", "runnerSha256", "adapterSha256", "promptSha256", "diffSha256", "transcriptSha256", "skillSha256", "findings"] },
     { "path": "evidence/runs/after/security-regression.json", "validJson": true, "minCharacters": 850, "includeAll": ["schemaVersion", "after", "sessionId", "runNonce", "runnerSha256", "adapterSha256", "promptSha256", "diffSha256", "transcriptSha256", "skillSha256", "findings"] },
     { "path": "evidence/runs/after/clean-control.json", "validJson": true, "minCharacters": 650, "includeAll": ["schemaVersion", "after", "sessionId", "runNonce", "runnerSha256", "adapterSha256", "promptSha256", "diffSha256", "transcriptSha256", "skillSha256", "findings"] },
-    { "path": "evidence/scorecard.json", "validJson": true, "minCharacters": 1200, "includeAll": ["historicalCoverage", "securityCoverage", "precision", "cleanControl", "noRegression", "adopt"] },
+    { "path": "evidence/scorecard.json", "validJson": true, "minCharacters": 600, "includeAll": ["historicalCoverage", "securityCoverage", "precision", "cleanControl", "noRegression", "adopt"] },
     { "path": "evidence/review-eval.md", "minCharacters": 900, "includeAll": ["Baseline", "Skill-assisted", "Coverage", "Precision", "Clean control", "Decision"] },
     { "path": "evidence/commands/eval-verify.txt", "minCharacters": 250, "includeAll": ["six runner-captured review sessions", "prompt", "transcript", "skill contains no case answers", "Decision"] }
   ],

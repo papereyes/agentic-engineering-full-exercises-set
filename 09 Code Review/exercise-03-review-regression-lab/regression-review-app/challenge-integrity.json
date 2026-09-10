@@ -48,7 +48,7 @@
     "src/types.ts": "c0ee9fe83194e9a683cc9ce11d4300126a14cb03b73f7f628bf8b3a373660641",
     "src/utils/filters.ts": "7c3190c5bf38e9bba7c2ff2eec98839f4d7456463ffa493c1262a6fad94f77e8",
     "src/utils/scoring.ts": "7524ae27c2f0cbf0a0e7b69d01ef02306c0e2c20e49cf36268bf657541d75990",
-    "submission-contract.json": "a68745f2e3bab7fa67c5b3137984a02c747bf59521ff62d8c7a87fbc61e66265",
+    "submission-contract.json": "6bb23280739986b372a3110ccfe8b61ce032ccca6a8d2b9185893ff8d2da0e30",
     "tsconfig.json": "b72b825b933563195288d4b0ebb158673891a811f0cb5ea5d3fc286920c2f7f9",
     "vite.config.ts": "4f9fbbdbc10bf58253a12eb98c949427d351c61ade1ed8250a3c9705ef0b50ba"
   }

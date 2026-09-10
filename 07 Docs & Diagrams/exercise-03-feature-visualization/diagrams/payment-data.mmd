@@ -1,0 +1,47 @@
+erDiagram
+    ORDER ||--|| PAYMENT : has
+    PAYMENT ||--|{ AUTHORIZATION_ATTEMPT : records
+    PAYMENT ||--|| RECEIPT_STATUS : reports
+    PAYMENT ||--o{ CAPTURE_DELIVERY : receives
+    CAPTURE_DELIVERY ||--o| VALID_CAPTURE_DELIVERY : is_valid_when_signed
+    PAYMENT ||--o{ VALID_CAPTURE_DELIVERY : owns
+    VALID_CAPTURE_DELIVERY ||--|| LEDGER_ENTRY : creates_new
+
+    ORDER {
+        string order_id PK
+        string status
+    }
+
+    PAYMENT {
+        string payment_id PK
+        string order_id FK
+        string status
+    }
+
+    AUTHORIZATION_ATTEMPT {
+        string attempt_id PK
+        string payment_id FK
+        int attempt_number "1 or retry 2"
+        string outcome "approved or declined"
+    }
+
+    CAPTURE_DELIVERY {
+        string delivery_id PK
+        boolean signature_valid
+    }
+
+    VALID_CAPTURE_DELIVERY {
+        string delivery_id PK
+        string payment_id FK "always known"
+    }
+
+    LEDGER_ENTRY {
+        string ledger_entry_id PK
+        string delivery_id FK
+        string payment_id FK
+    }
+
+    RECEIPT_STATUS {
+        string payment_id PK_FK
+        string status
+    }

@@ -1,0 +1,25 @@
+flowchart LR
+    Customer([Customer])
+
+    subgraph Checkout[Checkout application]
+        UI[Checkout]
+        Orchestrator[Payment orchestration]
+        Reconciler[Webhook reconciliation]
+        Receipt[Receipt status]
+
+        UI --> Orchestrator
+        Reconciler --> Receipt
+    end
+
+    Gateway[External payment gateway]
+    Payments[(Payments)]
+    Ledger[(Ledger records)]
+
+    Customer --> UI
+    Orchestrator -->|Authorize and capture directly| Gateway
+    Orchestrator -->|Create and update| Payments
+    Orchestrator -->|Set authorization status| Receipt
+    Gateway -->|Capture webhook| Reconciler
+    Reconciler -->|Resolve correctly signed webhook| Payments
+    Reconciler -->|New entry for every valid delivery| Ledger
+

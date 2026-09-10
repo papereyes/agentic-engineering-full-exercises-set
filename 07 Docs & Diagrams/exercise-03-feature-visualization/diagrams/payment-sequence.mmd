@@ -1,0 +1,44 @@
+sequenceDiagram
+    actor Customer
+    participant Checkout as Checkout application
+    participant Gateway as External gateway
+    participant Payments as Payment records
+    participant Ledger as Ledger records
+    participant Receipt as Receipt status
+
+    Customer->>Checkout: Submit checkout
+    Checkout->>Payments: Create payment
+    Checkout->>Gateway: Authorize (attempt 1)
+
+    alt Authorization approved
+        Gateway-->>Checkout: Approved
+        Checkout->>Receipt: Set authorized
+    else Authorization declined
+        Gateway-->>Checkout: Declined
+        Checkout->>Gateway: Authorize (single retry)
+        alt Retry approved
+            Gateway-->>Checkout: Approved
+            Checkout->>Receipt: Set authorized
+        else Retry declined
+            Gateway-->>Checkout: Declined
+            Checkout->>Receipt: Set failed
+            Checkout-->>Customer: Order failed
+        end
+    end
+
+    opt Authorization approved on either attempt
+        Checkout->>Gateway: Capture directly
+        Gateway-->>Checkout: Capture response
+        Gateway->>Checkout: Capture webhook delivery
+        Checkout->>Checkout: Verify signature
+        alt Signature valid
+            Checkout->>Payments: Resolve known payment
+            Checkout->>Ledger: Create new ledger entry
+            Checkout->>Receipt: Set captured
+        else Signature invalid
+            Checkout-->>Gateway: Reject delivery
+        end
+    end
+
+    Note over Gateway,Ledger: Every valid capture delivery creates a new ledger entry.
+

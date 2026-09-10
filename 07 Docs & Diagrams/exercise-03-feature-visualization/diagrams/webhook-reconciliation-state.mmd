@@ -1,0 +1,26 @@
+stateDiagram-v2
+    [*] --> CaptureDeliveryReceived
+    CaptureDeliveryReceived --> SignatureCheck
+
+    state SignatureCheck <<choice>>
+    SignatureCheck --> Rejected: signature invalid
+    SignatureCheck --> KnownPayment: signature valid
+
+    note right of KnownPayment
+        Every correctly signed capture
+        webhook belongs to a known payment.
+    end note
+
+    KnownPayment --> LedgerEntryCreated: create a new ledger entry
+    LedgerEntryCreated --> ReceiptCaptured: update receipt status
+    ReceiptCaptured --> Reconciled
+
+    note right of LedgerEntryCreated
+        Each valid delivery takes this path,
+        including another delivery of the
+        same capture.
+    end note
+
+    Rejected --> [*]
+    Reconciled --> [*]
+

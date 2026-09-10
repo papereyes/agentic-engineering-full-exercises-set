@@ -1,0 +1,21 @@
+flowchart LR
+  CheckoutUI["Checkout UI<br/>starts checkout"]
+  Orchestrator["Payment Orchestrator<br/>coordinates authorization and capture"]
+  GatewayAdapter["Gateway Adapter<br/>authorizes, captures, and builds events"]
+  LedgerRecord["Ledger Records<br/>authorization, capture, or failure"]
+  ReceiptRecord["Receipt Status<br/>sent or blocked"]
+  WebhookHandler["Webhook Handler<br/>validates and reconciles capture events"]
+
+  %% EDGE: VIS-01
+  CheckoutUI --> Orchestrator
+  %% EDGE: VIS-02
+  %% EDGE: VIS-03
+  Orchestrator --> GatewayAdapter
+  %% EDGE: VIS-04
+  Orchestrator --> LedgerRecord
+  %% EDGE: VIS-05
+  Orchestrator --> ReceiptRecord
+  %% EDGE: VIS-06
+  GatewayAdapter --> WebhookHandler
+  %% EDGE: VIS-07
+  WebhookHandler --> LedgerRecord

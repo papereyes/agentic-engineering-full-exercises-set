@@ -1,0 +1,64 @@
+erDiagram
+  CUSTOMER {
+    string id PK
+    string email
+    string billingCountry
+  }
+  CHECKOUT_ORDER {
+    string id PK
+    string customerId FK
+    string status
+  }
+  ORDER_ITEM {
+    string sku
+    int quantity
+    int unitPriceCents
+  }
+  PAYMENT_METHOD {
+    string id PK
+    string type
+    int riskScore
+  }
+  PAYMENT_INTENT {
+    string id PK
+    string orderId FK
+    string paymentMethodId FK
+    string status
+  }
+  GATEWAY_TRANSACTION {
+    string id PK
+    string intentId FK
+    string gatewayReference
+    string status
+  }
+  LEDGER_ENTRY {
+    string id PK
+    string paymentIntentId FK
+    string type
+    string status
+  }
+  WEBHOOK_EVENT {
+    string id PK
+    string gatewayReference FK
+    string type
+    boolean handled
+  }
+  RECEIPT {
+    string id PK
+    string orderId FK
+    string status
+  }
+
+  CUSTOMER ||--o{ CHECKOUT_ORDER : places
+  CHECKOUT_ORDER ||--|{ ORDER_ITEM : contains
+  %% EDGE: VIS-12
+  CHECKOUT_ORDER ||--|| PAYMENT_INTENT : funds
+  PAYMENT_METHOD ||--o{ PAYMENT_INTENT : authorizes
+  %% EDGE: VIS-13
+  PAYMENT_INTENT ||--o{ GATEWAY_TRANSACTION : produces
+  %% EDGE: VIS-14
+  PAYMENT_INTENT ||--o{ LEDGER_ENTRY : posts
+  %% EDGE: VIS-15
+  GATEWAY_TRANSACTION ||--o{ WEBHOOK_EVENT : emits
+  %% EDGE: VIS-16
+  CHECKOUT_ORDER ||--|| RECEIPT : receives

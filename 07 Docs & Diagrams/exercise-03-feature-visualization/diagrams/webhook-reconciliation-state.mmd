@@ -1,0 +1,27 @@
+stateDiagram-v2
+  state "Webhook received" as received
+  state "Verify signature before state access" as signature_check
+  state "Verify known gateway reference" as reference_check
+  state "Check handled event IDs" as duplicate_check
+  state "Rejected without mutation" as rejected
+  state "One capture ledger record written" as ledger_recorded
+  state "Return already-handled without mutation" as already_handled
+  state "Event marked handled; return recorded" as handled
+
+  [*] --> received
+  received --> signature_check
+  %% EDGE: VIS-08
+  signature_check --> rejected : invalid signature
+  signature_check --> reference_check : valid signature
+  %% EDGE: VIS-09
+  reference_check --> rejected : unknown reference
+  reference_check --> duplicate_check : known reference
+  %% EDGE: VIS-10
+  duplicate_check --> already_handled : duplicate event already handled
+  %% EDGE: VIS-07
+  duplicate_check --> ledger_recorded : new event
+  %% EDGE: VIS-11
+  ledger_recorded --> handled
+  rejected --> [*]
+  already_handled --> [*]
+  handled --> [*]

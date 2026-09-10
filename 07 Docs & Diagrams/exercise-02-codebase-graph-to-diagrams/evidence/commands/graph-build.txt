@@ -2,7 +2,7 @@
 > notification-mesh-app@0.1.0 graph:build
 > node ./scripts/build-code-graph.mjs
 
-Source SHA: 51ae528924fe8ef4bd3d6ccffbf0154d56c3f2e5
+Source SHA: 4e67c53f59cd0f9f67739407aa42dd83a2fb92f9
 Graph: artifacts/code-graph.json
 Nodes: 11
 Edges: 9

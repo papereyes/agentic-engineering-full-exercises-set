@@ -1,6 +1,6 @@
 # Verification
 
-- Source SHA: `51ae528924fe8ef4bd3d6ccffbf0154d56c3f2e5` contains the routing fix and both final diagrams.
+- Source SHA: `4e67c53f59cd0f9f67739407aa42dd83a2fb92f9` contains the routing fix, final diagrams, and source-verified design document.
 - Graph regeneration: the supplied builder reproduced the committed graph and all six required calls.
 - Mermaid parser: both dependency and sequence diagrams parse successfully.
 - Semantic edge: DEP-01 through DEP-06 match the generated graph and required diagram messages.

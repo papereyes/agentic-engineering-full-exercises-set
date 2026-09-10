@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_sha": "e9d154e1530baac49ff7e173ffc4c1003dfc4331",
+  "source_sha": "4808b8b6da7d9adbd6070501cc290671115579eb",
   "diagrams": {
     "architecture": {
       "path": "diagrams/payment-architecture.mmd",
@@ -26,7 +26,7 @@
   "evidence": {
     "traceability": {
       "path": "evidence/traceability.json",
-      "sha256": "233af9bfbd43effdb92c4dc1df1a334d95fb8c83db499264a64c8f112a4f36cb"
+      "sha256": "6348242450d1e59e9dd695e02ea69c0d61ff6eb83ee6f1045cda3d3bf6d4a9ce"
     },
     "contradictions": {
       "path": "evidence/brief-contradictions.md",
@@ -38,13 +38,13 @@
       "command": "npm run payment:trace",
       "exit_code": 0,
       "output_path": "evidence/commands/payment-trace.txt",
-      "output_sha256": "ed228d61b3be67bcc1b6d3581a3f4df887889116a8f914c4d4831fc1412542d3"
+      "output_sha256": "26e68bae6005d8131a3633108e2c53b245ca764bd7743d93fde4c7da670ba91d"
     },
     "diagram_parse": {
       "command": "npm run diagrams:parse",
       "exit_code": 0,
       "output_path": "evidence/commands/diagram-parse.txt",
-      "output_sha256": "ccb32f69e387e3069b2cebbd3cd2ab7fd2e80ac06c01b52bf3eb83ea44674a46"
+      "output_sha256": "490196eb8d842aca1ec5fb87543ae2fd7d0c320abcbe71806a86a48eeaaf778d"
     }
   }
 }

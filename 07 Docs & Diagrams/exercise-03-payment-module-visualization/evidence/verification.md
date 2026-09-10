@@ -1,6 +1,6 @@
 # Verification
 
-- Source SHA: `e9d154e1530baac49ff7e173ffc4c1003dfc4331` contains the reconciliation fix and all four diagrams.
+- Source SHA: `4808b8b6da7d9adbd6070501cc290671115579eb` contains the reconciliation fix and all four diagrams at the owner-renamed path.
 - Feature test: four checkout scenarios and five webhook cases pass, including unknown references and duplicate delivery.
 - Mermaid parser: architecture, state, sequence, and data diagrams all parse successfully.
 - Semantic diagram: required dependencies, transitions, interactions, entities, and cardinalities pass the supplied verifier.

@@ -44,10 +44,10 @@ transforming...
 ✓ 36 modules transformed.
 rendering chunks...
 computing gzip size...
-../../../../exercise-vite-build-ojXaTE/dist/index.html                   0.42 kB │ gzip:  0.28 kB
-../../../../exercise-vite-build-ojXaTE/dist/assets/index-DdS6lGJU.css    3.14 kB │ gzip:  1.20 kB
-../../../../exercise-vite-build-ojXaTE/dist/assets/index-RG18iaWp.js   207.64 kB │ gzip: 63.97 kB
-✓ built in 843ms
+../../../../exercise-vite-build-kkb0tm/dist/index.html                   0.42 kB │ gzip:  0.28 kB
+../../../../exercise-vite-build-kkb0tm/dist/assets/index-DdS6lGJU.css    3.14 kB │ gzip:  1.20 kB
+../../../../exercise-vite-build-kkb0tm/dist/assets/index-RG18iaWp.js   207.64 kB │ gzip: 63.97 kB
+✓ built in 861ms
 
 > workflow-reconstruction-app@0.1.0 verify:implementation
 > npm run workflow:trace && npm run diagrams:parse
@@ -56,7 +56,7 @@ computing gzip size...
 > workflow-reconstruction-app@0.1.0 workflow:trace
 > node ./scripts/trace-workflow.mjs
 
-Source SHA: f18f451109b241b8da2206286505342c0143de2c
+Source SHA: f56eb27988c7a4765b9c21c88ea7907e70060060
 {
   "normal": {
     "states": [
@@ -117,7 +117,7 @@ PASS: normal approval, high-risk security review, provisioning failure, and roll
 > workflow-reconstruction-app@0.1.0 diagrams:parse
 > node ./scripts/parse-diagrams.mjs
 
-Source SHA: f18f451109b241b8da2206286505342c0143de2c
+Source SHA: f56eb27988c7a4765b9c21c88ea7907e70060060
 PASS: diagrams/access-state.mmd parsed as stateDiagram
 PASS: diagrams/access-approval-sequence.mmd parsed as sequence
 PASS: diagrams/access-failure-sequence.mmd parsed as sequence

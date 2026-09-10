@@ -2,7 +2,7 @@
 > workflow-reconstruction-app@0.1.0 workflow:trace
 > node ./scripts/trace-workflow.mjs
 
-Source SHA: be9cd7d13699fa352c745582694f9b652506a8ed
+Source SHA: f56eb27988c7a4765b9c21c88ea7907e70060060
 {
   "normal": {
     "states": [

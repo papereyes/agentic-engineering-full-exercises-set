@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_sha": "be9cd7d13699fa352c745582694f9b652506a8ed",
+  "source_sha": "f56eb27988c7a4765b9c21c88ea7907e70060060",
   "diagrams": [
     {
       "id": "state",
@@ -24,7 +24,7 @@
   "artifacts": {
     "traceability": {
       "path": "evidence/traceability.json",
-      "sha256": "40a7fd7f878fd3a887e57859a9e02a2c6e8aabd1e5ba83b3920ee9dfd0a5c4fd"
+      "sha256": "d1f34ac73cf705dcea2c8d3114e21e65af72927f9b9755dd4b7440c41f581d30"
     },
     "contradictions": {
       "path": "evidence/contradictions.md",
@@ -36,13 +36,13 @@
       "command": "npm run workflow:trace",
       "exit_code": 0,
       "output_path": "evidence/commands/workflow-trace.txt",
-      "output_sha256": "163598c899245fb671ce7e5ecf47af153639c696faf9229d0a4e2842c338c5a4"
+      "output_sha256": "7be05eb9e973b5e6f7613a8224c929311cfc538955f2f92010cefcfd6e8fe92e"
     },
     "diagram_parse": {
       "command": "npm run diagrams:parse",
       "exit_code": 0,
       "output_path": "evidence/commands/diagram-parse.txt",
-      "output_sha256": "2ee6f6c63aaa3278547c787fb3538bc153d149c4a3199955637761d8c02256b2"
+      "output_sha256": "179e2fd14b6590d6ef4cdb7b188d35dff93d3164edf35f13bdcddc59d82764bc"
     }
   }
 }

@@ -1,6 +1,6 @@
 # Verification
 
-- Source SHA: `be9cd7d13699fa352c745582694f9b652506a8ed`
+- Source SHA: `f56eb27988c7a4765b9c21c88ea7907e70060060`
 - Mermaid parser: all three diagram files parsed with the required diagram types.
 - Semantic verifier: all ten implemented state transitions, required marker placements, actors, conditions, and sequences are represented.
 - Scenario trace: normal, high-risk, provisioning-failure, rollback-request, and rollback-completion paths matched implementation.

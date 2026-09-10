@@ -1,0 +1,11 @@
+flowchart LR
+  ChannelRouter["Channel Router<br/>selectNotificationRoute"]
+  ProviderStatus["Provider Status<br/>pushAvailable, smsAvailable, emailAvailable"]
+  ConsentPolicy["Consent Policy<br/>hasSmsConsent"]
+  ImmediateRoute["Immediate Route<br/>immediateRoute"]
+  DurableQueue["Durable Queue<br/>durableQueueRoute"]
+
+  ChannelRouter -->|checks availability| ProviderStatus
+  ChannelRouter -->|checks SMS consent| ConsentPolicy
+  ChannelRouter -->|selects one channel| ImmediateRoute
+  ChannelRouter -->|enqueues fallback| DurableQueue

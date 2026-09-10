@@ -1,0 +1,40 @@
+sequenceDiagram
+  actor Client
+  participant ChannelRouter
+  participant ProviderStatus
+  participant ConsentPolicy
+  participant RouteResult
+
+  rect rgb(235, 245, 255)
+    Note over Client,RouteResult: Case 1: SMS not consented, email selected
+    Client->>ChannelRouter: Select notification route
+    %% EDGE: DEP-01
+    ChannelRouter->>ProviderStatus: Check pushAvailable
+    ProviderStatus-->>ChannelRouter: Push unavailable
+    %% EDGE: DEP-02
+    ChannelRouter->>ProviderStatus: Check smsAvailable
+    ProviderStatus-->>ChannelRouter: SMS available
+    %% EDGE: DEP-03
+    ChannelRouter->>ConsentPolicy: Check hasSmsConsent
+    ConsentPolicy-->>ChannelRouter: SMS not consented
+    %% EDGE: DEP-04
+    ChannelRouter->>ProviderStatus: Check emailAvailable
+    ProviderStatus-->>ChannelRouter: Email available
+    %% EDGE: DEP-05
+    ChannelRouter->>RouteResult: Email selected via immediateRoute
+    RouteResult-->>Client: Immediate email route
+  end
+
+  rect rgb(255, 245, 235)
+    Note over Client,RouteResult: Case 2: SMS not permitted, email unavailable
+    Client->>ChannelRouter: Select notification route
+    ChannelRouter->>ProviderStatus: Check pushAvailable
+    ProviderStatus-->>ChannelRouter: Push unavailable
+    ChannelRouter->>ProviderStatus: Check smsAvailable
+    ProviderStatus-->>ChannelRouter: SMS unavailable, so SMS not permitted
+    ChannelRouter->>ProviderStatus: Check emailAvailable
+    ProviderStatus-->>ChannelRouter: Email unavailable
+    %% EDGE: DEP-06
+    ChannelRouter->>RouteResult: Durable queue selected via durableQueueRoute
+    RouteResult-->>Client: Durable queued route
+  end

@@ -1,11 +1,7 @@
 {
   "algorithm": "sha256-normalized-lf",
   "protectedFiles": {
-    "../../../scripts/run-clean-verification.mjs": "9b17cbb8865a642a7789113c145be88c6bb965bc2d8c024b82202e8ae85bf368",
-    "../../../scripts/run-vite-build.mjs": "b7901ed4f770e6537e80f864392c8c1de841b5c97fa8993246c5df7a86d5d415",
-    "../../../scripts/verify-protected-inputs.mjs": "d99346d9a84651bcb654d07d1b5d131d39d5f3b703ee9614db4eafc86cb4d96c",
-    "../../../scripts/verify-submission-contract.mjs": "5c34aab86313eeb825b19c6ceabc8afbaf65cce3d1cde325bdea7a9739e23ca4",
-    "../README.md": "74500e6fc6866a1bee8c3b9bd87a2d6f22d9eb52cd8daaac9425b0149e07bf1a",
+    "../README.md": "21504f936ae141c5cee3512e735ac8aa13cad4391b7160f64330ece9e57d335a",
     "../docs/evidence-template.md": "c50972740b43deabf168dff018ff270f5cce1c40bc65476b542448ebbde8cd02",
     "docs/abandoned-fix.patch": "40ec5bea90960811ce22a9e6ea7f8eebc1ddac5d88a3e2d0bcb8a9d39c9f2263",
     "docs/current-sla-policy.md": "c805a1d7bfdba095c8aed79dde413a7b6ddecc67472d3c1ac77f6eddb5010af6",

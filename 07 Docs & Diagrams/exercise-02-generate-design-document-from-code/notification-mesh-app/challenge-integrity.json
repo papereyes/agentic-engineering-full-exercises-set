@@ -5,7 +5,7 @@
     "../../../scripts/run-vite-build.mjs": "b7901ed4f770e6537e80f864392c8c1de841b5c97fa8993246c5df7a86d5d415",
     "../../../scripts/verify-protected-inputs.mjs": "d99346d9a84651bcb654d07d1b5d131d39d5f3b703ee9614db4eafc86cb4d96c",
     "../../../scripts/verify-submission-contract.mjs": "5c34aab86313eeb825b19c6ceabc8afbaf65cce3d1cde325bdea7a9739e23ca4",
-    "../README.md": "9b7358aaa367661ecf46de03ee7e8f29dd13a98c27654c68bea954be0f75369d",
+    "../README.md": "a15c864926e21c4457b7652f535e4847a2fb5e84dc162b00b3ad3d97b0d125ba",
     "../docs/current-routing-contract.md": "6456a34bb9781dbc2d21eedda836b42f41b3b71868e19b82334a39fce9d76d0b",
     "../docs/evidence-template.md": "fd68cc46d90b5abab465c769c63dd6efc0ad961c7c2a6ed69b118206bb055374",
     "../docs/graph-contract.md": "48619e957f69682a14729331c448c87cfe72e6cc07afccb7ba727816938c9f9f",

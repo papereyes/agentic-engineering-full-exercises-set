@@ -5,7 +5,7 @@
     "../../../scripts/run-vite-build.mjs": "b7901ed4f770e6537e80f864392c8c1de841b5c97fa8993246c5df7a86d5d415",
     "../../../scripts/verify-protected-inputs.mjs": "d99346d9a84651bcb654d07d1b5d131d39d5f3b703ee9614db4eafc86cb4d96c",
     "../../../scripts/verify-submission-contract.mjs": "5c34aab86313eeb825b19c6ceabc8afbaf65cce3d1cde325bdea7a9739e23ca4",
-    "../README.md": "15d232a0954806fd417e87eaa83cb00eca394d75727ec646a4ae9c1eff107e01",
+    "../README.md": "5887398b5d0fb67edccab3aa3caf4d0fc696cdc411cfba85bbf46e8557a06b59",
     "../docs/current-access-policy.md": "6b35d7b794589f6ecc90d852a968b622ed671e4f626263b16b360ad5fcd3bc3b",
     "../docs/evidence-template.md": "964176f8afde2b96d31c90445be0093aa9ec13233fd9a1b9f43fa4069c74c7fc",
     "../docs/legacy-rollout-notes.md": "ed9161ddc46095aef74d591ce8acad9fe6dd61c6df8ea88cc0c2ab88a60de562",

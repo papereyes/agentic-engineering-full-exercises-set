@@ -1,0 +1,10 @@
+Complete the source-led implementation portion of Exercise 7.2.
+
+Read `README.md`, `docs/graph-contract.md`, `docs/current-routing-contract.md`, and the notification source. Before editing, use the supplied graph builder to generate a source graph, query `selectNotificationRoute`, and find its path to `durableQueueRoute`. Treat source and the current routing contract as authoritative, not `docs/graph-snapshot.md`.
+
+Make the minimum routing fix so push remains primary, SMS requires both provider availability and explicit consent, email is next, and the durable queue is used otherwise. The protected routing test has already been observed failing for missing consent enforcement. Then create:
+
+- `diagrams/notification-dependencies.mmd`
+- `diagrams/fallback-sequence.mmd`
+
+Use the exact aliases and DEP-01 through DEP-06 marker placement from the graph contract. Run focused routing and Mermaid checks. Do not edit tests, graph/verifier scripts, contracts, fixtures, protected inputs, or evidence files. A temporary/generated graph may be used for analysis, but final evidence will bind the committed source SHA later. Do not ask follow-up questions or retry.

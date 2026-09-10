@@ -1,0 +1,100 @@
+.../diagrams/fallback-sequence.mmd                   | 20 ++++++++++++++++++++
+ .../diagrams/notification-dependencies.mmd           | 17 +++++++++++++++++
+ 2 files changed, 37 insertions(+)
+
+diff --git a/07 Docs & Diagrams/exercise-02-codebase-graph-to-diagrams/diagrams/fallback-sequence.mmd b/07 Docs & Diagrams/exercise-02-codebase-graph-to-diagrams/diagrams/fallback-sequence.mmd
+new file mode 100644
+index 0000000000000000000000000000000000000000..a2a3e2f7f9d3c3e61acfc53016c2a85716da483c
+--- /dev/null
++++ b/07 Docs & Diagrams/exercise-02-codebase-graph-to-diagrams/diagrams/fallback-sequence.mmd	
+@@ -0,0 +1,20 @@
++sequenceDiagram
++    participant S as selectNotificationRoute
++    participant P as pushAvailable
++    participant M as smsAvailable
++    participant E as emailAvailable
++    participant C as hasSmsConsent
++    participant I as immediateRoute
++    participant D as durableQueueRoute
++
++    S->>P: Check push availability
++    S->>M: Check SMS availability
++    M->>C: Check SMS consent
++    E->>C: Check SMS consent
++
++    loop Every available provider
++        S->>I: Select immediate route
++        alt Provider failure
++            I->>D: Select durable queue route
++        end
++    end
+diff --git a/07 Docs & Diagrams/exercise-02-codebase-graph-to-diagrams/diagrams/notification-dependencies.mmd b/07 Docs & Diagrams/exercise-02-codebase-graph-to-diagrams/diagrams/notification-dependencies.mmd
+new file mode 100644
+index 0000000000000000000000000000000000000000..9fe0e2f50fe6a6bde0cac689918b4da100ffaae2
+--- /dev/null
++++ b/07 Docs & Diagrams/exercise-02-codebase-graph-to-diagrams/diagrams/notification-dependencies.mmd	
+@@ -0,0 +1,17 @@
++flowchart LR
++    selectNotificationRoute["selectNotificationRoute"]
++    pushAvailable["pushAvailable"]
++    smsAvailable["smsAvailable"]
++    emailAvailable["emailAvailable"]
++    hasSmsConsent["hasSmsConsent"]
++    immediateRoute["immediateRoute"]
++    durableQueueRoute["durableQueueRoute"]
++
++    selectNotificationRoute --> pushAvailable
++    selectNotificationRoute --> smsAvailable
++    selectNotificationRoute -->|available push provider| immediateRoute
++    selectNotificationRoute -->|available SMS provider| immediateRoute
++    selectNotificationRoute -->|available email provider| immediateRoute
++    smsAvailable --> hasSmsConsent
++    emailAvailable --> hasSmsConsent
++    immediateRoute -->|provider failure| durableQueueRoute
+
+Changes:
+
+07 Docs & Diagrams/exercise-02-codebase-graph-to-diagrams/diagrams/fallback-sequence.mmd
+  @@ -0,0 +1,20 @@
+  +sequenceDiagram
+  +    participant S as selectNotificationRoute
+  +    participant P as pushAvailable
+  +    participant M as smsAvailable
+  +    participant E as emailAvailable
+  +    participant C as hasSmsConsent
+  +    participant I as immediateRoute
+  +    participant D as durableQueueRoute
+  +
+  +    S->>P: Check push availability
+  +    S->>M: Check SMS availability
+  +    M->>C: Check SMS consent
+  +    E->>C: Check SMS consent
+  +
+  +    loop Every available provider
+  +        S->>I: Select immediate route
+  +        alt Provider failure
+  +            I->>D: Select durable queue route
+  +        end
+  +    end
+  +20 -0
+
+07 Docs & Diagrams/exercise-02-codebase-graph-to-diagrams/diagrams/notification-dependencies.mmd
+  @@ -0,0 +1,17 @@
+  +flowchart LR
+  +    selectNotificationRoute["selectNotificationRoute"]
+  +    pushAvailable["pushAvailable"]
+  +    smsAvailable["smsAvailable"]
+  +    emailAvailable["emailAvailable"]
+  +    hasSmsConsent["hasSmsConsent"]
+  +    immediateRoute["immediateRoute"]
+  +    durableQueueRoute["durableQueueRoute"]
+  +
+  +    selectNotificationRoute --> pushAvailable
+  +    selectNotificationRoute --> smsAvailable
+  +    selectNotificationRoute -->|available push provider| immediateRoute
+  +    selectNotificationRoute -->|available SMS provider| immediateRoute
+  +    selectNotificationRoute -->|available email provider| immediateRoute
+  +    smsAvailable --> hasSmsConsent
+  +    emailAvailable --> hasSmsConsent
+  +    immediateRoute -->|provider failure| durableQueueRoute
+  +17 -0

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "source_sha": "51ae528924fe8ef4bd3d6ccffbf0154d56c3f2e5",
+  "graph": {
+    "path": "artifacts/code-graph.json",
+    "sha256": "5ce0ecd7724736dc266b10f6036bfd3e56e4404a7c27115774d0b0a461bab944"
+  },
+  "diagrams": {
+    "dependency": {
+      "path": "diagrams/notification-dependencies.mmd",
+      "sha256": "68f8dd3deaa7a5ccc15fdab8a5f8a0baccf182872acd1d6b6eefaf9b9013b68d"
+    },
+    "sequence": {
+      "path": "diagrams/fallback-sequence.mmd",
+      "sha256": "bd6f3c00e99382b719a2ff077eaab260175ab13aeb57d98041a23a799c349804"
+    }
+  },
+  "evidence": {
+    "traceability": {
+      "path": "evidence/traceability.json",
+      "sha256": "55b0dc1eb93e4abe04d1b6d9a1ba6732f08b5d6a84dec4cbad10648e604c2dbc"
+    },
+    "stale_claims": {
+      "path": "evidence/stale-claims.md",
+      "sha256": "29be69f45130a1685f35748993a1ac5203e2c053f8e151d2e0e5d74e64ba1eb0"
+    }
+  },
+  "commands": {
+    "graph_build": {
+      "command": "npm run graph:build",
+      "exit_code": 0,
+      "output_path": "evidence/commands/graph-build.txt",
+      "output_sha256": "0954119d9080a2a6a50f33dd6c51c915e18dcaa2a71b3e13bc340a91776dab3c"
+    },
+    "graph_query": {
+      "command": "npm run graph:query -- --symbol selectNotificationRoute",
+      "exit_code": 0,
+      "output_path": "evidence/commands/graph-query.txt",
+      "output_sha256": "b9106bb82bcbe886d66f1adf7b1e8f98e0eb91690503d368bbf127f4116009e0"
+    },
+    "graph_path": {
+      "command": "npm run graph:path -- --from selectNotificationRoute --to durableQueueRoute",
+      "exit_code": 0,
+      "output_path": "evidence/commands/graph-path.txt",
+      "output_sha256": "0ef76aeb135ed55dc2783de8998416c1138c33dc45d1d2ce18e3c1c20c11bf51"
+    }
+  }
+}

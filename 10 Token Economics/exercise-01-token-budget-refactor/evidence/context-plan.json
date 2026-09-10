@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "task": {
+    "summary": "Refactor the current session adapter without changing its public behavior.",
+    "tags": ["adapter", "session"],
+    "questionTags": ["errors"]
+  },
+  "openQuestions": [
+    {
+      "tag": "errors",
+      "question": "Which error class, codes, messages, and validation order are part of the compatibility contract?"
+    }
+  ],
+  "maximumBytes": 2000,
+  "mandatoryIds": ["repository-rules"],
+  "expectedSelectedIds": [
+    "repository-rules",
+    "current-adapter-contract",
+    "current-error-contract"
+  ],
+  "selectionPolicy": "Choose mandatory current authority first, then current sources matching task or question tags by descending priority and stable ID.",
+  "expectedBytes": 1867
+}

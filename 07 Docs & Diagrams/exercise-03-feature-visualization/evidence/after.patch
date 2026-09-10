@@ -1,0 +1,404 @@
+.../diagrams/payment-architecture.mmd              | 21 +++++++
+ .../diagrams/payment-data.mmd                      | 64 ++++++++++++++++++++++
+ .../diagrams/payment-sequence.mmd                  | 53 ++++++++++++++++++
+ .../diagrams/webhook-reconciliation-state.mmd      | 27 +++++++++
+ .../src/payment/webhookReconciler.mjs              |  3 +-
+ 5 files changed, 167 insertions(+), 1 deletion(-)
+
+diff --git a/07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/payment-architecture.mmd b/07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/payment-architecture.mmd
+new file mode 100644
+index 0000000000000000000000000000000000000000..dde5d3679e97276b9938a017eacd2fd4d8d4ae4f
+--- /dev/null
++++ b/07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/payment-architecture.mmd	
+@@ -0,0 +1,21 @@
++flowchart LR
++  CheckoutUI["Checkout UI<br/>starts checkout"]
++  Orchestrator["Payment Orchestrator<br/>coordinates authorization and capture"]
++  GatewayAdapter["Gateway Adapter<br/>authorizes, captures, and builds events"]
++  LedgerRecord["Ledger Records<br/>authorization, capture, or failure"]
++  ReceiptRecord["Receipt Status<br/>sent or blocked"]
++  WebhookHandler["Webhook Handler<br/>validates and reconciles capture events"]
++
++  %% EDGE: VIS-01
++  CheckoutUI --> Orchestrator
++  %% EDGE: VIS-02
++  %% EDGE: VIS-03
++  Orchestrator --> GatewayAdapter
++  %% EDGE: VIS-04
++  Orchestrator --> LedgerRecord
++  %% EDGE: VIS-05
++  Orchestrator --> ReceiptRecord
++  %% EDGE: VIS-06
++  GatewayAdapter --> WebhookHandler
++  %% EDGE: VIS-07
++  WebhookHandler --> LedgerRecord
+diff --git a/07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/payment-data.mmd b/07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/payment-data.mmd
+new file mode 100644
+index 0000000000000000000000000000000000000000..bbf01ed874957617b9b21c2f40a17a1d6cc6b738
+--- /dev/null
++++ b/07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/payment-data.mmd	
+@@ -0,0 +1,64 @@
++erDiagram
++  CUSTOMER {
++    string id PK
++    string email
++    string billingCountry
++  }
++  CHECKOUT_ORDER {
++    string id PK
++    string customerId FK
++    string status
++  }
++  ORDER_ITEM {
++    string sku
++    int quantity
++    int unitPriceCents
++  }
++  PAYMENT_METHOD {
++    string id PK
++    string type
++    int riskScore
++  }
++  PAYMENT_INTENT {
++    string id PK
++    string orderId FK
++    string paymentMethodId FK
++    string status
++  }
++  GATEWAY_TRANSACTION {
++    string id PK
++    string intentId FK
++    string gatewayReference
++    string status
++  }
++  LEDGER_ENTRY {
++    string id PK
++    string paymentIntentId FK
++    string type
++    string status
++  }
++  WEBHOOK_EVENT {
++    string id PK
++    string gatewayReference FK
++    string type
++    boolean handled
++  }
++  RECEIPT {
++    string id PK
++    string orderId FK
++    string status
++  }
++
++  CUSTOMER ||--o{ CHECKOUT_ORDER : places
++  CHECKOUT_ORDER ||--|{ ORDER_ITEM : contains
++  %% EDGE: VIS-12
++  CHECKOUT_ORDER ||--|| PAYMENT_INTENT : funds
++  PAYMENT_METHOD ||--o{ PAYMENT_INTENT : authorizes
++  %% EDGE: VIS-13
++  PAYMENT_INTENT ||--o{ GATEWAY_TRANSACTION : produces
++  %% EDGE: VIS-14
++  PAYMENT_INTENT ||--o{ LEDGER_ENTRY : posts
++  %% EDGE: VIS-15
++  GATEWAY_TRANSACTION ||--o{ WEBHOOK_EVENT : emits
++  %% EDGE: VIS-16
++  CHECKOUT_ORDER ||--|| RECEIPT : receives
+diff --git a/07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/payment-sequence.mmd b/07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/payment-sequence.mmd
+new file mode 100644
+index 0000000000000000000000000000000000000000..1079db8c8abc689ec63d1501ea09ef7efe80dc0f
+--- /dev/null
++++ b/07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/payment-sequence.mmd	
+@@ -0,0 +1,53 @@
++sequenceDiagram
++  actor Shopper
++  participant CheckoutUI
++  participant Orchestrator
++  participant GatewayAdapter
++  participant Ledger
++  participant ReceiptNotifier
++  participant WebhookHandler
++
++  Shopper->>CheckoutUI: Confirm checkout
++  %% EDGE: VIS-01
++  CheckoutUI->>Orchestrator: Create payment intent
++  %% EDGE: VIS-02
++  Orchestrator->>GatewayAdapter: Request authorization
++  GatewayAdapter-->>Orchestrator: Authorization result
++
++  alt Authorization approved
++    %% EDGE: VIS-03
++    Orchestrator->>GatewayAdapter: Capture approved authorization
++    GatewayAdapter-->>Orchestrator: Capture settled
++    %% EDGE: VIS-04
++    Orchestrator->>Ledger: Write authorization and capture ledger records
++    %% EDGE: VIS-05
++    Orchestrator->>ReceiptNotifier: Create sent receipt status
++    %% EDGE: VIS-06
++    GatewayAdapter->>WebhookHandler: Deliver captured webhook event
++  else Authorization declined
++    Orchestrator->>Ledger: Write rejected payment failure record
++    Orchestrator->>ReceiptNotifier: Create blocked receipt status
++  end
++
++  WebhookHandler->>WebhookHandler: Verify signature before state access
++  alt Invalid signature
++    %% EDGE: VIS-08
++    WebhookHandler-->>GatewayAdapter: Reject invalid signature without state access
++  else Valid signature
++    WebhookHandler->>WebhookHandler: Check known gateway reference
++    alt Unknown reference
++      %% EDGE: VIS-09
++      WebhookHandler-->>GatewayAdapter: Reject unknown reference without mutation
++    else Known reference
++      WebhookHandler->>WebhookHandler: Check handled event IDs
++      alt First delivery
++        %% EDGE: VIS-07
++        WebhookHandler->>Ledger: Write one capture ledger record
++        %% EDGE: VIS-11
++        WebhookHandler-->>GatewayAdapter: Mark event handled and return recorded
++      else Duplicate delivery
++        %% EDGE: VIS-10
++        WebhookHandler-->>GatewayAdapter: Return already-handled without mutation
++      end
++    end
++  end
+diff --git a/07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/webhook-reconciliation-state.mmd b/07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/webhook-reconciliation-state.mmd
+new file mode 100644
+index 0000000000000000000000000000000000000000..4351a306de8b97895ff28f7387ba951eed35d00f
+--- /dev/null
++++ b/07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/webhook-reconciliation-state.mmd	
+@@ -0,0 +1,27 @@
++stateDiagram-v2
++  state "Webhook received" as received
++  state "Verify signature before state access" as signature_check
++  state "Verify known gateway reference" as reference_check
++  state "Check handled event IDs" as duplicate_check
++  state "Rejected without mutation" as rejected
++  state "One capture ledger record written" as ledger_recorded
++  state "Return already-handled without mutation" as already_handled
++  state "Event marked handled; return recorded" as handled
++
++  [*] --> received
++  received --> signature_check
++  %% EDGE: VIS-08
++  signature_check --> rejected : invalid signature
++  signature_check --> reference_check : valid signature
++  %% EDGE: VIS-09
++  reference_check --> rejected : unknown reference
++  reference_check --> duplicate_check : known reference
++  %% EDGE: VIS-10
++  duplicate_check --> already_handled : duplicate event already handled
++  %% EDGE: VIS-07
++  duplicate_check --> ledger_recorded : new event
++  %% EDGE: VIS-11
++  ledger_recorded --> handled
++  rejected --> [*]
++  already_handled --> [*]
++  handled --> [*]
+diff --git a/07 Docs & Diagrams/exercise-03-feature-visualization/payment-workflow-app/src/payment/webhookReconciler.mjs b/07 Docs & Diagrams/exercise-03-feature-visualization/payment-workflow-app/src/payment/webhookReconciler.mjs
+index 9aa34fa2d507fda3c086c4dd5eca2c2deb397bb0..d900292e06c543481d0cf8d7a92aac97d2bb86b2 100644
+--- a/07 Docs & Diagrams/exercise-03-feature-visualization/payment-workflow-app/src/payment/webhookReconciler.mjs	
++++ b/07 Docs & Diagrams/exercise-03-feature-visualization/payment-workflow-app/src/payment/webhookReconciler.mjs	
+@@ -1,6 +1,7 @@
+-/** Seeded reconciler: it validates signatures but does not enforce idempotency or reference ownership. */
+ export function reconcileCapturedWebhook(state, event, signature) {
+   if (signature !== `sig_${event.gatewayReference}`) throw new Error("Invalid webhook signature"); // VIS: VIS-08
++  if (!state.knownGatewayReferences.has(event.gatewayReference)) throw new Error("Unknown gateway reference"); // VIS: VIS-09
++  if (state.handledEventIds.has(event.id)) return "already-handled"; // VIS: VIS-10
+   state.ledgerEntries.push({ eventId: event.id, gatewayReference: event.gatewayReference, type: "capture" }); // VIS: VIS-07
+   state.handledEventIds.add(event.id); // VIS: VIS-11
+   return "recorded";
+
+Changes:
+
+07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/payment-architecture.mmd
+  @@ -0,0 +1,21 @@
+  +flowchart LR
+  +  CheckoutUI["Checkout UI<br/>starts checkout"]
+  +  Orchestrator["Payment Orchestrator<br/>coordinates authorization and capture"]
+  +  GatewayAdapter["Gateway Adapter<br/>authorizes, captures, and builds events"]
+  +  LedgerRecord["Ledger Records<br/>authorization, capture, or failure"]
+  +  ReceiptRecord["Receipt Status<br/>sent or blocked"]
+  +  WebhookHandler["Webhook Handler<br/>validates and reconciles capture events"]
+  +
+  +  %% EDGE: VIS-01
+  +  CheckoutUI --> Orchestrator
+  +  %% EDGE: VIS-02
+  +  %% EDGE: VIS-03
+  +  Orchestrator --> GatewayAdapter
+  +  %% EDGE: VIS-04
+  +  Orchestrator --> LedgerRecord
+  +  %% EDGE: VIS-05
+  +  Orchestrator --> ReceiptRecord
+  +  %% EDGE: VIS-06
+  +  GatewayAdapter --> WebhookHandler
+  +  %% EDGE: VIS-07
+  +  WebhookHandler --> LedgerRecord
+  +21 -0
+
+07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/payment-data.mmd
+  @@ -0,0 +1,64 @@
+  +erDiagram
+  +  CUSTOMER {
+  +    string id PK
+  +    string email
+  +    string billingCountry
+  +  }
+  +  CHECKOUT_ORDER {
+  +    string id PK
+  +    string customerId FK
+  +    string status
+  +  }
+  +  ORDER_ITEM {
+  +    string sku
+  +    int quantity
+  +    int unitPriceCents
+  +  }
+  +  PAYMENT_METHOD {
+  +    string id PK
+  +    string type
+  +    int riskScore
+  +  }
+  +  PAYMENT_INTENT {
+  +    string id PK
+  +    string orderId FK
+  +    string paymentMethodId FK
+  +    string status
+  +  }
+  +  GATEWAY_TRANSACTION {
+  +    string id PK
+  +    string intentId FK
+  +    string gatewayReference
+  +    string status
+  +  }
+  +  LEDGER_ENTRY {
+  +    string id PK
+  +    string paymentIntentId FK
+  +    string type
+  +    string status
+  +  }
+  +  WEBHOOK_EVENT {
+  +    string id PK
+  +    string gatewayReference FK
+  +    string type
+  +    boolean handled
+  +  }
+  +  RECEIPT {
+  +    string id PK
+  +    string orderId FK
+  +    string status
+  +  }
+  +
+  +  CUSTOMER ||--o{ CHECKOUT_ORDER : places
+  +  CHECKOUT_ORDER ||--|{ ORDER_ITEM : contains
+  +  %% EDGE: VIS-12
+  +  CHECKOUT_ORDER ||--|| PAYMENT_INTENT : funds
+  +  PAYMENT_METHOD ||--o{ PAYMENT_INTENT : authorizes
+  +  %% EDGE: VIS-13
+  +  PAYMENT_INTENT ||--o{ GATEWAY_TRANSACTION : produces
+  +  %% EDGE: VIS-14
+  +  PAYMENT_INTENT ||--o{ LEDGER_ENTRY : posts
+  +  %% EDGE: VIS-15
+  +  GATEWAY_TRANSACTION ||--o{ WEBHOOK_EVENT : emits
+  +  %% EDGE: VIS-16
+  +  CHECKOUT_ORDER ||--|| RECEIPT : receives
+  +64 -0
+
+07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/payment-sequence.mmd
+  @@ -0,0 +1,53 @@
+  +sequenceDiagram
+  +  actor Shopper
+  +  participant CheckoutUI
+  +  participant Orchestrator
+  +  participant GatewayAdapter
+  +  participant Ledger
+  +  participant ReceiptNotifier
+  +  participant WebhookHandler
+  +
+  +  Shopper->>CheckoutUI: Confirm checkout
+  +  %% EDGE: VIS-01
+  +  CheckoutUI->>Orchestrator: Create payment intent
+  +  %% EDGE: VIS-02
+  +  Orchestrator->>GatewayAdapter: Request authorization
+  +  GatewayAdapter-->>Orchestrator: Authorization result
+  +
+  +  alt Authorization approved
+  +    %% EDGE: VIS-03
+  +    Orchestrator->>GatewayAdapter: Capture approved authorization
+  +    GatewayAdapter-->>Orchestrator: Capture settled
+  +    %% EDGE: VIS-04
+  +    Orchestrator->>Ledger: Write authorization and capture ledger records
+  +    %% EDGE: VIS-05
+  +    Orchestrator->>ReceiptNotifier: Create sent receipt status
+  +    %% EDGE: VIS-06
+  +    GatewayAdapter->>WebhookHandler: Deliver captured webhook event
+  +  else Authorization declined
+  +    Orchestrator->>Ledger: Write rejected payment failure record
+  +    Orchestrator->>ReceiptNotifier: Create blocked receipt status
+  +  end
+  +
+  +  WebhookHandler->>WebhookHandler: Verify signature before state access
+  +  alt Invalid signature
+  +    %% EDGE: VIS-08
+  +    WebhookHandler-->>GatewayAdapter: Reject invalid signature without state access
+  +  else Valid signature
+  +    WebhookHandler->>WebhookHandler: Check known gateway reference
+  +    alt Unknown reference
+  +      %% EDGE: VIS-09
+  +      WebhookHandler-->>GatewayAdapter: Reject unknown reference without mutation
+  +    else Known reference
+  +      WebhookHandler->>WebhookHandler: Check handled event IDs
+  +      alt First delivery
+  +        %% EDGE: VIS-07
+  +        WebhookHandler->>Ledger: Write one capture ledger record
+  +        %% EDGE: VIS-11
+  +        WebhookHandler-->>GatewayAdapter: Mark event handled and return recorded
+  +      else Duplicate delivery
+  +        %% EDGE: VIS-10
+  +        WebhookHandler-->>GatewayAdapter: Return already-handled without mutation
+  +      end
+  +    end
+  +  end
+  +53 -0
+
+07 Docs & Diagrams/exercise-03-feature-visualization/diagrams/webhook-reconciliation-state.mmd
+  @@ -0,0 +1,27 @@
+  +stateDiagram-v2
+  +  state "Webhook received" as received
+  +  state "Verify signature before state access" as signature_check
+  +  state "Verify known gateway reference" as reference_check
+  +  state "Check handled event IDs" as duplicate_check
+  +  state "Rejected without mutation" as rejected
+  +  state "One capture ledger record written" as ledger_recorded
+  +  state "Return already-handled without mutation" as already_handled
+  +  state "Event marked handled; return recorded" as handled
+  +
+  +  [*] --> received
+  +  received --> signature_check
+  +  %% EDGE: VIS-08
+  +  signature_check --> rejected : invalid signature
+  +  signature_check --> reference_check : valid signature
+  +  %% EDGE: VIS-09
+  +  reference_check --> rejected : unknown reference
+  +  reference_check --> duplicate_check : known reference
+  +  %% EDGE: VIS-10
+  +  duplicate_check --> already_handled : duplicate event already handled
+  +  %% EDGE: VIS-07
+  +  duplicate_check --> ledger_recorded : new event
+  +  %% EDGE: VIS-11
+  +  ledger_recorded --> handled
+  +  rejected --> [*]
+  +  already_handled --> [*]
+  +  handled --> [*]
+  +27 -0
+
+07 Docs & Diagrams/exercise-03-feature-visualization/payment-workflow-app/src/payment/webhookReconciler.mjs
+  @@ -1,6 +1,7 @@
+  -/** Seeded reconciler: it validates signatures but does not enforce idempotency or reference ownership. */
+   export function reconcileCapturedWebhook(state, event, signature) {
+     if (signature !== `sig_${event.gatewayReference}`) throw new Error("Invalid webhook signature"); // VIS: VIS-08
+  +  if (!state.knownGatewayReferences.has(event.gatewayReference)) throw new Error("Unknown gateway reference"); // VIS: VIS-09
+  +  if (state.handledEventIds.has(event.id)) return "already-handled"; // VIS: VIS-10
+     state.ledgerEntries.push({ eventId: event.id, gatewayReference: event.gatewayReference, type: "capture" }); // VIS: VIS-07
+     state.handledEventIds.add(event.id); // VIS: VIS-11
+     return "recorded";
+  +2 -1

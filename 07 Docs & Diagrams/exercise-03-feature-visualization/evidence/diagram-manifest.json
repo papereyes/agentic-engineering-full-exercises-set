@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "source_sha": "e9d154e1530baac49ff7e173ffc4c1003dfc4331",
+  "diagrams": {
+    "architecture": {
+      "path": "diagrams/payment-architecture.mmd",
+      "type": "flowchart-v2",
+      "sha256": "935447582c34956f118f741015931567a42630ad518e51f0bd654a819126560c"
+    },
+    "state": {
+      "path": "diagrams/webhook-reconciliation-state.mmd",
+      "type": "stateDiagram",
+      "sha256": "42ae9985a5471ab0af40f8f55f0978119fcf6b811af49ad0963ceabb3bef2f6c"
+    },
+    "sequence": {
+      "path": "diagrams/payment-sequence.mmd",
+      "type": "sequence",
+      "sha256": "7a7d5bca99157dccfa6dfa27a0cec2375c4d019090a07c7b3bd5b8b02be012c1"
+    },
+    "data": {
+      "path": "diagrams/payment-data.mmd",
+      "type": "er",
+      "sha256": "85ae7f2674e09b775876c4b7cc6962211d50eee9c2beab8ccf44b6edb49a8ab9"
+    }
+  },
+  "evidence": {
+    "traceability": {
+      "path": "evidence/traceability.json",
+      "sha256": "233af9bfbd43effdb92c4dc1df1a334d95fb8c83db499264a64c8f112a4f36cb"
+    },
+    "contradictions": {
+      "path": "evidence/brief-contradictions.md",
+      "sha256": "3c6e045964f55fc4f2cb5e54cc257383af4cbe9656d6a3e1c46d3cdae5fa9d6e"
+    }
+  },
+  "commands": {
+    "payment_trace": {
+      "command": "npm run payment:trace",
+      "exit_code": 0,
+      "output_path": "evidence/commands/payment-trace.txt",
+      "output_sha256": "ed228d61b3be67bcc1b6d3581a3f4df887889116a8f914c4d4831fc1412542d3"
+    },
+    "diagram_parse": {
+      "command": "npm run diagrams:parse",
+      "exit_code": 0,
+      "output_path": "evidence/commands/diagram-parse.txt",
+      "output_sha256": "ccb32f69e387e3069b2cebbd3cd2ab7fd2e80ac06c01b52bf3eb83ea44674a46"
+    }
+  }
+}

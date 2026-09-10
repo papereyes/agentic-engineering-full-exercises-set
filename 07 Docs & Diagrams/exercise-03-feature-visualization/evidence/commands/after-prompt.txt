@@ -1,0 +1,14 @@
+Complete the source-and-incident-led implementation portion of Exercise 7.3.
+
+Read `README.md`, `docs/diagram-contract.md`, `docs/duplicate-webhook-incident.md`, the payment source, and protected trace/tests. Treat implementation and incident behavior as authoritative, not unsupported claims in `docs/payment-feature-brief.md`.
+
+The protected webhook test has already been observed failing for unknown references and duplicate events. Make the minimum change to `reconcileCapturedWebhook`: reject invalid signatures before state access, reject unknown gateway references before duplicate checks, return `already-handled` without mutation for handled IDs, and preserve valid first-delivery recording.
+
+Then create the four required Mermaid diagrams with exact aliases and VIS-01 through VIS-16 marker placement:
+
+- `diagrams/payment-architecture.mmd`
+- `diagrams/webhook-reconciliation-state.mmd`
+- `diagrams/payment-sequence.mmd`
+- `diagrams/payment-data.mmd`
+
+Run focused payment, webhook, and Mermaid checks. Do not edit tests, verifier scripts, contracts, fixtures, protected inputs, or evidence files. Do not ask follow-up questions or retry.
